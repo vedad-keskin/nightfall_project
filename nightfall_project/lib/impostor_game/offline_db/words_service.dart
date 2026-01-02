@@ -1,6 +1,7 @@
 import 'data/words_lokacije.dart';
 import 'data/words_hrana.dart';
 import 'data/words_crtani.dart';
+import 'data/words_poznati.dart';
 
 class Word {
   final int id;
@@ -26,6 +27,7 @@ class WordsService {
     ...lokacijeWords,
     ...hranaWords,
     ...crtaniWords,
+    ...poznatiWords,
   ];
 
   List<Word> getAllWords() {
