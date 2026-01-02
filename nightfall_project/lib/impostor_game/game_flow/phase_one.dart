@@ -35,7 +35,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
 
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) {
         bool isRevealed = false;
         return StatefulBuilder(
