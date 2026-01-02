@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/impostor_game/categories_section/categories_screen.dart';
+import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
 import 'package:nightfall_project/impostor_game/players_section/players_screen.dart';
 
@@ -15,10 +17,14 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
   int _playerCount = 1;
   final PlayerService _playerService = PlayerService();
 
+  int _categoryCount = 0;
+  final CategoryService _categoryService = CategoryService();
+
   @override
   void initState() {
     super.initState();
     _loadPlayerCount();
+    _loadCategoryCount();
   }
 
   Future<void> _loadPlayerCount() async {
@@ -26,6 +32,15 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
     if (mounted) {
       setState(() {
         _playerCount = players.length;
+      });
+    }
+  }
+
+  Future<void> _loadCategoryCount() async {
+    final selected = await _categoryService.loadSelectedCategoryIds();
+    if (mounted) {
+      setState(() {
+        _categoryCount = selected.length;
       });
     }
   }
@@ -170,6 +185,52 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                               ),
                                               Text(
                                                 '$_playerCount',
+                                                style: GoogleFonts.vt323(
+                                                  color: Colors.white,
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      // Categories Section
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const CategoriesScreen(),
+                                            ),
+                                          );
+                                          _loadCategoryCount(); // This refreshes the count
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF1B263B,
+                                            ).withOpacity(0.8),
+                                            border: Border.all(
+                                              color: const Color(0xFF415A77),
+                                              width: 3,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'CATEGORIES',
+                                                style: GoogleFonts.vt323(
+                                                  color: Colors.white70,
+                                                  fontSize: 28,
+                                                ),
+                                              ),
+                                              Text(
+                                                '$_categoryCount',
                                                 style: GoogleFonts.vt323(
                                                   color: Colors.white,
                                                   fontSize: 28,
