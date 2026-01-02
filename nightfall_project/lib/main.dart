@@ -48,10 +48,19 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
   }
 
   void _showEasterEgg() {
-    showDialog(
+    showGeneralDialog(
       context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Team Credits',
       barrierColor: Colors.black87,
-      builder: (context) => const PixelTeamDialog(),
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (context, anim1, anim2) => const PixelTeamDialog(),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(parent: anim1, curve: Curves.easeOutBack),
+          child: FadeTransition(opacity: anim1, child: child),
+        );
+      },
     );
   }
 
@@ -212,7 +221,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     bottom: 16,
                     child: GestureDetector(
                       onLongPressStart: (_) {
-                        _easterEggTimer = Timer(const Duration(seconds: 2), () {
+                        _easterEggTimer = Timer(const Duration(seconds: 1), () {
                           if (mounted) {
                             _showEasterEgg();
                           }

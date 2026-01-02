@@ -37,20 +37,43 @@ class PixelTeamDialog extends StatelessWidget {
               children: [
                 _buildTitle('NIGHTFALL PROJECT'),
                 const SizedBox(height: 8),
-                _buildSubtitle('TEAM'),
+                _buildSubtitle('TEAM CREDITS'),
                 const SizedBox(height: 24),
-                _buildCreditRow('Developer', 'Vedad Keskin'),
-                const SizedBox(height: 16),
-                _buildCreditRow('Design & Art', 'Nidal Keskin'),
-                _buildCreditRow('', 'Iman-Bejana Keskin'),
+                _buildCreditRow(
+                  'DEVELOPER',
+                  'Vedad Keskin',
+                  labelColor: const Color(0xFF48CAE4), // Bright Cyan
+                  valueColor: Colors.white,
+                ),
+                const SizedBox(height: 20),
+                _buildCreditRow(
+                  'DESIGN & ART',
+                  'Nidal Keskin',
+                  labelColor: const Color(0xFFF72585), // Neon Pink
+                  valueColor: Colors.white,
+                ),
+                _buildCreditRow(
+                  '',
+                  'Iman-Bejana Keskin',
+                  valueColor: Colors.white,
+                ),
                 const SizedBox(height: 32),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    '[ CLOSE ]',
-                    style: GoogleFonts.pressStart2p(
-                      color: const Color(0xFFE0E1DD),
-                      fontSize: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xFFE0E1DD)),
+                    ),
+                    child: Text(
+                      'CLOSE',
+                      style: GoogleFonts.pressStart2p(
+                        color: const Color(0xFFE0E1DD),
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ),
@@ -79,29 +102,39 @@ class PixelTeamDialog extends StatelessWidget {
       text,
       style: GoogleFonts.pressStart2p(
         color: const Color(0xFF415A77),
-        fontSize: 14,
+        fontSize: 10,
+        letterSpacing: 2,
       ),
       textAlign: TextAlign.center,
     );
   }
 
-  Widget _buildCreditRow(String label, String value) {
+  Widget _buildCreditRow(
+    String label,
+    String value, {
+    Color? labelColor,
+    Color? valueColor,
+  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (label.isNotEmpty)
             Text(
-              label.toUpperCase(),
-              style: GoogleFonts.vt323(
-                color: const Color(0xFF415A77),
-                fontSize: 16,
+              label,
+              style: GoogleFonts.pressStart2p(
+                color: labelColor ?? const Color(0xFF415A77),
+                fontSize: 10,
               ),
             ),
+          if (label.isNotEmpty) const SizedBox(height: 8),
           Text(
             value,
-            style: GoogleFonts.vt323(color: Colors.white, fontSize: 20),
+            style: GoogleFonts.vt323(
+              color: valueColor ?? Colors.white,
+              fontSize: 24,
+            ),
           ),
         ],
       ),
