@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/layouts/game_layout.dart';
 import 'package:nightfall_project/mafia_game/layouts/game_layout.dart';
@@ -190,6 +191,18 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                             },
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                  // Version Info
+                  Positioned(
+                    right: 16,
+                    bottom: 16,
+                    child: Text(
+                      'Nightfall Project v1.0.0',
+                      style: GoogleFonts.vt323(
+                        color: Colors.white24,
+                        fontSize: 14,
                       ),
                     ),
                   ),
