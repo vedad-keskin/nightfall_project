@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
+import 'package:nightfall_project/impostor_game/players_section/players_screen.dart';
 
-class ImpostorGameLayout extends StatelessWidget {
+class ImpostorGameLayout extends StatefulWidget {
   const ImpostorGameLayout({super.key});
+
+  @override
+  State<ImpostorGameLayout> createState() => _ImpostorGameLayoutState();
+}
+
+class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
+  int _playerCount = 1;
+  final PlayerService _playerService = PlayerService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlayerCount();
+  }
+
+  Future<void> _loadPlayerCount() async {
+    final players = await _playerService.loadPlayers();
+    if (mounted) {
+      setState(() {
+        _playerCount = players.length;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +118,8 @@ class ImpostorGameLayout extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    // Empty SizedBox to balance the row roughly against the Back button
+                                    const SizedBox(width: 2),
                                   ],
                                 ),
                               ),
@@ -103,17 +130,57 @@ class ImpostorGameLayout extends StatelessWidget {
                                 margin: const EdgeInsets.only(bottom: 16),
                               ),
                               // Main Game Content
-                              const Expanded(
-                                child: Center(
-                                  // Placeholder for game content
-                                  child: Text(
-                                    "GAME AREA",
-                                    style: TextStyle(
-                                      color: Color(0xFFE0E1DD),
-                                      fontFamily: 'Courier',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      // Player Count Section
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PlayersScreen(),
+                                            ),
+                                          );
+                                          _loadPlayerCount();
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF1B263B,
+                                            ).withOpacity(0.8),
+                                            border: Border.all(
+                                              color: const Color(0xFF415A77),
+                                              width: 3,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'PLAYERS',
+                                                style: GoogleFonts.vt323(
+                                                  color: Colors.white70,
+                                                  fontSize: 28,
+                                                ),
+                                              ),
+                                              Text(
+                                                '$_playerCount',
+                                                style: GoogleFonts.vt323(
+                                                  color: Colors.white,
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
