@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nightfall_project/base_components/pixel_components.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,11 +31,24 @@ class SplitHomeScreen extends StatefulWidget {
 
 class _SplitHomeScreenState extends State<SplitHomeScreen> {
   ScrollController? _scrollController;
+  int _currentPage = 1; // Start on Right side (index 1)
 
   @override
   void dispose() {
+    _scrollController?.removeListener(_onScroll);
     _scrollController?.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController == null || !_scrollController!.hasClients) return;
+    final width = MediaQuery.of(context).size.width;
+    final page = (_scrollController!.offset / width).round();
+    if (page != _currentPage) {
+      setState(() {
+        _currentPage = page;
+      });
+    }
   }
 
   @override
@@ -43,27 +57,74 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
-          // Ensure we have a valid width
           if (width == 0) return const SizedBox();
 
-          // Initialize controller once we know the width
           if (_scrollController == null) {
-            _scrollController = ScrollController(
-              initialScrollOffset:
-                  width, // Start on the Right side (Page 1 equivalent)
-            );
+            _scrollController = ScrollController(initialScrollOffset: width);
+            _scrollController!.addListener(_onScroll);
           }
 
           return SingleChildScrollView(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
-            physics: const PageScrollPhysics(), // Snap to pages
+            physics: const PageScrollPhysics(),
             child: SizedBox(
-              width: width * 2, // Double the screen width
+              width: width * 2,
               height: constraints.maxHeight,
-              child: Image.asset(
-                'assets/images/2-split-home.jpg',
-                fit: BoxFit.cover,
+              child: Stack(
+                children: [
+                  // Background Image
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/images/2-split-home.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  // Left Side - Mafia
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: width,
+                    child: Center(
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 500),
+                        opacity: _currentPage == 0 ? 1.0 : 0.0,
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 500),
+                          scale: _currentPage == 0 ? 1.0 : 0.8,
+                          child: const PixelDialog(
+                            title: 'MAFIA',
+                            color: Colors.black87,
+                            accentColor: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Right Side - Impostor
+                  Positioned(
+                    left: width,
+                    top: 0,
+                    bottom: 0,
+                    width: width,
+                    child: Center(
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 500),
+                        opacity: _currentPage == 1 ? 1.0 : 0.0,
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 500),
+                          scale: _currentPage == 1 ? 1.0 : 0.8,
+                          child: const PixelDialog(
+                            title: 'IMPOSTOR',
+                            color: Colors.redAccent,
+                            accentColor: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -72,3 +133,4 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
     );
   }
 }
+
