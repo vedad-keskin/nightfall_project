@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
+import 'package:nightfall_project/base_components/pixel_team_dialog.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/layouts/game_layout.dart';
 import 'package:nightfall_project/mafia_game/layouts/game_layout.dart';
@@ -35,12 +37,22 @@ class SplitHomeScreen extends StatefulWidget {
 class _SplitHomeScreenState extends State<SplitHomeScreen> {
   ScrollController? _scrollController;
   int _currentPage = 1; // Start on Right side (index 1)
+  Timer? _easterEggTimer;
 
   @override
   void dispose() {
     _scrollController?.removeListener(_onScroll);
     _scrollController?.dispose();
+    _easterEggTimer?.cancel();
     super.dispose();
+  }
+
+  void _showEasterEgg() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (context) => const PixelTeamDialog(),
+    );
   }
 
   void _onScroll() {
@@ -198,11 +210,26 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                   Positioned(
                     right: 16,
                     bottom: 16,
-                    child: Text(
-                      'Nightfall Project v1.0.1',
-                      style: GoogleFonts.vt323(
-                        color: Colors.white24,
-                        fontSize: 14,
+                    child: GestureDetector(
+                      onLongPressStart: (_) {
+                        _easterEggTimer = Timer(const Duration(seconds: 2), () {
+                          if (mounted) {
+                            _showEasterEgg();
+                          }
+                        });
+                      },
+                      onLongPressEnd: (_) {
+                        _easterEggTimer?.cancel();
+                      },
+                      onLongPressCancel: () {
+                        _easterEggTimer?.cancel();
+                      },
+                      child: Text(
+                        'Nightfall Project v1.0.2',
+                        style: GoogleFonts.vt323(
+                          color: Colors.white24,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
