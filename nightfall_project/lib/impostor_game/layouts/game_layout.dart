@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/categories_section/categories_screen.dart';
+import 'package:nightfall_project/impostor_game/leaderboards/leaderboards_screen.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
 import 'package:nightfall_project/impostor_game/players_section/players_screen.dart';
@@ -236,6 +237,48 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                   fontSize: 28,
                                                   fontWeight: FontWeight.bold,
                                                 ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      // Leaderboards Section
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LeaderboardsScreen(),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF1B263B,
+                                            ).withOpacity(0.8),
+                                            border: Border.all(
+                                              color: const Color(0xFF415A77),
+                                              width: 3,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'LEADERBOARDS',
+                                                style: GoogleFonts.vt323(
+                                                  color: Colors.white70,
+                                                  fontSize: 28,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.leaderboard,
+                                                color: Colors.white,
+                                                size: 28,
                                               ),
                                             ],
                                           ),

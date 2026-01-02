@@ -4,13 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Player {
   final String id;
   final String name;
+  final int points;
 
-  Player({required this.id, required this.name});
+  Player({required this.id, required this.name, this.points = 0});
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name};
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'points': points};
 
   factory Player.fromJson(Map<String, dynamic> json) {
-    return Player(id: json['id'] as String, name: json['name'] as String);
+    return Player(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      points: (json['points'] as int?) ?? 0,
+    );
   }
 }
 
@@ -43,7 +48,7 @@ class PlayerService {
   }
 
   Future<List<Player>> _saveDefaultPlayer() async {
-    final defaultPlayer = Player(id: '1', name: 'Vedo');
+    final defaultPlayer = Player(id: '1', name: 'Vedo', points: 0);
     await savePlayers([defaultPlayer]);
     return [defaultPlayer];
   }
@@ -61,6 +66,7 @@ class PlayerService {
     final newPlayer = Player(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
+      points: 0,
     );
     final updatedList = [...currentPlayers, newPlayer];
     await savePlayers(updatedList);
@@ -86,7 +92,7 @@ class PlayerService {
   ) async {
     final updatedList = currentPlayers.map((p) {
       if (p.id == id) {
-        return Player(id: id, name: newName);
+        return Player(id: id, name: newName, points: p.points);
       }
       return p;
     }).toList();
