@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/impostor_game/layouts/game_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -118,16 +119,43 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                         child: AnimatedScale(
                           duration: const Duration(milliseconds: 500),
                           scale: _currentPage == 1 ? 1.0 : 0.8,
-                          child: const PixelDialog(
+                          child: PixelDialog(
                             title: 'IMPOSTOR',
-                            color: Color.fromRGBO(
-                              255,
-                              82,
-                              82,
-                              0.7,
-                            ), // RedAccent with opacity
+                            color: const Color.fromRGBO(255, 82, 82, 0.7),
                             accentColor: Colors.black87,
                             soundPath: 'audio/mystery_mist.mp3',
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionDuration: const Duration(
+                                    seconds: 3,
+                                  ),
+                                  reverseTransitionDuration: const Duration(
+                                    seconds: 1,
+                                  ),
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                        return const ImpostorGameLayout();
+                                      },
+                                  transitionsBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                        child,
+                                      ) {
+                                        // Fade to black, then fade in new screen?
+                                        // Or just a slow fade of the new screen over the old.
+                                        // User asked for "transition... last 3 seconds... 3second animation"
+                                        // A simple FadeTransition is cleanest and fits the "mystery" vibe.
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

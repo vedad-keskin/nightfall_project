@@ -7,6 +7,7 @@ class PixelDialog extends StatelessWidget {
   final Color color;
   final Color accentColor;
   final String? soundPath;
+  final VoidCallback? onPressed;
 
   const PixelDialog({
     super.key,
@@ -14,6 +15,7 @@ class PixelDialog extends StatelessWidget {
     required this.color,
     required this.accentColor,
     this.soundPath,
+    this.onPressed,
   });
 
   @override
@@ -22,10 +24,10 @@ class PixelDialog extends StatelessWidget {
       width: 310,
       // Layer 1: Outer Border / Shadow Base
       decoration: BoxDecoration(
-        color: const Color(0xFF000000), // Pure black outer
+        color: Colors.black.withOpacity(0.6), // Semi-transparent outer border
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withOpacity(0.3),
             offset: const Offset(12, 12), // Deep shadow
             blurRadius: 0,
           ),
@@ -34,15 +36,15 @@ class PixelDialog extends StatelessWidget {
       padding: const EdgeInsets.all(4), // Thickness of outer black border
       child: Container(
         // Layer 2: Main Frame Color (Silver/Stone)
-        decoration: const BoxDecoration(
-          color: Color(0xFF778DA9), // Stone Grey
+        decoration: BoxDecoration(
+          color: const Color(0xFF778DA9).withOpacity(0.9), // Stone Grey
           border: Border.symmetric(
             vertical: BorderSide(
-              color: Color(0xFF415A77),
+              color: const Color(0xFF415A77).withOpacity(0.9),
               width: 4,
             ), // Side accents
             horizontal: BorderSide(
-              color: Color(0xFFE0E1DD),
+              color: const Color(0xFFE0E1DD).withOpacity(0.9),
               width: 4,
             ), // Top/Bottom highlights
           ),
@@ -51,8 +53,8 @@ class PixelDialog extends StatelessWidget {
         child: Container(
           // Layer 3: Inner Inset Border
           decoration: BoxDecoration(
-            color: const Color(0xFF0D1B2A), // Inner BG base
-            border: Border.all(color: const Color(0xFF000000), width: 2),
+            color: const Color(0xFF0D1B2A).withOpacity(0.85), // Inner BG base
+            border: Border.all(color: Colors.black.withOpacity(0.6), width: 2),
           ),
           child: Container(
             // Actual Content Background
@@ -67,9 +69,9 @@ class PixelDialog extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1B263B),
+                    color: const Color(0xFF1B263B).withOpacity(0.9),
                     border: Border.all(
-                      color: const Color(0xFF415A77),
+                      color: const Color(0xFF415A77).withOpacity(0.9),
                       width: 2,
                     ),
                   ),
@@ -93,7 +95,7 @@ class PixelDialog extends StatelessWidget {
                   label: 'PLAY NOW',
                   color: const Color(0xFF415A77),
                   soundPath: soundPath,
-                  onPressed: () {},
+                  onPressed: onPressed,
                 ),
               ],
             ),
