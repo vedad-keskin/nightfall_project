@@ -5,6 +5,7 @@ import 'package:nightfall_project/impostor_game/game_flow/phase_three.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/words_service.dart';
+import 'dart:math';
 
 class PhaseTwoScreen extends StatefulWidget {
   final List<Player> players;
@@ -27,6 +28,13 @@ class PhaseTwoScreen extends StatefulWidget {
 class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
   bool _showInstructions = true;
   Player? _selectedSuspect;
+  late Player _startingPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startingPlayer = widget.players[Random().nextInt(widget.players.length)];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +91,42 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 64),
+          const SizedBox(height: 32),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE63946).withOpacity(0.1),
+              border: Border.all(color: const Color(0xFFE63946), width: 2),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.star, color: Color(0xFFFFD700), size: 24),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "STARTING PLAYER",
+                      style: GoogleFonts.pressStart2p(
+                        color: Colors.white54,
+                        fontSize: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _startingPlayer.name.toUpperCase(),
+                      style: GoogleFonts.pressStart2p(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
           PixelButton(
             label: "START VOTING",
             color: const Color(0xFF52B788),
