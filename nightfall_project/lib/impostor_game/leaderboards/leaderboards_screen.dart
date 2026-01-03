@@ -108,14 +108,14 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                           Navigator.of(context).pop();
                         },
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 2),
                       Expanded(
                         child: Center(
                           child: Text(
                             'LEADERBOARDS',
                             style: GoogleFonts.pressStart2p(
                               color: const Color(0xFFE0E1DD),
-                              fontSize: 17,
+                              fontSize: 14,
                               shadows: [
                                 const Shadow(
                                   color: Colors.black,
@@ -127,7 +127,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 2),
                       PixelButton(
                         label: 'RESET',
                         color: Colors.redAccent.withOpacity(0.7),

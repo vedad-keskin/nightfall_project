@@ -19,6 +19,7 @@ class CategoryService {
     Category(id: 2, name: 'Hrana'),
     Category(id: 3, name: 'Crtani'),
     Category(id: 4, name: 'Poznati'),
+    Category(id: 5, name: 'Predmeti'),
   ];
 
   // --- Methods ---
