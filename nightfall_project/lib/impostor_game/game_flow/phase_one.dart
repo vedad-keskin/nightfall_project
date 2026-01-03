@@ -363,7 +363,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             ),
             Text(
               widget.category.name,
-              style: GoogleFonts.vt323(color: Colors.white, fontSize: 28),
+              style: GoogleFonts.vt323(color: Colors.white, fontSize: 29),
             ),
             if (widget.hintsEnabled) ...[
               const SizedBox(height: 16),
@@ -401,7 +401,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             ),
             Text(
               widget.category.name,
-              style: GoogleFonts.vt323(color: Colors.white, fontSize: 28),
+              style: GoogleFonts.vt323(color: Colors.white, fontSize: 29),
             ),
           ],
         ],

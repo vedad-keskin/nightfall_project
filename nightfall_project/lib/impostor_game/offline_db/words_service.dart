@@ -3,6 +3,7 @@ import 'data/words_hrana.dart';
 import 'data/words_crtani.dart';
 import 'data/words_poznati.dart';
 import 'data/words_predmeti.dart';
+import 'data/words_anime.dart';
 
 class Word {
   final int id;
@@ -30,6 +31,7 @@ class WordsService {
     ...crtaniWords,
     ...poznatiWords,
     ...predmetiWords,
+    ...animeWords,
   ];
 
   List<Word> getAllWords() {
