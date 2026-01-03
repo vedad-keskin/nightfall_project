@@ -162,6 +162,8 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
                           (!_impostorWon ||
                               _typedImpostorName.length ==
                                   _realImpostor.name.length)) ...[
+                        _buildWordCard(),
+                        const SizedBox(height: 16),
                         _buildResultText(),
                         const SizedBox(height: 20),
                         PixelButton(
@@ -190,7 +192,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 800),
       curve: Curves.elasticOut,
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
       width: double.infinity,
       decoration: BoxDecoration(
         color: _isRevealDone
@@ -216,10 +218,10 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
             _votedPlayer.name.toUpperCase(),
             style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 20),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           if (_isRevealDone) ...[
             const Icon(Icons.arrow_downward, color: Colors.white54, size: 32),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Text(
               _typedVerdict,
               style: GoogleFonts.vt323(
@@ -241,7 +243,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   Widget _buildRealImpostorCard() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
       width: double.infinity,
       decoration: BoxDecoration(
         color: const Color(0xFF3D0C02),
@@ -259,6 +261,36 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFFE63946),
               fontSize: 22,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWordCard() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "SECRET WORD",
+            style: GoogleFonts.pressStart2p(color: Colors.white38, fontSize: 9),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            widget.word.name.toUpperCase(),
+            style: GoogleFonts.vt323(
+              color: const Color(0xFF4CC9F0),
+              fontSize: 22,
+              letterSpacing: 1.5,
             ),
             textAlign: TextAlign.center,
           ),
