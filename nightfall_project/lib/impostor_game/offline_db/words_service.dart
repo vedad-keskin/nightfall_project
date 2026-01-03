@@ -4,6 +4,7 @@ import 'data/words_crtani.dart';
 import 'data/words_poznati.dart';
 import 'data/words_predmeti.dart';
 import 'data/words_anime.dart';
+import 'data/words_islam.dart';
 
 class Word {
   final int id;
@@ -32,6 +33,7 @@ class WordsService {
     ...poznatiWords,
     ...predmetiWords,
     ...animeWords,
+    ...islamWords,
   ];
 
   List<Word> getAllWords() {
