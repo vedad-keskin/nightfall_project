@@ -77,6 +77,16 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
 
   final WordsService _wordsService = WordsService();
 
+  Future<int> _getTotalWordCount() async {
+    final selectedCategoryIds = await _categoryService
+        .loadSelectedCategoryIds();
+    int totalWords = 0;
+    for (final categoryId in selectedCategoryIds) {
+      totalWords += _wordsService.getWordCountForCategory(categoryId);
+    }
+    return totalWords;
+  }
+
   Future<void> _startGame() async {
     final players = await _playerService.loadPlayers();
     if (players.length < 3) {
@@ -308,26 +318,54 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                             ),
                                           ),
                                           padding: const EdgeInsets.all(16),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'CATEGORIES',
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white70,
-                                                  fontSize: 28,
-                                                ),
-                                              ),
-                                              Text(
-                                                '$_categoryCount',
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white,
-                                                  fontSize: 28,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
+                                          child: FutureBuilder<int>(
+                                            future: _getTotalWordCount(),
+                                            builder: (context, snapshot) {
+                                              final totalWords =
+                                                  snapshot.data ?? 0;
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'CATEGORIES',
+                                                        style:
+                                                            GoogleFonts.vt323(
+                                                              color: Colors
+                                                                  .white70,
+                                                              fontSize: 28,
+                                                            ),
+                                                      ),
+                                                      Text(
+                                                        '$_categoryCount',
+                                                        style:
+                                                            GoogleFonts.vt323(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    '$totalWords words available',
+                                                    style: GoogleFonts.vt323(
+                                                      color: Colors.white38,
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
