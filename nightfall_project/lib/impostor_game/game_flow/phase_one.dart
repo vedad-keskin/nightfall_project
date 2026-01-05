@@ -315,7 +315,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
 
   Widget _buildCardFront(LanguageService languageService) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 32),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF1B263B),
         border: Border.all(color: const Color(0xFF415A77), width: 4),
