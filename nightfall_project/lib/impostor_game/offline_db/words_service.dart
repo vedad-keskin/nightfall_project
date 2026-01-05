@@ -10,6 +10,8 @@ import 'data/words_borci.dart';
 import 'data/words_brendovi.dart';
 import 'data/words_igre.dart';
 import 'data/words_sportovi.dart';
+import 'data/words_zivotinje.dart';
+import 'data/words_filmovi.dart';
 
 class Word {
   final int id;
@@ -44,6 +46,8 @@ class WordsService {
     ...brendoviWords,
     ...igreWords,
     ...sportoviWords,
+    ...zivotinjeWords,
+    ...filmoviWords,
   ];
 
   List<Word> getAllWords() {
