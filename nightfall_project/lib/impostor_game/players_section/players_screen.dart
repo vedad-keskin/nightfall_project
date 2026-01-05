@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 
 class PlayersScreen extends StatefulWidget {
   const PlayersScreen({super.key});
@@ -67,6 +69,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     return Scaffold(
       backgroundColor: Colors.black, // Fallback
       body: Stack(
@@ -81,7 +84,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                   Row(
                     children: [
                       PixelButton(
-                        label: 'BACK',
+                        label: languageService.translate('back'),
                         color: const Color(0xFF415A77),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -91,7 +94,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            'PLAYERS',
+                            languageService.translate('players_title'),
                             style: GoogleFonts.pressStart2p(
                               color: const Color(0xFFE0E1DD),
                               fontSize: 24,
@@ -173,7 +176,9 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
-                                            hintText: 'Enter name...',
+                                            hintText: languageService.translate(
+                                              'enter_name_hint',
+                                            ),
                                             hintStyle: GoogleFonts.vt323(
                                               color: Colors.white54,
                                               fontSize: 24,
@@ -185,7 +190,9 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                     ),
                                     const SizedBox(width: 12),
                                     PixelButton(
-                                      label: 'ADD',
+                                      label: languageService.translate(
+                                        'add_button',
+                                      ),
                                       color: const Color(0xFF415A77),
                                       onPressed: _addPlayer,
                                     ),
@@ -269,6 +276,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
   }
 
   Future<void> _editPlayer(Player player) async {
+    final languageService = context.read<LanguageService>();
     final editController = TextEditingController(text: player.name);
     await showDialog(
       context: context,
@@ -288,7 +296,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'EDIT NAME',
+                    languageService.translate('edit_name_title'),
                     style: GoogleFonts.pressStart2p(
                       color: Colors.white,
                       fontSize: 16,
@@ -309,7 +317,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Enter name...',
+                        hintText: languageService.translate('enter_name_hint'),
                         hintStyle: GoogleFonts.vt323(
                           color: Colors.white54,
                           fontSize: 24,
@@ -323,7 +331,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                     children: [
                       Expanded(
                         child: PixelButton(
-                          label: 'CANCEL',
+                          label: languageService.translate('cancel_button'),
                           color: Colors.redAccent.withOpacity(0.8),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
@@ -331,7 +339,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                       const SizedBox(width: 5),
                       Expanded(
                         child: PixelButton(
-                          label: 'SAVE',
+                          label: languageService.translate('save_button'),
                           color: const Color(0xFF415A77),
                           onPressed: () async {
                             if (editController.text.trim().isNotEmpty) {

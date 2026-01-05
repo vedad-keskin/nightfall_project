@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 
 class LeaderboardsScreen extends StatefulWidget {
   const LeaderboardsScreen({super.key});
@@ -37,6 +39,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
   }
 
   Future<void> _showResetConfirmation() async {
+    final languageService = context.read<LanguageService>();
     final bool? confirm = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black87,
@@ -46,21 +49,21 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
           side: BorderSide(color: Color(0xFF778DA9), width: 4),
         ),
         title: Text(
-          'RESET POINTS?',
+          languageService.translate('reset_points_q'),
           style: GoogleFonts.pressStart2p(
             color: const Color(0xFFE0E1DD),
             fontSize: 16,
           ),
         ),
         content: Text(
-          'All player points will be set to zero. This cannot be undone.',
+          languageService.translate('reset_undo_warn'),
           style: GoogleFonts.vt323(color: Colors.white70, fontSize: 18),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
-              'CANCEL',
+              languageService.translate('cancel_button'),
               style: GoogleFonts.pressStart2p(
                 color: Colors.white54,
                 fontSize: 12,
@@ -68,7 +71,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
             ),
           ),
           PixelButton(
-            label: 'RESET',
+            label: languageService.translate('reset_button'),
             color: Colors.redAccent.withOpacity(0.8),
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -88,6 +91,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -102,7 +106,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                   Row(
                     children: [
                       PixelButton(
-                        label: 'BACK',
+                        label: languageService.translate('back'),
                         color: const Color(0xFF415A77),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -112,7 +116,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            'LEADERBOARDS',
+                            languageService.translate('leaderboards_title'),
                             style: GoogleFonts.pressStart2p(
                               color: const Color(0xFFE0E1DD),
                               fontSize: 14,
@@ -129,7 +133,7 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                       ),
                       const SizedBox(width: 2),
                       PixelButton(
-                        label: 'RESET',
+                        label: languageService.translate('reset_button'),
                         color: Colors.redAccent.withOpacity(0.7),
                         onPressed: _showResetConfirmation,
                       ),
@@ -188,7 +192,9 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  "TOP PLAYERS",
+                                  languageService.translate(
+                                    'top_players_title',
+                                  ),
                                   style: GoogleFonts.vt323(
                                     color: Colors.white70,
                                     fontSize: 24,
@@ -200,7 +206,9 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
                                 child: _players.isEmpty
                                     ? Center(
                                         child: Text(
-                                          "No players found.",
+                                          languageService.translate(
+                                            'no_players_found',
+                                          ),
                                           style: GoogleFonts.vt323(
                                             color: Colors.white54,
                                             fontSize: 24,

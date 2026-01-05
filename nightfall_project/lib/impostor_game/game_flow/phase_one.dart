@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/game_flow/phase_two.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
@@ -30,6 +32,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
   final Set<String> _viewedPlayerIds = {};
 
   void _showRoleDialog(Player player) {
+    final languageService = context.read<LanguageService>();
     if (_viewedPlayerIds.contains(player.id)) return;
 
     final isImpostor = player.id == widget.impostorId;
@@ -59,7 +62,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "SECRET ROLE",
+                        languageService.translate('secret_role'),
                         style: GoogleFonts.vt323(
                           color: Colors.white70,
                           fontSize: 20,
@@ -99,8 +102,11 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                                   ..setEntry(3, 2, 0.001)
                                   ..rotateY(value),
                                 child: isBackVisible
-                                    ? _buildCardBack(isImpostor)
-                                    : _buildCardFront(),
+                                    ? _buildCardBack(
+                                        isImpostor,
+                                        languageService,
+                                      )
+                                    : _buildCardFront(languageService),
                               );
                             },
                           ),
@@ -118,7 +124,10 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                                 ..setEntry(3, 2, 0.001)
                                 ..rotateY(value),
                               alignment: Alignment.center,
-                              child: _buildCardBack(isImpostor),
+                              child: _buildCardBack(
+                                isImpostor,
+                                languageService,
+                              ),
                             );
                           },
                         ),
@@ -126,7 +135,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                       if (isRevealed) ...[
                         const SizedBox(height: 32),
                         PixelButton(
-                          label: "UNDERSTOOD",
+                          label: languageService.translate('understood_button'),
                           color: const Color(0xFF415A77),
                           onPressed: () {
                             setState(() {
@@ -149,6 +158,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     final allViewed = _viewedPlayerIds.length == widget.players.length;
 
     return Scaffold(
@@ -165,7 +175,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                   child: Row(
                     children: [
                       PixelButton(
-                        label: 'BACK',
+                        label: languageService.translate('back'),
                         color: const Color(0xFF415A77),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -175,7 +185,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            'PASS THE DEVICE',
+                            languageService.translate('pass_device_title'),
                             style: GoogleFonts.pressStart2p(
                               color: const Color(0xFFE0E1DD),
                               fontSize: 18, // Adjusted slightly for row
@@ -268,7 +278,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: PixelButton(
-                      label: "GAME START",
+                      label: languageService.translate('game_start'),
                       color: const Color(0xFFE63946),
                       onPressed: () {
                         Navigator.of(context).push(
@@ -288,7 +298,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
-                      "Waiting for all players...",
+                      languageService.translate('waiting_players'),
                       style: GoogleFonts.vt323(
                         color: Colors.white54,
                         fontSize: 20,
@@ -303,9 +313,9 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
     );
   }
 
-  Widget _buildCardFront() {
+  Widget _buildCardFront(LanguageService languageService) {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(vertical: 32),
       decoration: BoxDecoration(
         color: const Color(0xFF1B263B),
         border: Border.all(color: const Color(0xFF415A77), width: 4),
@@ -316,13 +326,13 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
           const Icon(Icons.security, color: Color(0xFFE63946), size: 64),
           const SizedBox(height: 16),
           Text(
-            "TOP SECRET",
+            languageService.translate('top_secret'),
             style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 14),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            "TAP TO FLIP",
+            languageService.translate('tap_to_flip'),
             style: GoogleFonts.vt323(color: Colors.white70, fontSize: 18),
             textAlign: TextAlign.center,
           ),
@@ -331,7 +341,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
     );
   }
 
-  Widget _buildCardBack(bool isImpostor) {
+  Widget _buildCardBack(bool isImpostor, LanguageService languageService) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -346,11 +356,11 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
         children: [
           if (isImpostor) ...[
             Text(
-              "YOU ARE THE",
+              languageService.translate('you_are_the'),
               style: GoogleFonts.vt323(color: Colors.white70, fontSize: 24),
             ),
             Text(
-              "IMPOSTOR",
+              languageService.translate('impostor'),
               style: GoogleFonts.pressStart2p(
                 color: const Color(0xFFE63946), // Red
                 fontSize: 20,
@@ -358,7 +368,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              "CATEGORY:",
+              languageService.translate('category_label'),
               style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
             ),
             Text(
@@ -368,7 +378,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             if (widget.hintsEnabled) ...[
               const SizedBox(height: 16),
               Text(
-                "HINT:",
+                languageService.translate('hint_label'),
                 style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
               ),
               Text(
@@ -382,7 +392,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             ],
           ] else ...[
             Text(
-              "THE WORD IS:",
+              languageService.translate('word_is'),
               style: GoogleFonts.vt323(color: Colors.white70, fontSize: 24),
             ),
             const SizedBox(height: 12),
@@ -396,7 +406,7 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              "CATEGORY:",
+              languageService.translate('category_label'),
               style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
             ),
             Text(

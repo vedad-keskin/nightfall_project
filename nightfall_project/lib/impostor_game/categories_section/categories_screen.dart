@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/words_service.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -45,6 +47,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -59,7 +62,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   Row(
                     children: [
                       PixelButton(
-                        label: 'BACK',
+                        label: languageService.translate('back'),
                         color: const Color(0xFF415A77),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -69,7 +72,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            'CATEGORIES',
+                            languageService.translate('categories_title'),
                             style: GoogleFonts.pressStart2p(
                               color: const Color(0xFFE0E1DD),
                               fontSize: 20,
@@ -140,7 +143,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  "SELECT CATEGORIES",
+                                  languageService.translate(
+                                    'select_categories_title',
+                                  ),
                                   style: GoogleFonts.vt323(
                                     color: Colors.white70,
                                     fontSize: 24,
@@ -218,7 +223,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    '$wordCount words',
+                                                    '${wordCount} ${languageService.translate('words_count')}',
                                                     style: GoogleFonts.vt323(
                                                       color: Colors.white38,
                                                       fontSize: 18,

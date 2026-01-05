@@ -12,6 +12,8 @@ import 'package:nightfall_project/impostor_game/offline_db/game_settings_service
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/words_service.dart';
 import 'package:nightfall_project/impostor_game/players_section/players_screen.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 
 class ImpostorGameLayout extends StatefulWidget {
   const ImpostorGameLayout({super.key});
@@ -90,9 +92,13 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
   Future<void> _startGame() async {
     final players = await _playerService.loadPlayers();
     if (players.length < 3) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Need at least 3 players!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.read<LanguageService>().translate('need_players_error'),
+          ),
+        ),
+      );
       return;
     }
 
@@ -100,9 +106,13 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
         .loadSelectedCategoryIds();
     if (selectedCategoryIds.isEmpty) {
       // Fallback if somehow empty, though service handles default
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No categories selected!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.read<LanguageService>().translate('no_categories_error'),
+          ),
+        ),
+      );
       return;
     }
 
@@ -119,7 +129,11 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
     final words = _wordsService.getWordsForCategory(randomCatId);
     if (words.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selected category has no words!')),
+        SnackBar(
+          content: Text(
+            context.read<LanguageService>().translate('no_words_error'),
+          ),
+        ),
       );
       return;
     }
@@ -147,6 +161,7 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     return Scaffold(
       body: Stack(
         children: [
@@ -208,7 +223,7 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                 child: Row(
                                   children: [
                                     PixelButton(
-                                      label: 'BACK',
+                                      label: languageService.translate('back'),
                                       color: const Color(0xFF415A77),
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -218,7 +233,7 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                     Expanded(
                                       child: Center(
                                         child: Text(
-                                          'IMPOSTOR GAME',
+                                          languageService.translate('impostor'),
                                           style: GoogleFonts.pressStart2p(
                                             color: const Color(0xFFE0E1DD),
                                             fontSize: 15,
@@ -277,7 +292,9 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'PLAYERS',
+                                                languageService.translate(
+                                                  'players_title',
+                                                ),
                                                 style: GoogleFonts.vt323(
                                                   color: Colors.white70,
                                                   fontSize: 28,
@@ -333,7 +350,10 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        'CATEGORIES',
+                                                        languageService
+                                                            .translate(
+                                                              'categories_title',
+                                                            ),
                                                         style:
                                                             GoogleFonts.vt323(
                                                               color: Colors
@@ -357,7 +377,7 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
-                                                    '$totalWords words available',
+                                                    '$totalWords ${languageService.translate('words_available')}',
                                                     style: GoogleFonts.vt323(
                                                       color: Colors.white38,
                                                       fontSize: 18,
@@ -396,7 +416,9 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'LEADERBOARDS',
+                                                languageService.translate(
+                                                  'leaderboards_title',
+                                                ),
                                                 style: GoogleFonts.vt323(
                                                   color: Colors.white70,
                                                   fontSize: 28,
@@ -439,14 +461,22 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'HINTS',
+                                                languageService.translate(
+                                                  'hints_title',
+                                                ),
                                                 style: GoogleFonts.vt323(
                                                   color: Colors.white70,
                                                   fontSize: 28,
                                                 ),
                                               ),
                                               Text(
-                                                _hintsEnabled ? "ON" : "OFF",
+                                                _hintsEnabled
+                                                    ? languageService.translate(
+                                                        'on',
+                                                      )
+                                                    : languageService.translate(
+                                                        'off',
+                                                      ),
                                                 style: GoogleFonts.vt323(
                                                   color: _hintsEnabled
                                                       ? const Color(0xFF95D5B2)
@@ -466,7 +496,9 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                                           bottom: 8.0,
                                         ),
                                         child: PixelButtonCenterLarge(
-                                          label: "GAME ON",
+                                          label: languageService.translate(
+                                            'game_on',
+                                          ),
                                           color: const Color(0xFFE63946),
                                           onPressed: _startGame,
                                         ),

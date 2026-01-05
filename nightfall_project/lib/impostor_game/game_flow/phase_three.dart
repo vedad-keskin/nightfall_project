@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/player_service.dart';
@@ -71,9 +73,10 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   }
 
   void _startTypewriter() {
+    final languageService = context.read<LanguageService>();
     final fullText = _impostorWon
-        ? "THEY WERE INNOCENT!"
-        : "THEY WERE THE IMPOSTOR!";
+        ? languageService.translate('verdict_innocent')
+        : languageService.translate('verdict_impostor');
     int index = 0;
 
     _typewriterTimer = Timer.periodic(const Duration(milliseconds: 50), (
@@ -130,6 +133,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -145,7 +149,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
                     children: [
                       const SizedBox(height: 40),
                       Text(
-                        "THE VERDICT",
+                        languageService.translate('verdict_title'),
                         style: GoogleFonts.pressStart2p(
                           color: Colors.white,
                           fontSize: 24,
@@ -167,7 +171,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
                         _buildResultText(),
                         const SizedBox(height: 20),
                         PixelButton(
-                          label: "BACK TO MENU",
+                          label: languageService.translate('back_to_menu'),
                           color: const Color(0xFF415A77),
                           onPressed: () {
                             Navigator.of(
@@ -189,6 +193,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   }
 
   Widget _buildVerdictCard() {
+    final languageService = context.read<LanguageService>();
     return AnimatedContainer(
       duration: const Duration(milliseconds: 800),
       curve: Curves.elasticOut,
@@ -210,7 +215,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
       child: Column(
         children: [
           Text(
-            "VOTED AS IMPOSTOR:",
+            languageService.translate('voted_as_impostor'),
             style: GoogleFonts.vt323(color: Colors.white70, fontSize: 24),
           ),
           const SizedBox(height: 8),
@@ -241,6 +246,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   }
 
   Widget _buildRealImpostorCard() {
+    final languageService = context.read<LanguageService>();
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -252,7 +258,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
       child: Column(
         children: [
           Text(
-            "THE REAL IMPOSTOR WAS:",
+            languageService.translate('real_impostor_was'),
             style: GoogleFonts.vt323(color: Colors.white70, fontSize: 20),
           ),
           const SizedBox(height: 12),
@@ -270,6 +276,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   }
 
   Widget _buildWordCard() {
+    final languageService = context.read<LanguageService>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       width: double.infinity,
@@ -281,7 +288,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "SECRET WORD",
+            languageService.translate('secret_word'),
             style: GoogleFonts.pressStart2p(color: Colors.white38, fontSize: 9),
           ),
           const SizedBox(height: 6),
@@ -300,11 +307,12 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
   }
 
   Widget _buildResultText() {
+    final languageService = context.read<LanguageService>();
     return Column(
       children: [
         if (_impostorWon) ...[
           Text(
-            "THE IMPOSTOR ESCAPED!",
+            languageService.translate('impostor_escaped'),
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFFE63946),
               fontSize: 16,
@@ -313,7 +321,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            "+1 POINT TO ${_realImpostor.name.toUpperCase()}",
+            "${languageService.translate('point_to')} ${_realImpostor.name.toUpperCase()}",
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFFFFBA08),
               fontSize: 12,
@@ -321,7 +329,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
           ),
         ] else ...[
           Text(
-            "INNOCENTS WIN!",
+            languageService.translate('innocents_win'),
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFF52B788),
               fontSize: 18,
@@ -329,7 +337,7 @@ class _PhaseThreeScreenState extends State<PhaseThreeScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            "You caught the Impostor!",
+            languageService.translate('caught_impostor'),
             style: GoogleFonts.vt323(color: Colors.white70, fontSize: 22),
           ),
         ],

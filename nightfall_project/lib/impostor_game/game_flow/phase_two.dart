@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nightfall_project/services/language_service.dart';
+import 'package:provider/provider.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/impostor_game/game_flow/phase_three.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
@@ -52,13 +54,14 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
   }
 
   Widget _buildInstructions() {
+    final languageService = context.read<LanguageService>();
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "DISCUSSION TIME",
+            languageService.translate('discussion_time'),
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFFE63946),
               fontSize: 22,
@@ -74,20 +77,11 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
             ),
             child: Column(
               children: [
-                _buildInstructionShot(
-                  "1",
-                  "Go around in a circle for 2 or 3 rounds.",
-                ),
+                _buildInstructionShot("1", languageService.translate('inst_1')),
                 const SizedBox(height: 24),
-                _buildInstructionShot(
-                  "2",
-                  "Each player must say ONE WORD related to their secret.",
-                ),
+                _buildInstructionShot("2", languageService.translate('inst_2')),
                 const SizedBox(height: 24),
-                _buildInstructionShot(
-                  "3",
-                  "After rounds are over, you must vote for the IMPOSTOR!",
-                ),
+                _buildInstructionShot("3", languageService.translate('inst_3')),
               ],
             ),
           ),
@@ -107,7 +101,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "STARTING PLAYER",
+                      languageService.translate('starting_player_label'),
                       style: GoogleFonts.pressStart2p(
                         color: Colors.white54,
                         fontSize: 10,
@@ -128,7 +122,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
           ),
           const SizedBox(height: 32),
           PixelButton(
-            label: "START VOTING",
+            label: languageService.translate('start_voting_button'),
             color: const Color(0xFF52B788),
             onPressed: () {
               setState(() {
@@ -171,12 +165,13 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
   }
 
   Widget _buildVoting() {
+    final languageService = context.read<LanguageService>();
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            "WHO IS THE IMPOSTOR?",
+            languageService.translate('who_is_impostor'),
             style: GoogleFonts.pressStart2p(
               color: const Color(0xFFE0E1DD),
               fontSize: 14,
@@ -226,7 +221,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "DRAG SUSPECT HERE",
+                              languageService.translate('drag_suspect_here'),
                               style: GoogleFonts.vt323(
                                 color: Colors.white24,
                                 fontSize: 18,
@@ -305,7 +300,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: PixelButton(
-              label: "REVEAL IMPOSTOR",
+              label: languageService.translate('reveal_impostor_button'),
               color: const Color(0xFFE63946),
               soundPath: 'audio/gavel_hit.mp3',
               onPressed: () {
@@ -327,7 +322,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              "Drag a player to the box to vote",
+              languageService.translate('vote_instruction'),
               style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
             ),
           ),
