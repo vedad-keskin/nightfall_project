@@ -314,49 +314,65 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                 ),
 
                 // Footer Validation & Proceed
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0D1B2A),
-                    border: Border(
-                      top: BorderSide(color: const Color(0xFF778DA9), width: 4),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
                   ),
                   child: Column(
                     children: [
                       if (_selectedRoleCount != _totalPlayers)
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            _selectedRoleCount < _totalPlayers
-                                ? 'NEED ${_totalPlayers - _selectedRoleCount} MORE ROLES'
-                                : 'REMOVE ${_selectedRoleCount - _totalPlayers} ROLES',
-                            style: GoogleFonts.vt323(
-                              color: Colors.amberAccent,
-                              fontSize: 18,
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            color: Colors.black45,
+                            child: Text(
+                              _selectedRoleCount < _totalPlayers
+                                  ? 'NEED ${_totalPlayers - _selectedRoleCount} MORE ROLES'
+                                  : 'REMOVE ${_selectedRoleCount - _totalPlayers} ROLES',
+                              style: GoogleFonts.vt323(
+                                color: Colors.amberAccent,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),
                       if (!_isBalanceValid &&
                           _selectedRoleCount == _totalPlayers)
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            'NEED AT LEAST ONE WEREWOLF OR VAMPIRE',
-                            style: GoogleFonts.vt323(
-                              color: Colors.redAccent,
-                              fontSize: 18,
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            color: Colors.black45,
+                            child: Text(
+                              'NEED AT LEAST ONE WEREWOLF OR VAMPIRE',
+                              style: GoogleFonts.vt323(
+                                color: Colors.redAccent,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),
-                      PixelButton(
-                        label: 'PROCEED',
-                        color: _canProceed ? Colors.greenAccent : Colors.grey,
-                        onPressed: _canProceed
-                            ? () {
-                                // TODO: Navigate to assign roles phase
-                              }
-                            : null,
+                      SizedBox(
+                        width: double.infinity,
+                        child: PixelButton(
+                          label: 'PROCEED',
+                          color: _canProceed
+                              ? Colors.redAccent
+                              : const Color(0xFF415A77).withOpacity(0.5),
+                          onPressed: _canProceed
+                              ? () {
+                                  // TODO: Navigate to assign roles phase
+                                }
+                              : null,
+                        ),
                       ),
                     ],
                   ),
