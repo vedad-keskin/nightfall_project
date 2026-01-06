@@ -429,6 +429,197 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     );
   }
 
+  Widget _buildAllianceSection(
+    String title,
+    Color color,
+    List<WerewolfPlayer> sectionPlayers,
+  ) {
+    if (sectionPlayers.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Container(width: 4, height: 24, color: color),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: GoogleFonts.vt323(
+                  color: color,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(height: 1, color: color.withOpacity(0.3)),
+              ),
+            ],
+          ),
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.8,
+          ),
+          itemCount: sectionPlayers.length,
+          itemBuilder: (context, index) {
+            final player = sectionPlayers[index];
+            final role = widget.playerRoles[player.id];
+
+            // Determine visual state based on current step selection
+            bool isSelected = false;
+            bool isDisabled = false;
+
+            if (_currentStep == NightStep.werewolves) {
+              if (_targetKilledId == player.id) isSelected = true;
+              // Disable Werewolf Alliance from being targeted by Werewolves
+              if (role?.allianceId == 2) isDisabled = true;
+            }
+
+            if (_currentStep == NightStep.doctor) {
+              if (_targetHealedId == player.id) isSelected = true;
+              // Disable last healed
+              if (player.id == widget.lastHealedId) isDisabled = true;
+            }
+
+            if (_currentStep == NightStep.plagueDoctor) {
+              if (_targetHealedId == player.id) isSelected = true;
+              if (player.id == widget.lastPlagueTargetId) isDisabled = true;
+            }
+
+            if (_currentStep == NightStep.guard) {
+              // Disable Self
+              if (role?.id == 4) isDisabled = true;
+            }
+
+            return GestureDetector(
+              onTap: isDisabled ? null : () => _handlePlayerTap(player),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: isDisabled
+                      ? Colors.grey.withOpacity(0.1)
+                      : isSelected
+                      ? _stepColor.withOpacity(0.4)
+                      : const Color(0xFF1B263B),
+                  border: Border.all(
+                    color: isDisabled
+                        ? Colors.grey.withOpacity(0.2)
+                        : isSelected
+                        ? _stepColor
+                        : const Color(0xFF415A77),
+                    width: isSelected ? 3 : 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: isDisabled
+                          ? const Center(
+                              child: Icon(
+                                Icons.block,
+                                color: Colors.grey,
+                                size: 32,
+                              ),
+                            )
+                          : role != null
+                          ? SizedBox.expand(
+                              child: Image.asset(
+                                role.imagePath,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
+                              ),
+                            )
+                          : Center(
+                              child: Icon(
+                                Icons.person,
+                                size: 40,
+                                color: isSelected
+                                    ? Colors.white
+                                    : Colors.white60,
+                              ),
+                            ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      color: Colors
+                          .black87, // Darker background for better contrast
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            player.name,
+                            style: GoogleFonts.vt323(
+                              color: isDisabled ? Colors.white24 : Colors.white,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (role != null)
+                            Text(
+                              role.name.toUpperCase(),
+                              style: GoogleFonts.pressStart2p(
+                                color: isDisabled
+                                    ? Colors.white12
+                                    : _getRoleColor(role.id),
+                                fontSize: 8,
+                                height: 1.5,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Color _getRoleColor(int roleId) {
+    switch (roleId) {
+      case 2: // Werewolf
+      case 7: // Avenging Twin
+      case 8: // Vampire
+        return const Color(0xFFE63946); // Red
+      case 6: // Twins
+        return const Color(0xFF4CC9F0); // Blue
+      case 3: // Doctor
+        return Colors.green; // Classic Green
+      case 5: // Plague Doctor
+        return const Color(0xFF06D6A0); // Toxic/Emerald Green
+      case 4: // Guard
+        return const Color(0xFFFFD166); // Yellow
+      case 9: // Jester
+        return const Color(0xFF9D4EDD); // Purple
+      default:
+        return Colors.white; // Villager etc.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -441,6 +632,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
               children: [
                 // Header
                 Container(
+                  width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: _stepColor.withOpacity(0.2),
@@ -471,127 +663,37 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                   ),
                 ),
 
-                // Player Grid
+                // Player Sections
                 Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.8,
-                        ),
-                    itemCount: widget.players.length,
-                    itemBuilder: (context, index) {
-                      final player = widget.players[index];
-                      final role = widget.playerRoles[player.id];
-
-                      // Determine visual state based on current step selection
-                      bool isSelected = false;
-                      bool isDisabled = false;
-
-                      if (_currentStep == NightStep.werewolves) {
-                        if (_targetKilledId == player.id) isSelected = true;
-                        // Disable Werewolf Alliance
-                        if (role?.allianceId == 2) isDisabled = true;
-                      }
-
-                      if (_currentStep == NightStep.doctor) {
-                        if (_targetHealedId == player.id) isSelected = true;
-                        // Disable last healed
-                        if (player.id == widget.lastHealedId) isDisabled = true;
-                      }
-
-                      if (_currentStep == NightStep.plagueDoctor) {
-                        if (_targetHealedId == player.id) isSelected = true;
-                        if (player.id == widget.lastPlagueTargetId)
-                          isDisabled = true;
-                      }
-
-                      if (_currentStep == NightStep.guard) {
-                        // Disable Self
-                        if (role?.id == 4) isDisabled = true;
-                      }
-
-                      return GestureDetector(
-                        onTap: isDisabled
-                            ? null
-                            : () => _handlePlayerTap(player),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          decoration: BoxDecoration(
-                            color: isDisabled
-                                ? Colors.grey.withOpacity(0.1)
-                                : isSelected
-                                ? _stepColor.withOpacity(0.4)
-                                : const Color(0xFF1B263B),
-                            border: Border.all(
-                              color: isDisabled
-                                  ? Colors.grey.withOpacity(0.2)
-                                  : isSelected
-                                  ? _stepColor
-                                  : const Color(0xFF415A77),
-                              width: isSelected ? 3 : 1,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (isDisabled)
-                                const Icon(
-                                  Icons.block,
-                                  color: Colors.grey,
-                                  size: 24,
-                                )
-                              else if (role != null)
-                                Image.asset(
-                                  role.imagePath,
-                                  width: 32,
-                                  height: 32,
-                                )
-                              else
-                                Icon(
-                                  Icons.person,
-                                  size: 32,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.white60,
-                                ),
-
-                              const SizedBox(height: 8),
-
-                              Text(
-                                player.name,
-                                style: GoogleFonts.vt323(
-                                  color: isDisabled
-                                      ? Colors.white24
-                                      : Colors.white,
-                                  fontSize: 18,
-                                ),
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                              if (role != null)
-                                Text(
-                                  role.name.toUpperCase(),
-                                  style: GoogleFonts.pressStart2p(
-                                    color: isDisabled
-                                        ? Colors.white12
-                                        : _stepColor,
-                                    fontSize: 8,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      _buildAllianceSection(
+                        'THE PACK',
+                        const Color(0xFFE63946),
+                        widget.players.where((p) {
+                          final role = widget.playerRoles[p.id];
+                          return role?.allianceId == 2;
+                        }).toList(),
+                      ),
+                      _buildAllianceSection(
+                        'THE VILLAGE',
+                        const Color(0xFF4CC9F0),
+                        widget.players.where((p) {
+                          final role = widget.playerRoles[p.id];
+                          return role?.allianceId == 1;
+                        }).toList(),
+                      ),
+                      _buildAllianceSection(
+                        'SPECIALS',
+                        const Color(0xFF9D4EDD), // Purple
+                        widget.players.where((p) {
+                          final role = widget.playerRoles[p.id];
+                          return role?.allianceId != 1 && role?.allianceId != 2;
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
 
