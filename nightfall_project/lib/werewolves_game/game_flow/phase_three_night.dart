@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
-import 'phase_four.dart';
+import 'phase_four_day.dart';
 import 'dart:math';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {

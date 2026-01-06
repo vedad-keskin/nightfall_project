@@ -1,0 +1,389 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
+import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
+import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
+import 'phase_five.dart';
+import 'phase_three_night.dart';
+
+class WerewolfPhaseFourScreen extends StatefulWidget {
+  final Map<String, WerewolfRole> playerRoles;
+  final List<WerewolfPlayer> players;
+  final List<String> deadPlayerIds; // IDs of players who are dead
+
+  // History state passed specifically to maintain game state if we loop back to night
+  final String? lastHealedId;
+  final String? lastPlagueTargetId;
+
+  const WerewolfPhaseFourScreen({
+    super.key,
+    required this.playerRoles,
+    required this.players,
+    required this.deadPlayerIds,
+    this.lastHealedId,
+    this.lastPlagueTargetId,
+  });
+
+  @override
+  State<WerewolfPhaseFourScreen> createState() =>
+      _WerewolfPhaseFourScreenState();
+}
+
+class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
+  String? _selectedForHangingId;
+  int _secondsRemaining = 300; // 5 minutes
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining > 0) {
+        setState(() {
+          _secondsRemaining--;
+        });
+      } else {
+        _timer?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _formattedTime {
+    final minutes = (_secondsRemaining / 60).floor();
+    final seconds = _secondsRemaining % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  Color _getRoleColor(int roleId) {
+    switch (roleId) {
+      case 2: // Werewolf
+      case 7: // Avenging Twin
+      case 8: // Vampire
+        return const Color(0xFFE63946); // Red
+      case 6: // Twins
+        return const Color(0xFF4CC9F0); // Blue
+      case 3: // Doctor
+        return Colors.green; // Classic Green
+      case 5: // Plague Doctor
+        return const Color(0xFF06D6A0); // Toxic/Emerald Green
+      case 4: // Guard
+        return const Color(0xFFFFD166); // Yellow
+      case 9: // Jester
+        return const Color(0xFF9D4EDD); // Purple
+      default:
+        return Colors.white; // Villager etc.
+    }
+  }
+
+  void _handleVote() {
+    // 1. Jester Check (Specific Win Condition)
+    if (_selectedForHangingId != null) {
+      final role = widget.playerRoles[_selectedForHangingId];
+      if (role?.id == 9) {
+        // Jester Wins immediately if hanged
+        _navigateToGameEnd("The Jester");
+        return;
+      }
+    }
+
+    // 2. Update Dead List
+    List<String> nextDeadIds = List.from(widget.deadPlayerIds);
+
+    if (_selectedForHangingId != null) {
+      nextDeadIds.add(_selectedForHangingId!);
+    }
+
+    // 3. Check Win Conditions
+    int aliveWerewolves = 0;
+    int aliveVillagers = 0;
+
+    for (final player in widget.players) {
+      if (!nextDeadIds.contains(player.id)) {
+        final role = widget.playerRoles[player.id];
+        if (role != null) {
+          // Werewolf Alliance (2, 7, 8) count as "Bad"
+          if (role.id == 2 || role.id == 7 || role.id == 8) {
+            aliveWerewolves++;
+          } else {
+            // Everyone else counts as Village/Good for now
+            aliveVillagers++;
+          }
+        }
+      }
+    }
+
+    if (aliveWerewolves == 0) {
+      // Village Wins
+      _navigateToGameEnd("The Village");
+    } else if (aliveWerewolves >= aliveVillagers) {
+      // Werewolves Win
+      _navigateToGameEnd("The Werewolves");
+    } else {
+      // Game Continues -> Night Phase
+      _navigateToNextNight(nextDeadIds);
+    }
+  }
+
+  void _navigateToGameEnd(String winningTeam) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => WerewolfPhaseFiveScreen(
+          playerRoles: widget.playerRoles,
+          players: widget.players,
+          winningTeam: winningTeam,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToNextNight(List<String> nextDeadIds) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => WerewolfPhaseThreeScreen(
+          playerRoles: widget.playerRoles,
+          // We pass ONLY the alive players to the next night phase?
+          // Phase 3 expects a list of players. If we filter it, dead players are gone from the UI.
+          // This matches the "Moderator View" requirement where they only see relevant info.
+          players: widget.players
+              .where((p) => !nextDeadIds.contains(p.id))
+              .toList(),
+          lastHealedId: widget.lastHealedId,
+          lastPlagueTargetId: widget.lastPlagueTargetId,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Filter Alive Players for Display
+    final alivePlayers = widget.players
+        .where((p) => !widget.deadPlayerIds.contains(p.id))
+        .toList();
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          const PixelStarfield(),
+          SafeArea(
+            child: Column(
+              children: [
+                // Header - Full Width Match
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(
+                      0xFFFCA311,
+                    ).withOpacity(0.2), // Day/Sun Color
+                    border: const Border(
+                      bottom: BorderSide(color: Color(0xFFFCA311), width: 2),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "DAY PHASE",
+                        style: GoogleFonts.pressStart2p(
+                          color: const Color(0xFFFCA311),
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "DISCUSS & VOTE",
+                        style: GoogleFonts.vt323(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Content - Alive Players Grid
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.8,
+                        ),
+                    itemCount: alivePlayers.length,
+                    itemBuilder: (context, index) {
+                      final player = alivePlayers[index];
+                      final role = widget.playerRoles[player.id];
+                      final isSelected = _selectedForHangingId == player.id;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (isSelected) {
+                              _selectedForHangingId = null;
+                            } else {
+                              _selectedForHangingId = player.id;
+                            }
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? const Color(0xFFE63946).withOpacity(
+                                    0.4,
+                                  ) // Red selection
+                                : const Color(0xFF1B263B), // Dark card bg
+                            border: Border.all(
+                              color: isSelected
+                                  ? const Color(0xFFE63946)
+                                  : const Color(0xFF415A77),
+                              width: isSelected ? 3 : 1,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              // Image Top (Expanded)
+                              Expanded(
+                                child: role != null
+                                    ? SizedBox.expand(
+                                        child: Image.asset(
+                                          role.imagePath,
+                                          fit: BoxFit.cover,
+                                          alignment: Alignment.topCenter,
+                                        ),
+                                      )
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 40,
+                                        ),
+                                      ),
+                              ),
+                              const SizedBox(height: 4),
+                              // Footer Text
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                color: Colors.black87,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      player.name,
+                                      style: GoogleFonts.vt323(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    if (role != null)
+                                      Text(
+                                        role.name.toUpperCase(),
+                                        style: GoogleFonts.pressStart2p(
+                                          color: _getRoleColor(role.id),
+                                          fontSize: 8,
+                                          height: 1.5,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (isSelected)
+                                      Text(
+                                        "HANG",
+                                        style: GoogleFonts.pressStart2p(
+                                          color: Colors.redAccent,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // Footer (Timer & Action)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: const Color(0xFF1B263B), // Dark Footer
+                  child: Column(
+                    children: [
+                      Text(
+                        _formattedTime,
+                        style: GoogleFonts.vt323(
+                          color: _secondsRemaining < 60
+                              ? Colors.redAccent
+                              : Colors.greenAccent,
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: PixelButton(
+                              label: "SKIP VOTE",
+                              color: const Color(0xFF415A77),
+                              onPressed: () {
+                                _selectedForHangingId = null; // Ensure null
+                                _handleVote();
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: PixelButton(
+                              label: _selectedForHangingId == null
+                                  ? "SELECT"
+                                  : "CONFIRM",
+                              color: _selectedForHangingId == null
+                                  ? Colors.grey
+                                  : const Color(0xFFE63946),
+                              onPressed: _selectedForHangingId == null
+                                  ? null
+                                  : _handleVote,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
