@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/werewolves_game/offline_db/timer_settings_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'phase_five.dart';
@@ -38,7 +39,18 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _loadTimerDuration();
+  }
+
+  Future<void> _loadTimerDuration() async {
+    final timerService = TimerSettingsService();
+    final duration = await timerService.getTimerDuration();
+    if (mounted) {
+      setState(() {
+        _secondsRemaining = duration;
+      });
+      _startTimer();
+    }
   }
 
   void _startTimer() {
@@ -357,41 +369,66 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                   ),
                 ),
 
-                // Footer (Timer & Action)
+                // Footer (Timer & Action) - Redesigned
                 Container(
-                  padding: const EdgeInsets.all(16),
-                  color: const Color(0xFF1B263B), // Dark Footer
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1B263B),
+                    border: const Border(
+                      top: BorderSide(color: Color(0xFF415A77), width: 2),
+                    ),
+                  ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Timer on the left
-                      Text(
-                        _formattedTime,
-                        style: GoogleFonts.vt323(
-                          color: _secondsRemaining < 60
-                              ? Colors.redAccent
-                              : Colors.greenAccent,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                      // Timer Display
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          border: Border.all(
+                            color: _secondsRemaining < 60
+                                ? Colors.redAccent
+                                : const Color(0xFF06D6A0),
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          _formattedTime,
+                          style: GoogleFonts.vt323(
+                            color: _secondsRemaining < 60
+                                ? Colors.redAccent
+                                : Colors.greenAccent,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      // Buttons on the right
+                      const SizedBox(width: 12),
+                      // Buttons
                       Expanded(
                         child: PixelButton(
-                          label: "SKIP VOTE",
+                          label: "SKIP",
                           color: const Color(0xFF415A77),
                           onPressed: () {
-                            _selectedForHangingId = null; // Ensure null
+                            _selectedForHangingId = null;
                             _handleVote();
                           },
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
+                        flex: 2,
                         child: PixelButton(
                           label: _selectedForHangingId == null
-                              ? "SELECT"
-                              : "CONFIRM",
+                              ? "SELECT PLAYER"
+                              : "HANG",
                           color: _selectedForHangingId == null
                               ? Colors.grey
                               : const Color(0xFFE63946),

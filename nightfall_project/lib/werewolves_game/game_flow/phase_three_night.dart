@@ -4,6 +4,7 @@ import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'phase_four_day.dart';
+import 'phase_five.dart';
 import 'dart:math';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {
@@ -431,19 +432,11 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
             child: SizedBox(
               width: 200,
               child: PixelButton(
-                label: 'Start Day', // Capitalized to match button style
+                label: 'Start Day',
                 color: Colors.orange,
                 onPressed: () {
                   Navigator.of(context).pop(); // Close Dialog
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => WerewolfPhaseFourScreen(
-                        playerRoles: widget.playerRoles,
-                        players: widget.players,
-                        deadPlayerIds: deadPlayerIds,
-                      ),
-                    ),
-                  );
+                  _checkWinConditionsAndNavigate(deadPlayerIds);
                 },
               ),
             ),
@@ -451,6 +444,63 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         ],
       ),
     );
+  }
+
+  void _checkWinConditionsAndNavigate(List<String> deadPlayerIds) {
+    // Calculate alive werewolves and villagers after night deaths
+    int aliveWerewolves = 0;
+    int aliveVillagers = 0;
+
+    for (final player in widget.players) {
+      if (!deadPlayerIds.contains(player.id)) {
+        final role = widget.playerRoles[player.id];
+        if (role != null) {
+          // Werewolf Alliance (2, 7, 8) count as "Bad"
+          if (role.id == 2 || role.id == 7 || role.id == 8) {
+            aliveWerewolves++;
+          } else {
+            // Everyone else counts as Village/Good
+            aliveVillagers++;
+          }
+        }
+      }
+    }
+
+    // Check win conditions
+    if (aliveWerewolves == 0) {
+      // Village Wins (Plague Doctor killed last werewolf!)
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => WerewolfPhaseFiveScreen(
+            playerRoles: widget.playerRoles,
+            players: widget.players,
+            winningTeam: "The Village",
+          ),
+        ),
+      );
+    } else if (aliveWerewolves >= aliveVillagers) {
+      // Werewolves Win (rare but possible if Plague Doctor kills many villagers)
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => WerewolfPhaseFiveScreen(
+            playerRoles: widget.playerRoles,
+            players: widget.players,
+            winningTeam: "The Werewolves",
+          ),
+        ),
+      );
+    } else {
+      // Game continues - go to Day Phase
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => WerewolfPhaseFourScreen(
+            playerRoles: widget.playerRoles,
+            players: widget.players,
+            deadPlayerIds: deadPlayerIds,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildAllianceSection(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/werewolves_game/offline_db/timer_settings_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/players_section/players_screen.dart';
 import 'package:nightfall_project/werewolves_game/leaderboards/leaderboards_screen.dart';
@@ -18,12 +19,15 @@ class WerewolfGameLayout extends StatefulWidget {
 
 class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
   int _playerCount = 0;
+  int _timerDuration = 300; // Default 5 minutes
   final WerewolfPlayerService _playerService = WerewolfPlayerService();
+  final TimerSettingsService _timerService = TimerSettingsService();
 
   @override
   void initState() {
     super.initState();
     _loadPlayerCount();
+    _loadTimerSetting();
   }
 
   Future<void> _loadPlayerCount() async {
@@ -33,6 +37,22 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
         _playerCount = players.length;
       });
     }
+  }
+
+  Future<void> _loadTimerSetting() async {
+    final duration = await _timerService.getTimerDuration();
+    if (mounted) {
+      setState(() {
+        _timerDuration = duration;
+      });
+    }
+  }
+
+  Future<void> _setTimerDuration(int seconds) async {
+    await _timerService.setTimerDuration(seconds);
+    setState(() {
+      _timerDuration = seconds;
+    });
   }
 
   @override
@@ -271,6 +291,96 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                               ),
                                             ],
                                           ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      // Timer Duration Selector
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(
+                                            0xFF1B263B,
+                                          ).withOpacity(0.8),
+                                          border: Border.all(
+                                            color: const Color(0xFF415A77),
+                                            width: 3,
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'DAY TIMER',
+                                              style: GoogleFonts.vt323(
+                                                color: Colors.white70,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: TimerSettingsService.timerOptions.map((
+                                                duration,
+                                              ) {
+                                                final isSelected =
+                                                    _timerDuration == duration;
+                                                return Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 4,
+                                                        ),
+                                                    child: GestureDetector(
+                                                      onTap: () =>
+                                                          _setTimerDuration(
+                                                            duration,
+                                                          ),
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 8,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: isSelected
+                                                              ? const Color(
+                                                                  0xFFFCA311,
+                                                                )
+                                                              : Colors
+                                                                    .transparent,
+                                                          border: Border.all(
+                                                            color: isSelected
+                                                                ? const Color(
+                                                                    0xFFFCA311,
+                                                                  )
+                                                                : const Color(
+                                                                    0xFF415A77,
+                                                                  ),
+                                                            width: 2,
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          TimerSettingsService.formatDuration(
+                                                            duration,
+                                                          ),
+                                                          style: GoogleFonts.pressStart2p(
+                                                            color: isSelected
+                                                                ? Colors.black
+                                                                : Colors
+                                                                      .white54,
+                                                            fontSize: 10,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Spacer(),
