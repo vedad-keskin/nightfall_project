@@ -102,6 +102,10 @@ class _WerewolfRolesScreenState extends State<WerewolfRolesScreen> {
                     onPageChanged: (index) {
                       setState(() {
                         _currentPage = index;
+                        // Reset all cards to front side when swiping
+                        for (int i = 0; i < _isFlipped.length; i++) {
+                          _isFlipped[i] = false;
+                        }
                       });
                     },
                     itemCount: _roles.length,

@@ -31,7 +31,8 @@ class WerewolfRoleService {
       name: 'Werewolf',
       points: 2,
       allianceId: 2, // Werewolves
-      description: 'A fierce predator hungry for villagers. Each night, they can kill one player. Wins if they outnumber the village.',
+      description:
+          'A fierce predator hungry for villagers. Each night, they can kill one player. Wins if they outnumber the village.',
       imagePath: 'assets/images/werewolves/Werewolf.png',
     ),
     WerewolfRole(
@@ -39,7 +40,8 @@ class WerewolfRoleService {
       name: 'Doctor',
       points: 1,
       allianceId: 1, // Villagers
-      description: 'A dedicated healer. Each night, she can save one person from being attacked that night.',
+      description:
+          'A dedicated healer. Each night, she can save one person from being attacked that night.',
       imagePath: 'assets/images/werewolves/Doctor.png',
     ),
     WerewolfRole(
@@ -47,7 +49,8 @@ class WerewolfRoleService {
       name: 'Guard',
       points: 1,
       allianceId: 1, // Villagers
-      description: 'A vigilant protector. Each night, he can inspect one player.',
+      description:
+          'A vigilant protector. Each night, he can inspect one player.',
       imagePath: 'assets/images/werewolves/Guard.png',
     ),
     WerewolfRole(
@@ -55,7 +58,8 @@ class WerewolfRoleService {
       name: 'Plague Doctor',
       points: 1,
       allianceId: 1, // Villagers
-      description: 'A mysterious healer. Each night, he can save one player but can but also has a small chance to kill him.',
+      description:
+          'A mysterious healer. Each night, he can save one player but can but also has a small chance to kill him.',
       imagePath: 'assets/images/werewolves/Plague Doctor.png',
     ),
     WerewolfRole(
@@ -63,23 +67,35 @@ class WerewolfRoleService {
       name: 'Twins',
       points: 1,
       allianceId: 1, // Villagers
-      description: 'Two souls bound together. If one is hanged by the village, the other turns into a werewolf. if one is killed by a werewolf, the other remains a villager.',
+      description:
+          'Two souls bound together. If one is hanged by the village, the other turns into a werewolf. if one is killed by a werewolf, the other remains a villager.',
       imagePath: 'assets/images/werewolves/Twins.png',
     ),
     WerewolfRole(
       id: 7,
-      name: 'Vampire',
-      points: 2,
+      name: 'Avenging Twin',
+      points: 4,
       allianceId: 2, // Werewolves
-      description: 'A dark creature of the night. Awakens and kills with the werewolves each night, but remains undetected by the Guard.',
-      imagePath: 'assets/images/werewolves/Vampire.png',
+      description:
+          'A twin fueled by vengeance. When their sibling is hanged by the village, they embrace the darkness and join the werewolves to hunt down those who killed their loved one.',
+      imagePath: 'assets/images/werewolves/Avenging Twin.png',
     ),
     WerewolfRole(
       id: 8,
+      name: 'Vampire',
+      points: 2,
+      allianceId: 2, // Werewolves
+      description:
+          'A dark creature of the night. Awakens and kills with the werewolves each night, but remains undetected by the Guard.',
+      imagePath: 'assets/images/werewolves/Vampire.png',
+    ),
+    WerewolfRole(
+      id: 9,
       name: 'Jester',
       points: 3,
       allianceId: 3, // Jester
-      description: 'A silly trickster. Wants to be hanged by the village to claim victory.',
+      description:
+          'A silly trickster. Wants to be hanged by the village to claim victory.',
       imagePath: 'assets/images/werewolves/Jester.png',
     ),
   ];
