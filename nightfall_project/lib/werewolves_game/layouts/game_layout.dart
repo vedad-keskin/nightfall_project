@@ -5,6 +5,7 @@ import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart
 import 'package:nightfall_project/werewolves_game/players_section/players_screen.dart';
 import 'package:nightfall_project/werewolves_game/leaderboards/leaderboards_screen.dart';
 import 'package:nightfall_project/werewolves_game/roles/roles_screen.dart';
+import 'package:nightfall_project/werewolves_game/game_flow/phase_one.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:provider/provider.dart';
 
@@ -273,16 +274,37 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        "ADDITIONAL FEATURES\nCOMING SOON",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.pressStart2p(
-                                          color: const Color(
-                                            0xFFE0E1DD,
-                                          ).withOpacity(0.3),
-                                          fontSize: 12,
-                                        ),
+                                      PixelButton(
+                                        label: 'START GAME',
+                                        color: _playerCount >= 5
+                                            ? Colors.redAccent
+                                            : Colors.grey,
+                                        onPressed: _playerCount >= 5
+                                            ? () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const WerewolfPhaseOneScreen(),
+                                                  ),
+                                                );
+                                              }
+                                            : null,
                                       ),
+                                      if (_playerCount < 5)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 8.0,
+                                          ),
+                                          child: Text(
+                                            'NEED AT LEAST 5 PLAYERS',
+                                            style: GoogleFonts.vt323(
+                                              color: Colors.redAccent
+                                                  .withOpacity(0.7),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      const SizedBox(height: 16),
                                     ],
                                   ),
                                 ),
