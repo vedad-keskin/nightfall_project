@@ -14,6 +14,7 @@ class PixelDialog extends StatelessWidget {
   final Color accentColor;
   final String? soundPath;
   final VoidCallback? onPressed;
+  final double? titleFontSize;
 
   const PixelDialog({
     super.key,
@@ -22,6 +23,7 @@ class PixelDialog extends StatelessWidget {
     required this.accentColor,
     this.soundPath,
     this.onPressed,
+    this.titleFontSize,
   });
 
   @override
@@ -85,7 +87,7 @@ class PixelDialog extends StatelessWidget {
                     title,
                     style: GoogleFonts.pressStart2p(
                       color: const Color(0xFFE0E1DD),
-                      fontSize: 24,
+                      fontSize: titleFontSize ?? 24,
                       shadows: [
                         const Shadow(
                           color: Color(0xFF000000),

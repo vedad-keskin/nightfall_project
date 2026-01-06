@@ -5,7 +5,7 @@ import 'package:nightfall_project/base_components/pixel_team_dialog.dart';
 import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/base_components/pixel_language_switch.dart';
 import 'package:nightfall_project/impostor_game/layouts/game_layout.dart';
-import 'package:nightfall_project/mafia_game/layouts/game_layout.dart';
+import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:provider/provider.dart';
 
@@ -134,6 +134,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                     .translate('mafia'),
                                 color: Colors.black54, // More transparent
                                 accentColor: Colors.redAccent,
+                                titleFontSize: 19,
                                 soundPath: 'audio/wolf_howl.mp3',
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -150,7 +151,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                             animation,
                                             secondaryAnimation,
                                           ) {
-                                            return const MafiaGameLayout();
+                                            return const WerewolfGameLayout();
                                           },
                                       transitionsBuilder:
                                           (
@@ -193,6 +194,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                 color: const Color.fromRGBO(255, 82, 82, 0.7),
                                 accentColor: Colors.black87,
                                 soundPath: 'audio/mystery_mist.mp3',
+                                titleFontSize: 19,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(

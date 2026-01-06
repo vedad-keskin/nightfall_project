@@ -33,7 +33,7 @@ class LanguageService extends ChangeNotifier {
   }
 
   static const Map<String, String> _enTranslations = {
-    'mafia': 'MAFIA',
+    'mafia': 'WEREWOLVES',
     'impostor': 'IMPOSTOR',
     'play_now': 'PLAY NOW',
     'back': 'BACK',
@@ -124,7 +124,7 @@ class LanguageService extends ChangeNotifier {
   };
 
   static const Map<String, String> _bsTranslations = {
-    'mafia': 'MAFIJA',
+    'mafia': 'VUKOVI',
     'impostor': 'VARALICA',
     'play_now': 'ZAIGRAJ',
     'back': 'NAZAD',
