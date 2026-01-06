@@ -218,10 +218,11 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                                   fontSize: 28,
                                                 ),
                                               ),
-                                              const Icon(
-                                                Icons.supervised_user_circle,
-                                                color: Colors.white,
-                                                size: 28,
+                                              Image.asset(
+                                                'assets/images/claw_icon.png',
+                                                width: 32,
+                                                height: 32,
+                                                fit: BoxFit.contain,
                                               ),
                                             ],
                                           ),
