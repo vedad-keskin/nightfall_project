@@ -45,9 +45,6 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
     TimerMode mode = TimerMode.fiveMinutes;
 
     switch (modeString) {
-      case 'twoMinutes':
-        mode = TimerMode.twoMinutes;
-        break;
       case 'fiveMinutes':
         mode = TimerMode.fiveMinutes;
         break;
@@ -56,6 +53,9 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
         break;
       case 'thirtySecondsPerPlayer':
         mode = TimerMode.thirtySecondsPerPlayer;
+        break;
+      case 'infinity':
+        mode = TimerMode.infinity;
         break;
     }
 
@@ -69,9 +69,6 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
   Future<void> _setTimerMode(TimerMode mode) async {
     String modeString = 'fiveMinutes';
     switch (mode) {
-      case TimerMode.twoMinutes:
-        modeString = 'twoMinutes';
-        break;
       case TimerMode.fiveMinutes:
         modeString = 'fiveMinutes';
         break;
@@ -80,6 +77,9 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
         break;
       case TimerMode.thirtySecondsPerPlayer:
         modeString = 'thirtySecondsPerPlayer';
+        break;
+      case TimerMode.infinity:
+        modeString = 'infinity';
         break;
     }
 

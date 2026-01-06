@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum TimerMode { twoMinutes, fiveMinutes, tenMinutes, thirtySecondsPerPlayer }
+enum TimerMode { fiveMinutes, tenMinutes, thirtySecondsPerPlayer, infinity }
 
 class PixelGameTimer extends StatelessWidget {
   final TimerMode selectedMode;
@@ -17,27 +17,27 @@ class PixelGameTimer extends StatelessWidget {
 
   String _getModeLabel(TimerMode mode) {
     switch (mode) {
-      case TimerMode.twoMinutes:
-        return '2 MIN';
       case TimerMode.fiveMinutes:
         return '5 MIN';
       case TimerMode.tenMinutes:
         return '10 MIN';
       case TimerMode.thirtySecondsPerPlayer:
         return '30s/P';
+      case TimerMode.infinity:
+        return '∞';
     }
   }
 
   int getTimerDuration(TimerMode mode, int playerCount) {
     switch (mode) {
-      case TimerMode.twoMinutes:
-        return 120;
       case TimerMode.fiveMinutes:
         return 300;
       case TimerMode.tenMinutes:
         return 600;
       case TimerMode.thirtySecondsPerPlayer:
         return 30 * playerCount;
+      case TimerMode.infinity:
+        return -1; // -1 represents infinity
     }
   }
 
@@ -56,17 +56,17 @@ class PixelGameTimer extends StatelessWidget {
           children: [
             Row(
               children: [
-                _buildTimerOption(TimerMode.twoMinutes),
-                const SizedBox(width: 8),
                 _buildTimerOption(TimerMode.fiveMinutes),
+                const SizedBox(width: 8),
+                _buildTimerOption(TimerMode.tenMinutes),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                _buildTimerOption(TimerMode.tenMinutes),
-                const SizedBox(width: 8),
                 _buildTimerOption(TimerMode.thirtySecondsPerPlayer),
+                const SizedBox(width: 8),
+                _buildTimerOption(TimerMode.infinity),
               ],
             ),
           ],
