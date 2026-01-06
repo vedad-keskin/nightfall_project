@@ -352,8 +352,26 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                           ),
                                         ),
                                         const SizedBox(height: 24),
+                                        if (_playerCount < 5)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 8.0,
+                                            ),
+                                            child: Text(
+                                              languageService.translate(
+                                                'need_at_least_5_players',
+                                              ),
+                                              style: GoogleFonts.vt323(
+                                                color: Colors.redAccent
+                                                    .withOpacity(0.7),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
                                         PixelButton(
-                                          label: 'START GAME',
+                                          label: languageService.translate(
+                                            'game_on',
+                                          ),
                                           color: _playerCount >= 5
                                               ? Colors.redAccent
                                               : Colors.grey,
@@ -368,20 +386,6 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                                 }
                                               : null,
                                         ),
-                                        if (_playerCount < 5)
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 8.0,
-                                            ),
-                                            child: Text(
-                                              'NEED AT LEAST 5 PLAYERS',
-                                              style: GoogleFonts.vt323(
-                                                color: Colors.redAccent
-                                                    .withOpacity(0.7),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
                                         const SizedBox(height: 16),
                                       ],
                                     ),

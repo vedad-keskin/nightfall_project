@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class PixelButtonCenterLarge extends StatefulWidget {
   final String label;
   final Color color;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double height;
 
   const PixelButtonCenterLarge({
     super.key,
     required this.label,
     required this.color,
-    required this.onPressed,
+    this.onPressed,
     this.height = 100,
   });
 
@@ -28,7 +28,7 @@ class _PixelButtonCenterLargeState extends State<PixelButtonCenterLarge> {
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
         setState(() => _isPressed = false);
-        widget.onPressed();
+        widget.onPressed?.call();
       },
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedContainer(

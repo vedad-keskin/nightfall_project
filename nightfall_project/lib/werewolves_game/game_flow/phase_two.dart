@@ -103,10 +103,7 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                                           transform: Matrix4.identity()
                                             ..rotateY(pi),
                                           alignment: Alignment.center,
-                                          child: _buildCardBack(
-                                            role,
-                                            player.name,
-                                          ),
+                                          child: _buildCardBack(role, player),
                                         )
                                       : _buildCardFront(),
                                 );
@@ -223,9 +220,23 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
     );
   }
 
-  Widget _buildCardBack(WerewolfRole role, String playerName) {
+  Widget _buildCardBack(WerewolfRole role, WerewolfPlayer player) {
     final alliance = _allianceService.getAllianceById(role.allianceId);
     final allianceColor = _getAllianceColor(role.allianceId);
+
+    // Find Twin Partner if applicable
+    String? twinPartnerName;
+    if (role.id == 6) {
+      try {
+        twinPartnerName = widget.players
+            .firstWhere(
+              (p) => p.id != player.id && widget.playerRoles[p.id]?.id == 6,
+            )
+            .name;
+      } catch (_) {
+        // Handle case where only one twin is assigned (shouldn't happen with proper logic)
+      }
+    }
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -263,7 +274,7 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                           color: Colors.black.withOpacity(0.6),
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Text(
-                            playerName.toUpperCase(),
+                            player.name.toUpperCase(),
                             style: GoogleFonts.vt323(
                               color: Colors.white,
                               fontSize: 24,
@@ -273,6 +284,40 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                           ),
                         ),
                       ),
+                      // Bound Soul Overlay for Twins
+                      if (twinPartnerName != null)
+                        Positioned(
+                          bottom: 12,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            color: Colors.blueAccent.withOpacity(0.8),
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'BOUND SOUL:',
+                                  style: GoogleFonts.pressStart2p(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  twinPartnerName.toUpperCase(),
+                                  style: GoogleFonts.vt323(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

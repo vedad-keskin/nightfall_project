@@ -452,7 +452,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                         flex: 2,
                         child: PixelButton(
                           label: _selectedForHangingId == null
-                              ? "SELECT PLAYER"
+                              ? "SELECT"
                               : "HANG",
                           color: _selectedForHangingId == null
                               ? Colors.grey

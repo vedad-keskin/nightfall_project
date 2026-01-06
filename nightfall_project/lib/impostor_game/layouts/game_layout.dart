@@ -261,249 +261,280 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
                               ),
                               // Main Game Content
                               Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      // Player Count Section
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PlayersScreen(),
-                                            ),
-                                          );
-                                          _loadPlayerCount();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color(
-                                              0xFF1B263B,
-                                            ).withOpacity(0.8),
-                                            border: Border.all(
-                                              color: const Color(0xFF415A77),
-                                              width: 3,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.all(16),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                languageService.translate(
-                                                  'players_title',
-                                                ),
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white70,
-                                                  fontSize: 28,
-                                                ),
+                                child: SingleChildScrollView(
+                                  physics: const BouncingScrollPhysics(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      children: [
+                                        // Player Count Section
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PlayersScreen(),
                                               ),
-                                              Text(
-                                                '$_playerCount',
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white,
-                                                  fontSize: 28,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            );
+                                            _loadPlayerCount();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFF1B263B,
+                                              ).withOpacity(0.8),
+                                              border: Border.all(
+                                                color: const Color(0xFF415A77),
+                                                width: 3,
                                               ),
-                                            ],
+                                            ),
+                                            padding: const EdgeInsets.all(16),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  languageService.translate(
+                                                    'players_title',
+                                                  ),
+                                                  style: GoogleFonts.vt323(
+                                                    color: Colors.white70,
+                                                    fontSize: 28,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '$_playerCount',
+                                                  style: GoogleFonts.vt323(
+                                                    color: Colors.white,
+                                                    fontSize: 28,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      // Categories Section
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CategoriesScreen(),
+                                        const SizedBox(height: 12),
+                                        // Categories Section
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CategoriesScreen(),
+                                              ),
+                                            );
+                                            _loadCategoryCount(); // This refreshes the count
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFF1B263B,
+                                              ).withOpacity(0.8),
+                                              border: Border.all(
+                                                color: const Color(0xFF415A77),
+                                                width: 3,
+                                              ),
                                             ),
-                                          );
-                                          _loadCategoryCount(); // This refreshes the count
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color(
-                                              0xFF1B263B,
-                                            ).withOpacity(0.8),
-                                            border: Border.all(
-                                              color: const Color(0xFF415A77),
-                                              width: 3,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.all(16),
-                                          child: FutureBuilder<int>(
-                                            future: _getTotalWordCount(),
-                                            builder: (context, snapshot) {
-                                              final totalWords =
-                                                  snapshot.data ?? 0;
-                                              return Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        languageService
-                                                            .translate(
-                                                              'categories_title',
-                                                            ),
-                                                        style:
-                                                            GoogleFonts.vt323(
-                                                              color: Colors
-                                                                  .white70,
-                                                              fontSize: 28,
-                                                            ),
-                                                      ),
-                                                      Text(
-                                                        '$_categoryCount',
-                                                        style:
-                                                            GoogleFonts.vt323(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 28,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    '$totalWords ${languageService.translate('words_available')}',
-                                                    style: GoogleFonts.vt323(
-                                                      color: Colors.white38,
-                                                      fontSize: 18,
+                                            padding: const EdgeInsets.all(16),
+                                            child: FutureBuilder<int>(
+                                              future: _getTotalWordCount(),
+                                              builder: (context, snapshot) {
+                                                final totalWords =
+                                                    snapshot.data ?? 0;
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          languageService
+                                                              .translate(
+                                                                'categories_title',
+                                                              ),
+                                                          style:
+                                                              GoogleFonts.vt323(
+                                                                color: Colors
+                                                                    .white70,
+                                                                fontSize: 28,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          '$_categoryCount',
+                                                          style:
+                                                              GoogleFonts.vt323(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 28,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      // Leaderboards Section
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LeaderboardsScreen(),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color(
-                                              0xFF1B263B,
-                                            ).withOpacity(0.8),
-                                            border: Border.all(
-                                              color: const Color(0xFF415A77),
-                                              width: 3,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.all(16),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                languageService.translate(
-                                                  'leaderboards_title',
-                                                ),
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white70,
-                                                  fontSize: 28,
-                                                ),
-                                              ),
-                                              const Icon(
-                                                Icons.leaderboard,
-                                                color: Colors.white,
-                                                size: 28,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      // Hints Section
-                                      GestureDetector(
-                                        onTap: _toggleHints,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: _hintsEnabled
-                                                ? const Color(
-                                                    0xFF1B4332,
-                                                  ).withOpacity(
-                                                    0.8,
-                                                  ) // Green-ish
-                                                : const Color(
-                                                    0xFF3D0C02,
-                                                  ).withOpacity(0.8), // Red-ish
-                                            border: Border.all(
-                                              color: _hintsEnabled
-                                                  ? const Color(0xFF52B788)
-                                                  : const Color(0xFF9D0208),
-                                              width: 3,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.all(16),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                languageService.translate(
-                                                  'hints_title',
-                                                ),
-                                                style: GoogleFonts.vt323(
-                                                  color: Colors.white70,
-                                                  fontSize: 28,
-                                                ),
-                                              ),
-                                              Text(
-                                                _hintsEnabled
-                                                    ? languageService.translate(
-                                                        'on',
-                                                      )
-                                                    : languageService.translate(
-                                                        'off',
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      '$totalWords ${languageService.translate('words_available')}',
+                                                      style: GoogleFonts.vt323(
+                                                        color: Colors.white38,
+                                                        fontSize: 18,
                                                       ),
-                                                style: GoogleFonts.vt323(
-                                                  color: _hintsEnabled
-                                                      ? const Color(0xFF95D5B2)
-                                                      : const Color(0xFFFFBA08),
-                                                  fontSize: 28,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        // Leaderboards Section
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LeaderboardsScreen(),
                                               ),
-                                            ],
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFF1B263B,
+                                              ).withOpacity(0.8),
+                                              border: Border.all(
+                                                color: const Color(0xFF415A77),
+                                                width: 3,
+                                              ),
+                                            ),
+                                            padding: const EdgeInsets.all(16),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  languageService.translate(
+                                                    'leaderboards_title',
+                                                  ),
+                                                  style: GoogleFonts.vt323(
+                                                    color: Colors.white70,
+                                                    fontSize: 28,
+                                                  ),
+                                                ),
+                                                const Icon(
+                                                  Icons.leaderboard,
+                                                  color: Colors.white,
+                                                  size: 28,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const Spacer(),
-                                      // GAME ON Button
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 8.0,
-                                        ),
-                                        child: PixelButtonCenterLarge(
-                                          label: languageService.translate(
-                                            'game_on',
+                                        const SizedBox(height: 12),
+                                        // Hints Section
+                                        GestureDetector(
+                                          onTap: _toggleHints,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: _hintsEnabled
+                                                  ? const Color(
+                                                      0xFF1B4332,
+                                                    ).withOpacity(
+                                                      0.8,
+                                                    ) // Green-ish
+                                                  : const Color(
+                                                      0xFF3D0C02,
+                                                    ).withOpacity(
+                                                      0.8,
+                                                    ), // Red-ish
+                                              border: Border.all(
+                                                color: _hintsEnabled
+                                                    ? const Color(0xFF52B788)
+                                                    : const Color(0xFF9D0208),
+                                                width: 3,
+                                              ),
+                                            ),
+                                            padding: const EdgeInsets.all(16),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  languageService.translate(
+                                                    'hints_title',
+                                                  ),
+                                                  style: GoogleFonts.vt323(
+                                                    color: Colors.white70,
+                                                    fontSize: 28,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _hintsEnabled
+                                                      ? languageService
+                                                            .translate('on')
+                                                      : languageService
+                                                            .translate('off'),
+                                                  style: GoogleFonts.vt323(
+                                                    color: _hintsEnabled
+                                                        ? const Color(
+                                                            0xFF95D5B2,
+                                                          )
+                                                        : const Color(
+                                                            0xFFFFBA08,
+                                                          ),
+                                                    fontSize: 28,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          color: const Color(0xFFE63946),
-                                          onPressed: _startGame,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 24),
+                                        // GAME ON Button
+                                        if (_playerCount < 3)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 8.0,
+                                            ),
+                                            child: Text(
+                                              languageService.translate(
+                                                'need_at_least_3_players',
+                                              ),
+                                              style: GoogleFonts.vt323(
+                                                color: Colors.redAccent
+                                                    .withOpacity(0.7),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 8.0,
+                                          ),
+                                          child: PixelButton(
+                                            label: languageService.translate(
+                                              'game_on',
+                                            ),
+                                            color: _playerCount >= 3
+                                                ? const Color(0xFFE63946)
+                                                : Colors.grey,
+                                            onPressed: _playerCount >= 3
+                                                ? () => _startGame()
+                                                : null,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
