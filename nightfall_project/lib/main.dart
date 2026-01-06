@@ -44,7 +44,7 @@ class SplitHomeScreen extends StatefulWidget {
 
 class _SplitHomeScreenState extends State<SplitHomeScreen> {
   ScrollController? _scrollController;
-  int _currentPage = 1; // Start on Right side (index 1)
+  int _currentPage = 0; // Start on Left side (index 0)
   Timer? _easterEggTimer;
 
   @override
@@ -92,7 +92,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
           if (width == 0) return const SizedBox();
 
           if (_scrollController == null) {
-            _scrollController = ScrollController(initialScrollOffset: width);
+            _scrollController = ScrollController(initialScrollOffset: 0);
             _scrollController!.addListener(_onScroll);
           }
 
@@ -135,7 +135,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                 color: Colors.black54, // More transparent
                                 accentColor: Colors.redAccent,
                                 titleFontSize: 19,
-                                soundPath: 'audio/wolf_howl.mp3',
+                                soundPath: 'audio/werewolves/wolf_howl.mp3',
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
@@ -193,7 +193,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                     .translate('impostor'),
                                 color: const Color.fromRGBO(255, 82, 82, 0.7),
                                 accentColor: Colors.black87,
-                                soundPath: 'audio/mystery_mist.mp3',
+                                soundPath: 'audio/impostor/mystery_mist.mp3',
                                 titleFontSize: 19,
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -343,7 +343,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     _easterEggTimer?.cancel();
                   },
                   child: Text(
-                    'Nightfall Project v2.1.3',
+                    'Nightfall Project v2.2.0',
                     style: GoogleFonts.vt323(
                       color: Colors.white24,
                       fontSize: 14,

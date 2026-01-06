@@ -5,6 +5,7 @@ import 'package:nightfall_project/base_components/pixel_components.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class WerewolfPhaseFiveScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -29,6 +30,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
   Timer? _titleTimer;
   bool _showWinners = false;
   List<WerewolfPlayer> _appPlayersUpdated = [];
+  late AudioPlayer _winPlayer;
 
   // Color scheme based on winner
   Color get _themeColor {
@@ -44,13 +46,36 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
   @override
   void initState() {
     super.initState();
+    _winPlayer = AudioPlayer();
     _distributePoints();
     _startTypewriter();
+    _playWinSound();
+  }
+
+  Future<void> _playWinSound() async {
+    String soundPath = "";
+    if (widget.winningTeam.contains('Werewolves')) {
+      soundPath = 'audio/werewolves/werewolf_win.mp3';
+    } else if (widget.winningTeam.contains('Village')) {
+      soundPath = 'audio/werewolves/village_win.mp3';
+    } else if (widget.winningTeam.contains('Jester')) {
+      soundPath = 'audio/werewolves/jester_win.mp3';
+    }
+
+    if (soundPath.isNotEmpty) {
+      try {
+        await _winPlayer.play(AssetSource(soundPath));
+      } catch (e) {
+        debugPrint('Error playing win sound: $e');
+      }
+    }
   }
 
   @override
   void dispose() {
     _titleTimer?.cancel();
+    _winPlayer.stop();
+    _winPlayer.dispose();
     super.dispose();
   }
 
@@ -204,13 +229,17 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
                       child: PixelButton(
                         label: "BACK TO MENU",
                         color: const Color(0xFF415A77),
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => const WerewolfGameLayout(),
-                            ),
-                            (route) => route.isFirst,
-                          );
+                        onPressed: () async {
+                          await _winPlayer.stop();
+                          if (mounted) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const WerewolfGameLayout(),
+                              ),
+                              (route) => route.isFirst,
+                            );
+                          }
                         },
                       ),
                     ),
