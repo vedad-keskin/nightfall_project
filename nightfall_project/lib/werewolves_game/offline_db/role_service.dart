@@ -59,7 +59,7 @@ class WerewolfRoleService {
       points: 1,
       allianceId: 1, // Villagers
       description:
-          'A mysterious healer. Each night, he can save one player but can but also has a small chance to kill him.',
+          'A mysterious healer. Each night, he can save one player but also has a small chance to kill him.',
       imagePath: 'assets/images/werewolves/Plague Doctor.png',
     ),
     WerewolfRole(
