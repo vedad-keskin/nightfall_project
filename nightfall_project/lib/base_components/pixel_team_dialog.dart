@@ -40,7 +40,7 @@ class PixelTeamDialog extends StatelessWidget {
                 _buildSubtitle('TEAM CREDITS'),
                 const SizedBox(height: 24),
                 _buildCreditRow(
-                  'DEVELOPER',
+                  'LEAD DEVELOPER',
                   'Vedad Keskin',
                   labelColor: const Color(0xFF48CAE4), // Bright Cyan
                   valueColor: Colors.white,

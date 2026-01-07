@@ -9,6 +9,7 @@ import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -61,6 +62,9 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     try {
       // Wait for owl howl to finish (approximately 3-4 seconds)
       await Future.delayed(const Duration(seconds: 4));
+
+      if (!mounted) return;
+      if (context.read<SoundSettingsService>().isMuted) return;
 
       await _ambientPlayer.setReleaseMode(ReleaseMode.loop);
       await _ambientPlayer.play(
@@ -304,18 +308,13 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         _currentStepIndex++;
         // Reset transient selection state between steps
         // Capture Doctor's choice before resetting if moving away from Doctor
-        if (_currentStep == NightStep.plagueDoctor ||
-            _currentStep == NightStep.doctor) {
-          // Logic handles this below by checking previous step?
-          // No, _currentStep updates AFTER index increment.
-          // We need to capture BEFORE increment or use the previous step index.
-          // Easier: Capture based on the step we just finished.
-        }
+        // Note: _currentStep updates AFTER index increment.
+        // We need to capture BEFORE increment or use the previous step index.
+        // Easier: Capture based on the step we just finished.
       });
 
       // Post-transition cleanup
       // If we just finished Doctor, store the ID and clear for next healer
-      // Note: _nightSteps[_currentStepIndex - 1] is the one we just finished.
       final finishedStep = _nightSteps[_currentStepIndex - 1];
       if (finishedStep == NightStep.doctor) {
         _doctorHealedId = _targetHealedId;
@@ -489,14 +488,18 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                 ),
                 color: Colors.orange,
                 onPressed: () async {
-                  // Play day transition sound
-                  final player = AudioPlayer();
-                  try {
-                    await player.play(
-                      AssetSource('audio/werewolves/rooster_daylight.mp3'),
-                    );
-                  } catch (e) {
-                    debugPrint('Error playing day sound: $e');
+                  // Play day transition sound if not muted
+                  final isMuted = context.read<SoundSettingsService>().isMuted;
+
+                  if (!isMuted) {
+                    final player = AudioPlayer();
+                    try {
+                      await player.play(
+                        AssetSource('audio/werewolves/rooster_daylight.mp3'),
+                      );
+                    } catch (e) {
+                      debugPrint('Error playing day sound: $e');
+                    }
                   }
 
                   if (mounted) {

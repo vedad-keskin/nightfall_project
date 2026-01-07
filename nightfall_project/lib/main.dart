@@ -7,12 +7,17 @@ import 'package:nightfall_project/base_components/pixel_language_switch.dart';
 import 'package:nightfall_project/impostor_game/layouts/game_layout.dart';
 import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
 import 'package:nightfall_project/services/language_service.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
+import 'package:nightfall_project/base_components/pixel_sound_button.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => LanguageService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LanguageService()),
+        ChangeNotifierProvider(create: (_) => SoundSettingsService()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -249,79 +254,89 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                 top: 40,
                 child: PixelLanguageSwitch(),
               ),
-              // How to Play Button (Static)
+              // How to Play Button and Sound Button (Static)
               Positioned(
                 left: 20,
                 top: 40,
-                child: PixelRulesButton(
-                  onPressed: () {
-                    final isImpostor = _currentPage == 1;
-                    final lang = context.read<LanguageService>();
+                child: Row(
+                  children: [
+                    PixelRulesButton(
+                      onPressed: () {
+                        final isImpostor = _currentPage == 1;
+                        final lang = context.read<LanguageService>();
 
-                    showDialog(
-                      context: context,
-                      builder: (context) => Dialog(
-                        backgroundColor: Colors.transparent,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF778DA9),
-                            border: Border.all(
-                              color: const Color(0xFF415A77),
-                              width: 4,
-                            ),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0D1B2A),
-                              border: Border.all(color: Colors.black, width: 4),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  lang.translate(
-                                    isImpostor
-                                        ? 'rules_impostor_title'
-                                        : 'rules_werewolves_title',
-                                  ),
-                                  style: GoogleFonts.pressStart2p(
-                                    color: const Color(0xFFE0E1DD),
-                                    fontSize: 16,
-                                  ),
-                                  textAlign: TextAlign.center,
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF778DA9),
+                                border: Border.all(
+                                  color: const Color(0xFF415A77),
+                                  width: 4,
                                 ),
-                                const SizedBox(height: 24),
-                                Flexible(
-                                  child: SingleChildScrollView(
-                                    child: Text(
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0D1B2A),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 4,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
                                       lang.translate(
                                         isImpostor
-                                            ? 'rules_impostor_content'
-                                            : 'rules_werewolves_content',
+                                            ? 'rules_impostor_title'
+                                            : 'rules_werewolves_title',
                                       ),
-                                      style: GoogleFonts.vt323(
-                                        color: Colors.white,
-                                        fontSize: 18,
+                                      style: GoogleFonts.pressStart2p(
+                                        color: const Color(0xFFE0E1DD),
+                                        fontSize: 16,
                                       ),
-                                      textAlign: TextAlign.left,
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
+                                    const SizedBox(height: 24),
+                                    Flexible(
+                                      child: SingleChildScrollView(
+                                        child: Text(
+                                          lang.translate(
+                                            isImpostor
+                                                ? 'rules_impostor_content'
+                                                : 'rules_werewolves_content',
+                                          ),
+                                          style: GoogleFonts.vt323(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 32),
+                                    PixelButton(
+                                      label: lang.translate('back'),
+                                      color: const Color(0xFF415A77),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 32),
-                                PixelButton(
-                                  label: lang.translate('back'),
-                                  color: const Color(0xFF415A77),
-                                  onPressed: () => Navigator.of(context).pop(),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    const PixelSoundButton(),
+                  ],
                 ),
               ),
               // Version Info (Static)
@@ -343,7 +358,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     _easterEggTimer?.cancel();
                   },
                   child: Text(
-                    'Nightfall Project v2.3.7',
+                    'Nightfall Project v2.4.1',
                     style: GoogleFonts.vt323(
                       color: Colors.white24,
                       fontSize: 14,

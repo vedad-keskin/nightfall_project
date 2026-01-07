@@ -1,6 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class PixelButton extends StatefulWidget {
   final String label;
@@ -38,6 +40,10 @@ class _PixelButtonState extends State<PixelButton> {
 
   Future<void> _playSound() async {
     if (widget.soundPath == null) return;
+
+    // Check mute setting
+    if (context.read<SoundSettingsService>().isMuted) return;
+
     try {
       await _audioPlayer.play(AssetSource(widget.soundPath!));
     } catch (e) {

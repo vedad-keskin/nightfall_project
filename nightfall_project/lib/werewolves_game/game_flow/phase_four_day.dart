@@ -10,6 +10,7 @@ import 'phase_three_night.dart';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class WerewolfPhaseFourScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -209,12 +210,16 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     List<String> nextDeadIds,
     Map<String, WerewolfRole> updatedRoles,
   ) async {
-    // Play night transition sound
-    final player = AudioPlayer();
-    try {
-      await player.play(AssetSource('audio/werewolves/owl_howl_night.mp3'));
-    } catch (e) {
-      debugPrint('Error playing night sound: $e');
+    // Play night transition sound if not muted
+    final isMuted = context.read<SoundSettingsService>().isMuted;
+
+    if (!isMuted) {
+      final player = AudioPlayer();
+      try {
+        await player.play(AssetSource('audio/werewolves/owl_howl_night.mp3'));
+      } catch (e) {
+        debugPrint('Error playing night sound: $e');
+      }
     }
 
     if (mounted) {

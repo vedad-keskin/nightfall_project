@@ -8,6 +8,7 @@ import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class WerewolfPhaseFiveScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -53,6 +54,8 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
   }
 
   Future<void> _playWinSound() async {
+    if (context.read<SoundSettingsService>().isMuted) return;
+
     String soundPath = "";
     final team = widget.winningTeam.toLowerCase();
     if (team.contains('werewolves')) {
