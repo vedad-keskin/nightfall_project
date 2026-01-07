@@ -46,10 +46,36 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
   String? _targetKilledId;
   String? _targetHealedId;
 
+  // Ambient night sound player
+  late AudioPlayer _ambientPlayer;
+
   @override
   void initState() {
     super.initState();
+    _ambientPlayer = AudioPlayer();
     _calculateNightSteps();
+    _playAmbientNightSounds();
+  }
+
+  Future<void> _playAmbientNightSounds() async {
+    try {
+      // Wait for owl howl to finish (approximately 3-4 seconds)
+      await Future.delayed(const Duration(seconds: 4));
+
+      await _ambientPlayer.setReleaseMode(ReleaseMode.loop);
+      await _ambientPlayer.play(
+        AssetSource('audio/werewolves/birds_frogs_night.mp3'),
+      );
+    } catch (e) {
+      debugPrint('Error playing ambient night sounds: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _ambientPlayer.stop();
+    _ambientPlayer.dispose();
+    super.dispose();
   }
 
   void _calculateNightSteps() {
@@ -125,7 +151,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
       case NightStep.werewolves:
         return const Color(0xFFE63946); // Red
       case NightStep.doctor:
-        return const Color(0xFF4CC9F0); // Blue
+        return Colors.green; // Green
       case NightStep.guard:
         return const Color(0xFFFFD166); // Yellow (Shieldy)
       case NightStep.plagueDoctor:
