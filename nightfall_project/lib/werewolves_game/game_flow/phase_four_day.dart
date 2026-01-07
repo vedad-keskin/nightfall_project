@@ -9,6 +9,7 @@ import 'phase_five.dart';
 import 'phase_three_night.dart';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class WerewolfPhaseFourScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -207,22 +208,32 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
   void _navigateToNextNight(
     List<String> nextDeadIds,
     Map<String, WerewolfRole> updatedRoles,
-  ) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => WerewolfPhaseThreeScreen(
-          playerRoles: updatedRoles,
-          // We pass ONLY the alive players to the next night phase?
-          // Phase 3 expects a list of players. If we filter it, dead players are gone from the UI.
-          // This matches the "Moderator View" requirement where they only see relevant info.
-          players: widget.players
-              .where((p) => !nextDeadIds.contains(p.id))
-              .toList(),
-          lastHealedId: widget.lastHealedId,
-          lastPlagueTargetId: widget.lastPlagueTargetId,
+  ) async {
+    // Play night transition sound
+    final player = AudioPlayer();
+    try {
+      await player.play(AssetSource('audio/werewolves/owl_howl_night.mp3'));
+    } catch (e) {
+      debugPrint('Error playing night sound: $e');
+    }
+
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => WerewolfPhaseThreeScreen(
+            playerRoles: updatedRoles,
+            // We pass ONLY the alive players to the next night phase?
+            // Phase 3 expects a list of players. If we filter it, dead players are gone from the UI.
+            // This matches the "Moderator View" requirement where they only see relevant info.
+            players: widget.players
+                .where((p) => !nextDeadIds.contains(p.id))
+                .toList(),
+            lastHealedId: widget.lastHealedId,
+            lastPlagueTargetId: widget.lastPlagueTargetId,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override

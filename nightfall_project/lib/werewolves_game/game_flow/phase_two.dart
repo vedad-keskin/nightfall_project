@@ -8,6 +8,7 @@ import 'phase_three_night.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class WerewolfPhaseTwoScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -597,15 +598,30 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                             'commence_night_button',
                           ),
                           color: const Color(0xFFE63946),
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => WerewolfPhaseThreeScreen(
-                                  playerRoles: widget.playerRoles,
-                                  players: widget.players,
+                          onPressed: () async {
+                            // Play night transition sound
+                            final player = AudioPlayer();
+                            try {
+                              await player.play(
+                                AssetSource(
+                                  'audio/werewolves/owl_howl_night.mp3',
                                 ),
-                              ),
-                            );
+                              );
+                            } catch (e) {
+                              debugPrint('Error playing night sound: $e');
+                            }
+
+                            if (mounted) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      WerewolfPhaseThreeScreen(
+                                        playerRoles: widget.playerRoles,
+                                        players: widget.players,
+                                      ),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),

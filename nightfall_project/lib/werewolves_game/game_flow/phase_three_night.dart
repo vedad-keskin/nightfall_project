@@ -8,6 +8,7 @@ import 'phase_five.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -461,9 +462,21 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                   'start_day_button',
                 ),
                 color: Colors.orange,
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close Dialog
-                  _checkWinConditionsAndNavigate(deadPlayerIds);
+                onPressed: () async {
+                  // Play day transition sound
+                  final player = AudioPlayer();
+                  try {
+                    await player.play(
+                      AssetSource('audio/werewolves/rooster_daylight.mp3'),
+                    );
+                  } catch (e) {
+                    debugPrint('Error playing day sound: $e');
+                  }
+
+                  if (mounted) {
+                    Navigator.of(context).pop(); // Close Dialog
+                    _checkWinConditionsAndNavigate(deadPlayerIds);
+                  }
                 },
               ),
             ),
