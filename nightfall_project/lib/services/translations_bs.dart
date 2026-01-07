@@ -169,4 +169,17 @@ const Map<String, String> bsTranslations = {
   'jester_alliance_name': 'Luda',
   'jester_alliance_desc':
       'Haočna duša koja pobjeđuje samo ako bude izglasana od strane sela tokom dana.',
+  'day_timer': 'TRAJANJE DANA',
+  'timer_5_min': '5 MIN',
+  'timer_10_min': '10 MIN',
+  'timer_30s_p': '30s/I',
+  'timer_infinity': '∞',
+  'prepare_game_title': 'PRIPREMA IGRE',
+  'players_count_label': 'IGRAČA: {count}',
+  'selected_count_label': 'ODABRANO: {count}',
+  'need_more_roles': 'POTREBNO JOŠ {count} ULOGA/E',
+  'remove_roles': 'UKLONITE {count} ULOGU/E',
+  'need_predator': 'POTREBAN BAR JEDAN VUKODLAK ILI VAMPIR',
+  'too_many_predators': 'PREVIŠE VUKODLAKA / VAMPIRA',
+  'proceed_button': 'NASTAVI',
 };

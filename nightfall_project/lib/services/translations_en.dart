@@ -169,4 +169,17 @@ const Map<String, String> enTranslations = {
   'jester_alliance_name': 'Jester',
   'jester_alliance_desc':
       'A chaotic soul who wins only if they are voted out by the village during the day.',
+  'day_timer': 'DAY TIMER',
+  'timer_5_min': '5 MIN',
+  'timer_10_min': '10 MIN',
+  'timer_30s_p': '30s/P',
+  'timer_infinity': '∞',
+  'prepare_game_title': 'PREPARE GAME',
+  'players_count_label': 'PLAYERS: {count}',
+  'selected_count_label': 'SELECTED: {count}',
+  'need_more_roles': 'NEED {count} MORE ROLES',
+  'remove_roles': 'REMOVE {count} ROLES',
+  'need_predator': 'NEED AT LEAST ONE WEREWOLF OR VAMPIRE',
+  'too_many_predators': 'TOO MANY WEREWOLVES / VAMPIRES',
+  'proceed_button': 'PROCEED',
 };

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:nightfall_project/services/language_service.dart';
 
 enum TimerMode { fiveMinutes, tenMinutes, thirtySecondsPerPlayer, infinity }
 
@@ -15,16 +17,16 @@ class PixelGameTimer extends StatelessWidget {
     required this.onModeChanged,
   });
 
-  String _getModeLabel(TimerMode mode) {
+  String _getModeLabel(TimerMode mode, LanguageService languageService) {
     switch (mode) {
       case TimerMode.fiveMinutes:
-        return '5 MIN';
+        return languageService.translate('timer_5_min');
       case TimerMode.tenMinutes:
-        return '10 MIN';
+        return languageService.translate('timer_10_min');
       case TimerMode.thirtySecondsPerPlayer:
-        return '30s/P';
+        return languageService.translate('timer_30s_p');
       case TimerMode.infinity:
-        return '∞';
+        return languageService.translate('timer_infinity');
     }
   }
 
@@ -43,11 +45,13 @@ class PixelGameTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageService = context.watch<LanguageService>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'DAY TIMER',
+          languageService.translate('day_timer'),
           style: GoogleFonts.vt323(color: Colors.white70, fontSize: 20),
         ),
         const SizedBox(height: 12),
@@ -56,17 +60,20 @@ class PixelGameTimer extends StatelessWidget {
           children: [
             Row(
               children: [
-                _buildTimerOption(TimerMode.fiveMinutes),
+                _buildTimerOption(TimerMode.fiveMinutes, languageService),
                 const SizedBox(width: 8),
-                _buildTimerOption(TimerMode.tenMinutes),
+                _buildTimerOption(TimerMode.tenMinutes, languageService),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                _buildTimerOption(TimerMode.thirtySecondsPerPlayer),
+                _buildTimerOption(
+                  TimerMode.thirtySecondsPerPlayer,
+                  languageService,
+                ),
                 const SizedBox(width: 8),
-                _buildTimerOption(TimerMode.infinity),
+                _buildTimerOption(TimerMode.infinity, languageService),
               ],
             ),
           ],
@@ -75,7 +82,7 @@ class PixelGameTimer extends StatelessWidget {
     );
   }
 
-  Widget _buildTimerOption(TimerMode mode) {
+  Widget _buildTimerOption(TimerMode mode, LanguageService languageService) {
     final isSelected = selectedMode == mode;
     return Expanded(
       child: GestureDetector(
@@ -95,7 +102,7 @@ class PixelGameTimer extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                _getModeLabel(mode),
+                _getModeLabel(mode, languageService),
                 style: GoogleFonts.pressStart2p(
                   color: isSelected ? Colors.black : Colors.white54,
                   fontSize: 10,

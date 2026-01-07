@@ -7,6 +7,8 @@ import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart
 import 'package:nightfall_project/werewolves_game/offline_db/alliance_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/game_settings_service.dart';
 import 'package:nightfall_project/werewolves_game/game_flow/phase_two.dart';
+import 'package:provider/provider.dart';
+import 'package:nightfall_project/services/language_service.dart';
 
 class WerewolfPhaseOneScreen extends StatefulWidget {
   const WerewolfPhaseOneScreen({super.key});
@@ -193,14 +195,18 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                   child: Row(
                     children: [
                       PixelButton(
-                        label: 'BACK',
+                        label: context.watch<LanguageService>().translate(
+                          'back',
+                        ),
                         color: const Color(0xFF415A77),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: Text(
-                          'PREPARE GAME',
+                          context.watch<LanguageService>().translate(
+                            'prepare_game_title',
+                          ),
                           style: GoogleFonts.pressStart2p(
                             color: Colors.white,
                             fontSize: 18,
@@ -229,7 +235,10 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'PLAYERS: $_totalPlayers',
+                        context
+                            .watch<LanguageService>()
+                            .translate('players_count_label')
+                            .replaceAll('{count}', '$_totalPlayers'),
                         style: GoogleFonts.vt323(
                           color: Colors.white,
                           fontSize: 24,
@@ -237,7 +246,10 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        'SELECTED: $_selectedRoleCount',
+                        context
+                            .watch<LanguageService>()
+                            .translate('selected_count_label')
+                            .replaceAll('{count}', '$_selectedRoleCount'),
                         style: GoogleFonts.vt323(
                           color: _selectedRoleCount == _totalPlayers
                               ? Colors.greenAccent
@@ -341,7 +353,10 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            role.name.toUpperCase(),
+                                            context
+                                                .watch<LanguageService>()
+                                                .translate(role.translationKey)
+                                                .toUpperCase(),
                                             style: GoogleFonts.pressStart2p(
                                               color: isSelected
                                                   ? Colors.white
@@ -353,12 +368,22 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                                           const SizedBox(height: 4),
                                           Text(
                                             _allianceService
-                                                    .getAllianceById(
-                                                      role.allianceId,
-                                                    )
-                                                    ?.name
-                                                    .toUpperCase() ??
-                                                '',
+                                                        .getAllianceById(
+                                                          role.allianceId,
+                                                        )
+                                                        ?.translationKey !=
+                                                    null
+                                                ? context
+                                                      .watch<LanguageService>()
+                                                      .translate(
+                                                        _allianceService
+                                                            .getAllianceById(
+                                                              role.allianceId,
+                                                            )!
+                                                            .translationKey,
+                                                      )
+                                                      .toUpperCase()
+                                                : '',
                                             style: GoogleFonts.vt323(
                                               color: isSelected
                                                   ? allianceColor
@@ -462,8 +487,20 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                             color: Colors.black45,
                             child: Text(
                               _selectedRoleCount < _totalPlayers
-                                  ? 'NEED ${_totalPlayers - _selectedRoleCount} MORE ROLES'
-                                  : 'REMOVE ${_selectedRoleCount - _totalPlayers} ROLES',
+                                  ? context
+                                        .watch<LanguageService>()
+                                        .translate('need_more_roles')
+                                        .replaceAll(
+                                          '{count}',
+                                          '${_totalPlayers - _selectedRoleCount}',
+                                        )
+                                  : context
+                                        .watch<LanguageService>()
+                                        .translate('remove_roles')
+                                        .replaceAll(
+                                          '{count}',
+                                          '${_selectedRoleCount - _totalPlayers}',
+                                        ),
                               style: GoogleFonts.vt323(
                                 color: Colors.amberAccent,
                                 fontSize: 20,
@@ -488,7 +525,9 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                                     (_roleCounts[8] ?? 0);
                                 if (werewolfCount < 1) {
                                   return Text(
-                                    'NEED AT LEAST ONE WEREWOLF OR VAMPIRE',
+                                    context.watch<LanguageService>().translate(
+                                      'need_predator',
+                                    ),
                                     style: GoogleFonts.vt323(
                                       color: Colors.greenAccent,
                                       fontSize: 20,
@@ -496,7 +535,9 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                                   );
                                 } else {
                                   return Text(
-                                    'TOO MANY WEREWOLVES / VAMPIRES',
+                                    context.watch<LanguageService>().translate(
+                                      'too_many_predators',
+                                    ),
                                     style: GoogleFonts.vt323(
                                       color: Colors.redAccent,
                                       fontSize: 20,
@@ -510,7 +551,9 @@ class _WerewolfPhaseOneScreenState extends State<WerewolfPhaseOneScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: PixelButton(
-                          label: 'PROCEED',
+                          label: context.watch<LanguageService>().translate(
+                            'proceed_button',
+                          ),
                           color: _canProceed
                               ? Colors.green
                               : const Color(0xFF415A77).withOpacity(0.5),
