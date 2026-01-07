@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
-import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
+import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
@@ -158,7 +159,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          const PixelStarfield(),
+          const PixelStarfieldBackground(),
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),

@@ -2,8 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nightfall_project/base_components/pixel_components.dart';
-import 'package:nightfall_project/base_components/pixel_button_center_large.dart';
+import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
+import 'package:nightfall_project/base_components/pixel_button.dart';
+
 import 'package:nightfall_project/impostor_game/categories_section/categories_screen.dart';
 import 'package:nightfall_project/impostor_game/game_flow/phase_one.dart';
 import 'package:nightfall_project/impostor_game/leaderboards/leaderboards_screen.dart';
@@ -166,7 +167,7 @@ class _ImpostorGameLayoutState extends State<ImpostorGameLayout> {
       body: Stack(
         children: [
           // Background Layer
-          const PixelStarfield(),
+          const PixelStarfieldBackground(),
 
           // Foreground Content
           SafeArea(

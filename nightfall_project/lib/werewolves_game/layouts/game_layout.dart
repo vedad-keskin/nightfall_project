@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:provider/provider.dart';
-import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
+import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:nightfall_project/base_components/pixel_game_timer.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/timer_settings_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
@@ -96,7 +97,7 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
       body: Stack(
         children: [
           // Background Layer (Shared Component)
-          const PixelStarfield(),
+          const PixelStarfieldBackground(),
 
           // Foreground Content
           SafeArea(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nightfall_project/base_components/pixel_components.dart';
+import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
+import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:nightfall_project/impostor_game/offline_db/category_service.dart';
 import 'package:nightfall_project/impostor_game/offline_db/words_service.dart';
 import 'package:nightfall_project/services/language_service.dart';
@@ -52,7 +53,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          const PixelStarfield(),
+          const PixelStarfieldBackground(),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
