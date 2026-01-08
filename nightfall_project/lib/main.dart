@@ -11,6 +11,7 @@ import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:nightfall_project/base_components/pixel_sound_button.dart';
+import 'package:nightfall_project/base_components/pixel_swipe_indicator.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -87,6 +88,17 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
       setState(() {
         _currentPage = page;
       });
+    }
+  }
+
+  void _scrollToPage(int page) {
+    if (_scrollController != null && _scrollController!.hasClients) {
+      final width = MediaQuery.of(context).size.width;
+      _scrollController!.animateTo(
+        page * width,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutQuart,
+      );
     }
   }
 
@@ -297,12 +309,31 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     _easterEggTimer?.cancel();
                   },
                   child: Text(
-                    'Nightfall Project v3.2.7',
+                    'Nightfall Project v3.2.8',
                     style: GoogleFonts.vt323(
                       color: Colors.white24,
                       fontSize: 14,
                     ),
                   ),
+                ),
+              ),
+              // Swipe Indicators
+              Positioned(
+                right: 10,
+                top: constraints.maxHeight / 2 - 30,
+                child: PixelSwipeIndicator(
+                  isRight: true,
+                  visible: _currentPage == 0,
+                  onTap: () => _scrollToPage(1),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                top: constraints.maxHeight / 2 - 30,
+                child: PixelSwipeIndicator(
+                  isRight: false,
+                  visible: _currentPage == 1,
+                  onTap: () => _scrollToPage(0),
                 ),
               ),
             ],
