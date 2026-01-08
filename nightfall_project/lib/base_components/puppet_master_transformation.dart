@@ -6,6 +6,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'package:nightfall_project/base_components/pixel_button.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class PuppetMasterTransformationDialog extends StatefulWidget {
   final String playerName;
@@ -64,6 +66,19 @@ class _PuppetMasterTransformationDialogState
       _isStarted = true;
       _stage = 1;
     });
+
+    // Play transformation sound if not muted
+    final isMuted = context.read<SoundSettingsService>().isMuted;
+    if (!isMuted) {
+      final player = AudioPlayer();
+      try {
+        await player.play(
+          AssetSource('audio/werewolves/puppet_master_transformation.mp3'),
+        );
+      } catch (e) {
+        debugPrint('Error playing transformation sound: $e');
+      }
+    }
 
     final lang = context.read<LanguageService>();
     await _type(lang.translate('puppet_master_transforming'));
@@ -285,7 +300,7 @@ class _PuppetMasterTransformationDialogState
                             lang.translate('puppet_master_desc'),
                             style: GoogleFonts.vt323(
                               color: Colors.white,
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -312,7 +327,7 @@ class _PuppetMasterTransformationDialogState
                             _typedText,
                             style: GoogleFonts.vt323(
                               color: Colors.white,
-                              fontSize: 26,
+                              fontSize: 20,
                             ),
                             textAlign: TextAlign.center,
                           ),
