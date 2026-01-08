@@ -61,20 +61,26 @@ class _LeaderboardsScreenState extends State<LeaderboardsScreen> {
           style: GoogleFonts.vt323(color: Colors.white70, fontSize: 18),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              languageService.translate('cancel_button'),
-              style: GoogleFonts.pressStart2p(
-                color: Colors.white54,
-                fontSize: 12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  languageService.translate('cancel_button'),
+                  style: GoogleFonts.pressStart2p(
+                    color: Colors.white54,
+                    fontSize: 12,
+                  ),
+                ),
               ),
-            ),
-          ),
-          PixelButton(
-            label: languageService.translate('reset_button'),
-            color: Colors.redAccent.withOpacity(0.8),
-            onPressed: () => Navigator.of(context).pop(true),
+              const SizedBox(width: 16),
+              PixelButton(
+                label: languageService.translate('reset_button'),
+                color: Colors.redAccent.withOpacity(0.8),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
           ),
         ],
       ),
