@@ -57,7 +57,7 @@ class PixelRulesDialog extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               PixelButton(
-                label: lang.translate('back'),
+                label: lang.translate('close_button'),
                 color: const Color(0xFF415A77),
                 onPressed: () => Navigator.of(context).pop(),
               ),

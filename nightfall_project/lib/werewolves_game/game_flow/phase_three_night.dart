@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
+import 'package:nightfall_project/base_components/guard_scanner_dialog.dart';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -254,42 +255,11 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
 
     await showDialog(
       context: context,
-      barrierDismissible: false, // Force them to press Close
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            border: Border.all(color: _stepColor, width: 4),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                player.name.toUpperCase(),
-                style: GoogleFonts.vt323(color: Colors.white, fontSize: 24),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                isWerewolf ? 'W' : 'V',
-                style: GoogleFonts.pressStart2p(
-                  color: isWerewolf ? Colors.red : Colors.green,
-                  fontSize: 120, // Massive letter
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              PixelButton(
-                label: context.watch<LanguageService>().translate(
-                  'close_button',
-                ),
-                color: const Color(0xFF415A77),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        ),
+      barrierDismissible: false,
+      builder: (context) => GuardScannerDialog(
+        playerName: player.name,
+        isWerewolf: isWerewolf,
+        onClose: () => Navigator.of(context).pop(),
       ),
     );
 
