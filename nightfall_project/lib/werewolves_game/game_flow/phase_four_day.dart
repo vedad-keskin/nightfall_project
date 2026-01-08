@@ -409,6 +409,17 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                                   : const Color(0xFF415A77),
                               width: isSelected ? 3 : 1,
                             ),
+                            boxShadow: isSelected
+                                ? [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFFE63946,
+                                      ).withOpacity(0.6),
+                                      blurRadius: 15,
+                                      spreadRadius: 2,
+                                    ),
+                                  ]
+                                : null,
                           ),
                           child: Column(
                             children: [
@@ -472,6 +483,47 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                                                 size: 13,
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                      ),
+                                    // Hanging Noose Icon Overlay
+                                    if (isSelected)
+                                      Positioned(
+                                        top: 4,
+                                        right: 4,
+                                        child: TweenAnimationBuilder<double>(
+                                          duration: const Duration(
+                                            milliseconds: 400,
+                                          ),
+                                          tween: Tween(begin: 0.0, end: 1.0),
+                                          curve: Curves.elasticOut,
+                                          builder: (context, value, child) {
+                                            return Transform.scale(
+                                              scale: value,
+                                              child: Opacity(
+                                                opacity: value.clamp(0.0, 1.0),
+                                                child: child,
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(
+                                                0.6,
+                                              ),
+                                              border: Border.all(
+                                                color: const Color(
+                                                  0xFFE63946,
+                                                ).withOpacity(0.4),
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Image.asset(
+                                              'assets/images/hanging_noose_alt.png',
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
                                       ),

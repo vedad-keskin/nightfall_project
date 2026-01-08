@@ -720,6 +720,15 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                         : const Color(0xFF415A77),
                     width: isSelected ? 3 : 1,
                   ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: _stepColor.withOpacity(0.6),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -783,6 +792,41 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                                       size: 13,
                                     ),
                                   ],
+                                ),
+                              ),
+                            ),
+                          // Action Icon Overlay
+                          if (!isDisabled && isSelected)
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: TweenAnimationBuilder<double>(
+                                duration: const Duration(milliseconds: 400),
+                                tween: Tween(begin: 0.0, end: 1.0),
+                                curve: Curves.elasticOut,
+                                builder: (context, value, child) {
+                                  return Transform.scale(
+                                    scale: value,
+                                    child: Opacity(
+                                      opacity: value.clamp(0.0, 1.0),
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.6),
+                                    border: Border.all(
+                                      color: _stepColor.withOpacity(0.4),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    _getActionIcon() ?? '',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
@@ -865,6 +909,19 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         return const Color(0xFF7209B7); // Indigo/Deep Purple
       default:
         return Colors.white; // Villager etc.
+    }
+  }
+
+  String? _getActionIcon() {
+    switch (_currentStep) {
+      case NightStep.werewolves:
+        return 'assets/images/werewolf_kill.png';
+      case NightStep.doctor:
+        return 'assets/images/doctor_heal.png';
+      case NightStep.guard:
+        return 'assets/images/guard_inspect.png';
+      case NightStep.plagueDoctor:
+        return 'assets/images/plague_heal.png';
     }
   }
 
