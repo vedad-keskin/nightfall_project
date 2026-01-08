@@ -29,7 +29,7 @@ class _PixelSwipeIndicatorState extends State<PixelSwipeIndicator>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.0, end: 12.0).animate(
+    _animation = Tween<double>(begin: 0.0, end: 4.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
   }
