@@ -163,6 +163,10 @@ const Map<String, String> bsTranslations = {
   'drunk_name': 'Pijanica',
   'drunk_desc':
       'Zbunjeni pijanac. Zbog opijenosti, Stražaru izgleda kao Vukodlak, ali njegovo srce kuca za selo.',
+  'knight_name': 'Vitez',
+  'knight_desc':
+      'Hrabri ratnik. Ima oklop koji ga štiti od prvog smrtonosnog napada. Umire samo ako bude napadnut drugi put.',
+  'knight_armor_msg': "Vitezov oklop ga je zaštitio! (-1 Život)",
   'villagers_alliance_name': 'Seljani',
   'villagers_alliance_desc':
       'Mirni stanovnici sela. Njihov cilj je pronaći i eliminisati sve vukove.',

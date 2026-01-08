@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
 import 'package:nightfall_project/base_components/pixel_button.dart';
+import 'package:nightfall_project/base_components/pixel_heart.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/timer_settings_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
@@ -21,6 +22,7 @@ class WerewolfPhaseFourScreen extends StatefulWidget {
   // History state passed specifically to maintain game state if we loop back to night
   final String? lastHealedId;
   final String? lastPlagueTargetId;
+  final Map<String, int>? knightLives;
 
   const WerewolfPhaseFourScreen({
     super.key,
@@ -29,6 +31,7 @@ class WerewolfPhaseFourScreen extends StatefulWidget {
     required this.deadPlayerIds,
     this.lastHealedId,
     this.lastPlagueTargetId,
+    this.knightLives,
   });
 
   @override
@@ -116,6 +119,8 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
         return const Color(0xFF06D6A0); // Toxic/Emerald Green
       case 4: // Guard
         return const Color(0xFFFFD166); // Yellow
+      case 11: // Knight
+        return const Color(0xFF9E2A2B); // Dark Red
       case 9: // Jester
         return const Color(0xFF9D4EDD); // Purple
       default:
@@ -236,6 +241,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                 .toList(),
             lastHealedId: widget.lastHealedId,
             lastPlagueTargetId: widget.lastPlagueTargetId,
+            knightLives: widget.knightLives,
           ),
         ),
       );
@@ -327,10 +333,8 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                           duration: const Duration(milliseconds: 200),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? const Color(0xFFE63946).withOpacity(
-                                    0.4,
-                                  ) // Red selection
-                                : const Color(0xFF1B263B), // Dark card bg
+                                ? const Color(0xFFE63946).withOpacity(0.4)
+                                : const Color(0xFF1B263B),
                             border: Border.all(
                               color: isSelected
                                   ? const Color(0xFFE63946)
@@ -342,21 +346,69 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                             children: [
                               // Image Top (Expanded)
                               Expanded(
-                                child: role != null
-                                    ? SizedBox.expand(
-                                        child: Image.asset(
-                                          role.imagePath,
-                                          fit: BoxFit.cover,
-                                          alignment: Alignment.topCenter,
-                                        ),
-                                      )
-                                    : const Center(
-                                        child: Icon(
-                                          Icons.person,
-                                          color: Colors.white,
-                                          size: 40,
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: role != null
+                                          ? Image.asset(
+                                              role.imagePath,
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.topCenter,
+                                            )
+                                          : const Center(
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                                size: 40,
+                                              ),
+                                            ),
+                                    ),
+                                    if (role?.id == 11)
+                                      Positioned(
+                                        top: 4,
+                                        left: 4,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 2,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withOpacity(
+                                              0.5,
+                                            ),
+                                            border: Border.all(
+                                              color: Colors.white.withOpacity(
+                                                0.2,
+                                              ),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              PixelHeart(
+                                                isFull:
+                                                    (widget.knightLives?[player
+                                                            .id] ??
+                                                        0) >=
+                                                    1,
+                                                size: 13,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              PixelHeart(
+                                                isFull:
+                                                    (widget.knightLives?[player
+                                                            .id] ??
+                                                        0) >=
+                                                    2,
+                                                size: 13,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 4),
                               // Footer Text
@@ -395,20 +447,20 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                    if (isSelected)
-                                      Text(
-                                        context
-                                            .watch<LanguageService>()
-                                            .translate('hang_button'),
-                                        style: GoogleFonts.pressStart2p(
-                                          color: Colors.redAccent,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ),
+                              if (isSelected)
+                                Text(
+                                  context.watch<LanguageService>().translate(
+                                    'hang_button',
+                                  ),
+                                  style: GoogleFonts.pressStart2p(
+                                    color: Colors.redAccent,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                             ],
                           ),
                         ),

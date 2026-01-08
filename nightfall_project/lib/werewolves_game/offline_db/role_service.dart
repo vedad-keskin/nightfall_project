@@ -131,6 +131,17 @@ class WerewolfRoleService {
       translationKey: 'drunk_name',
       descriptionKey: 'drunk_desc',
     ),
+    WerewolfRole(
+      id: 11,
+      name: 'Knight',
+      points: 1,
+      allianceId: 1, // Villagers
+      description:
+          'A brave warrior. He has armor that protects him from the first lethal attack. He only dies if attacked a second time.',
+      imagePath: 'assets/images/werewolves/Knight.png',
+      translationKey: 'knight_name',
+      descriptionKey: 'knight_desc',
+    ),
   ];
 
   List<WerewolfRole> getRoles() => _roles;

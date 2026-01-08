@@ -12,6 +12,7 @@ import 'package:nightfall_project/services/language_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:nightfall_project/base_components/guard_scanner_dialog.dart';
+import 'package:nightfall_project/base_components/pixel_heart.dart';
 
 class WerewolfPhaseThreeScreen extends StatefulWidget {
   final Map<String, WerewolfRole> playerRoles;
@@ -20,6 +21,7 @@ class WerewolfPhaseThreeScreen extends StatefulWidget {
   // History state passed from previous nights
   final String? lastHealedId;
   final String? lastPlagueTargetId;
+  final Map<String, int>? knightLives;
 
   const WerewolfPhaseThreeScreen({
     super.key,
@@ -27,6 +29,7 @@ class WerewolfPhaseThreeScreen extends StatefulWidget {
     required this.players,
     this.lastHealedId,
     this.lastPlagueTargetId,
+    this.knightLives,
   });
 
   @override
@@ -49,6 +52,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
   String? _targetKilledId;
   String? _targetHealedId;
   String? _guardTargetId;
+  late Map<String, int> _knightLives;
 
   // Ambient night sound player
   late AudioPlayer _ambientPlayer;
@@ -59,6 +63,19 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     _ambientPlayer = AudioPlayer();
     _calculateNightSteps();
     _playAmbientNightSounds();
+
+    // Initialize Knight Lives
+    if (widget.knightLives != null) {
+      _knightLives = Map.from(widget.knightLives!);
+    } else {
+      _knightLives = {};
+      widget.playerRoles.forEach((playerId, role) {
+        if (role.id == 11) {
+          // Knight ID
+          _knightLives[playerId] = 2; // Starts with 2 lives
+        }
+      });
+    }
   }
 
   Future<void> _playAmbientNightSounds() async {
@@ -371,7 +388,23 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
       }
 
       if (!isSaved) {
-        deadPlayerIds.add(_targetKilledId!);
+        // CHECK IF KNIGHT AND HAS LIVES
+        if (widget.playerRoles[_targetKilledId]?.id == 11) {
+          int currentLives = _knightLives[_targetKilledId] ?? 0;
+          if (currentLives > 1) {
+            // Survived!
+            _knightLives[_targetKilledId!] = currentLives - 1;
+            messages.add(
+              context.read<LanguageService>().translate('knight_armor_msg'),
+            );
+          } else {
+            // Dies
+            deadPlayerIds.add(_targetKilledId!);
+            _knightLives[_targetKilledId!] = 0;
+          }
+        } else {
+          deadPlayerIds.add(_targetKilledId!);
+        }
       }
     }
 
@@ -558,6 +591,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
             deadPlayerIds: deadPlayerIds,
             lastHealedId: _doctorHealedId,
             lastPlagueTargetId: _plagueDoctorTargetId,
+            knightLives: _knightLives,
           ),
         ),
       );
@@ -659,31 +693,69 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: isDisabled
-                          ? const Center(
-                              child: Icon(
-                                Icons.block,
-                                color: Colors.grey,
-                                size: 32,
-                              ),
-                            )
-                          : role != null
-                          ? SizedBox.expand(
-                              child: Image.asset(
-                                role.imagePath,
-                                fit: BoxFit.cover,
-                                alignment: Alignment.topCenter,
-                              ),
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 40,
-                                color: isSelected
-                                    ? Colors.white
-                                    : Colors.white60,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: isDisabled
+                                ? const Center(
+                                    child: Icon(
+                                      Icons.block,
+                                      color: Colors.grey,
+                                      size: 32,
+                                    ),
+                                  )
+                                : role != null
+                                ? Image.asset(
+                                    role.imagePath,
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
+                                  )
+                                : Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 40,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.white60,
+                                    ),
+                                  ),
+                          ),
+                          if (!isDisabled && role?.id == 11)
+                            Positioned(
+                              top: 4,
+                              left: 4,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    PixelHeart(
+                                      isFull:
+                                          (_knightLives[player.id] ?? 0) >= 1,
+                                      size: 13,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    PixelHeart(
+                                      isFull:
+                                          (_knightLives[player.id] ?? 0) >= 2,
+                                      size: 13,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Container(
@@ -721,7 +793,6 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                                 height: 1.5,
                               ),
                               textAlign: TextAlign.center,
-                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                         ],
@@ -756,6 +827,8 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         return const Color(0xFF9D4EDD); // Purple
       case 10: // Drunk
         return const Color(0xFFCD9777); // Brown/Beer
+      case 11: // Knight
+        return const Color(0xFF9E2A2B); // Dark Red
       default:
         return Colors.white; // Villager etc.
     }

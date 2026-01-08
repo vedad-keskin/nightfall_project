@@ -163,6 +163,10 @@ const Map<String, String> enTranslations = {
   'drunk_name': 'Drunk',
   'drunk_desc':
       'A confused drinker. Due to intoxication, he appears as a Werewolf to the Guard, but is actually a loyal Villager.',
+  'knight_name': 'Knight',
+  'knight_desc':
+      'A brave warrior. He has armor that protects him from the first lethal attack. He only dies if attacked a second time.',
+  'knight_armor_msg': "The Knight's armor protected him! (-1 Life)",
   'villagers_alliance_name': 'Villagers',
   'villagers_alliance_desc':
       'The peaceful inhabitants of the village. Their goal is to find and eliminate all werewolves.',
