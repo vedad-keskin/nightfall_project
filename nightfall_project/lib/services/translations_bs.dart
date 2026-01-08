@@ -166,16 +166,17 @@ const Map<String, String> bsTranslations = {
   'knight_name': 'Vitez',
   'knight_desc':
       'Hrabri ratnik. Ima oklop koji ga štiti od prvog smrtonosnog napada. Umire samo ako bude napadnut drugi put.',
-  'knight_armor_msg': "Vitezov oklop ga je zaštitio! (-1 Život)",
+  'knight_armor_msg': 'Vitezov oklop ga je zaštitio! (-1 Život)',
+  'knight_overwhelmed_msg': 'Vitez je bio savladan višestrukim napadima!',
   'villagers_alliance_name': 'Seljani',
   'villagers_alliance_desc':
       'Mirni stanovnici sela. Njihov cilj je pronaći i eliminisati sve vukove.',
   'werewolves_alliance_name': 'Vukovi',
   'werewolves_alliance_desc':
       'Grabežljivci noći. Njihov cilj je nadmašiti broj seljana kako bi preuzeli grad.',
-  'jester_alliance_name': 'Luda',
-  'jester_alliance_desc':
-      'Haočna duša koja pobjeđuje samo ako bude izglasana od strane sela tokom dana.',
+  'specials_alliance_name': 'Posebni',
+  'specials_alliance_desc':
+      'Jedinstvene uloge sa specijalnim uslovima pobjede i posebnim sposobnostima.',
   'day_timer': 'TRAJANJE DANA',
   'timer_5_min': '5 MIN',
   'timer_10_min': '10 MIN',
@@ -220,9 +221,10 @@ const Map<String, String> bsTranslations = {
   'plague_doctor_failed_msg':
       'Vrač je pokušao pomoći igraču {name}... ali nije uspio.',
   'plague_doctor_killed_msg': 'Vračev tretman je bio fatalan za igrača {name}.',
+  'plague_doctor_treated_msg': 'Vrač je liječio igrača {name}.',
   'winning_team_village': 'SELO',
   'winning_team_werewolves': 'VUKOVI',
-  'winning_team_jester': 'LUDA',
+  'winning_team_specials': 'SPECIJALCI',
   'game_over_title': 'KRAJ IGRE',
   'points_distributed_label': 'BODOVI DODIJELJENI',
   'no_points_awarded_msg': 'Nema dodijeljenih bodova.',

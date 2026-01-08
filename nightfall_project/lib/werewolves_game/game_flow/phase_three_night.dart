@@ -236,12 +236,6 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
           break;
 
         case NightStep.guard:
-          // Restriction: Cannot inspect self (if target is Guard role)
-          if (targetRole.id == 4) {
-            // ID 4 is Guard
-            return;
-          }
-
           // Toggle selection. Only one can be selected.
           if (_guardTargetId == player.id) {
             _guardTargetId = null;
@@ -346,84 +340,130 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
   void _calculateResults() {
     List<String> deadPlayerIds = [];
     List<String> messages = [];
+    final rng = Random();
+    final lang = context.read<LanguageService>();
 
-    // 1. Resolve Werewolf Kill
-    if (_targetKilledId != null) {
-      bool isSaved = false;
-      String? killedName = widget.players
-          .firstWhere((p) => p.id == _targetKilledId)
-          .name;
+    // 1. Identify active targets and actions
+    String? werewolfTarget = _targetKilledId;
+    String? doctorTarget = _doctorHealedId;
+    String? plagueTarget = _plagueDoctorTargetId;
+    bool isPlagueAccident = (plagueTarget != null && rng.nextInt(3) == 0);
 
-      // Saved by Doctor?
-      if (_doctorHealedId == _targetKilledId) {
-        isSaved = true;
-        messages.add(
-          context
-              .read<LanguageService>()
-              .translate('doctor_saved_msg')
-              .replaceAll('{name}', killedName),
-        );
-      }
+    // 2. Identify all players involved in an action
+    final actionPlayerIds = {
+      if (werewolfTarget != null) werewolfTarget,
+      if (doctorTarget != null) doctorTarget,
+      if (plagueTarget != null) plagueTarget,
+    };
 
-      // Saved by Plague Doctor? (67% chance)
-      if (_plagueDoctorTargetId == _targetKilledId) {
-        final rng = Random();
-        if (rng.nextInt(3) != 0) {
-          // 2/3 chance to HEAL
-          isSaved = true;
-          messages.add(
-            context
-                .read<LanguageService>()
-                .translate('plague_doctor_saved_msg')
-                .replaceAll('{name}', killedName),
-          );
-        } else {
-          messages.add(
-            context
-                .read<LanguageService>()
-                .translate('plague_doctor_failed_msg')
-                .replaceAll('{name}', killedName),
-          );
+    // 3. Resolve results for each involved player
+    for (final playerId in actionPlayerIds) {
+      final player = widget.players.firstWhere((p) => p.id == playerId);
+      final role = widget.playerRoles[playerId];
+      if (role == null) continue;
+
+      final isKnight = role.id == 11;
+      int currentLives = _knightLives[playerId] ?? 0;
+
+      bool hitByWerewolves = (playerId == werewolfTarget);
+      bool hitByPlagueAccident = (playerId == plagueTarget && isPlagueAccident);
+      bool savedByDoctor = (playerId == doctorTarget);
+      bool savedByPlagueHeal = (playerId == plagueTarget && !isPlagueAccident);
+
+      if (isKnight) {
+        if (currentLives == 2) {
+          // Rule: Hit by both on 2 lives -> Instant death
+          if (hitByWerewolves && hitByPlagueAccident) {
+            deadPlayerIds.add(playerId);
+            _knightLives[playerId] = 0;
+            messages.add(lang.translate('knight_overwhelmed_msg'));
+          }
+          // Rule: Hit by either on 2 lives -> Down to 1 life (Armor sacrificed)
+          else if (hitByWerewolves || hitByPlagueAccident) {
+            _knightLives[playerId] = 1;
+            messages.add(lang.translate('knight_armor_msg'));
+          }
+          // No regeneration - if he wasn't hit, he stays at 2 lives even if doctors "healed" him.
+        } else if (currentLives == 1) {
+          // Rule: Hit by both on 1 life -> Instant death
+          if (hitByWerewolves && hitByPlagueAccident) {
+            deadPlayerIds.add(playerId);
+            _knightLives[playerId] = 0;
+            messages.add(lang.translate('knight_overwhelmed_msg'));
+          }
+          // Rule: Hit by one on 1 life -> Can be SAVED, but not REGENERATED
+          else if (hitByWerewolves || hitByPlagueAccident) {
+            if (savedByDoctor || savedByPlagueHeal) {
+              // Successfully saved! Lives stay at 1.
+              if (savedByDoctor) {
+                messages.add(
+                  lang
+                      .translate('doctor_saved_msg')
+                      .replaceAll('{name}', player.name),
+                );
+              } else {
+                messages.add(
+                  lang
+                      .translate('plague_doctor_saved_msg')
+                      .replaceAll('{name}', player.name),
+                );
+              }
+            } else {
+              // Not saved -> Death
+              deadPlayerIds.add(playerId);
+              _knightLives[playerId] = 0;
+              messages.add(
+                lang
+                    .translate('player_is_dead_label')
+                    .replaceAll('{name}', player.name.toUpperCase()),
+              );
+            }
+          }
         }
-      }
-
-      if (!isSaved) {
-        // CHECK IF KNIGHT AND HAS LIVES
-        if (widget.playerRoles[_targetKilledId]?.id == 11) {
-          int currentLives = _knightLives[_targetKilledId] ?? 0;
-          if (currentLives > 1) {
-            // Survived!
-            _knightLives[_targetKilledId!] = currentLives - 1;
+      } else {
+        // NON-KNIGHT standard logic
+        if (hitByWerewolves) {
+          if (savedByDoctor) {
             messages.add(
-              context.read<LanguageService>().translate('knight_armor_msg'),
+              lang
+                  .translate('doctor_saved_msg')
+                  .replaceAll('{name}', player.name),
+            );
+          } else if (savedByPlagueHeal) {
+            messages.add(
+              lang
+                  .translate('plague_doctor_saved_msg')
+                  .replaceAll('{name}', player.name),
             );
           } else {
-            // Dies
-            deadPlayerIds.add(_targetKilledId!);
-            _knightLives[_targetKilledId!] = 0;
+            deadPlayerIds.add(playerId);
           }
-        } else {
-          deadPlayerIds.add(_targetKilledId!);
         }
-      }
-    }
 
-    // 2. Resolve Plague Doctor Accidental Kill on NON-Werewolf Targets
-    if (_plagueDoctorTargetId != null &&
-        _plagueDoctorTargetId != _targetKilledId) {
-      final rng = Random();
-      if (rng.nextInt(3) == 0) {
-        // 1/3 chance to kill
-        if (!deadPlayerIds.contains(_plagueDoctorTargetId)) {
-          deadPlayerIds.add(_plagueDoctorTargetId!);
-          final victimName = widget.players
-              .firstWhere((p) => p.id == _plagueDoctorTargetId)
-              .name;
+        if (hitByPlagueAccident && !deadPlayerIds.contains(playerId)) {
+          // Doctor can save from Plague accident
+          if (savedByDoctor) {
+            messages.add(
+              lang
+                  .translate('doctor_saved_msg')
+                  .replaceAll('{name}', player.name),
+            );
+          } else {
+            deadPlayerIds.add(playerId);
+            messages.add(
+              lang
+                  .translate('plague_doctor_killed_msg')
+                  .replaceAll('{name}', player.name),
+            );
+          }
+        }
+
+        // Informative message for successful Plague Doctor treatment without werewolf attack
+        if (savedByPlagueHeal && !hitByWerewolves) {
           messages.add(
-            context
-                .read<LanguageService>()
-                .translate('plague_doctor_killed_msg')
-                .replaceAll('{name}', victimName),
+            lang
+                .translate('plague_doctor_treated_msg')
+                .replaceAll('{name}', player.name),
           );
         }
       }
@@ -649,24 +689,16 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
 
             if (_currentStep == NightStep.werewolves) {
               if (_targetKilledId == player.id) isSelected = true;
-              // Disable Werewolf Alliance from being targeted by Werewolves
               if (role?.allianceId == 2) isDisabled = true;
-            }
-
-            if (_currentStep == NightStep.doctor) {
+            } else if (_currentStep == NightStep.doctor) {
               if (_targetHealedId == player.id) isSelected = true;
-              // Disable last healed
               if (player.id == widget.lastHealedId) isDisabled = true;
-            }
-
-            if (_currentStep == NightStep.plagueDoctor) {
+            } else if (_currentStep == NightStep.plagueDoctor) {
               if (_targetHealedId == player.id) isSelected = true;
               if (player.id == widget.lastPlagueTargetId) isDisabled = true;
-            }
-
-            if (_currentStep == NightStep.guard) {
+            } else if (_currentStep == NightStep.guard) {
               if (_guardTargetId == player.id) isSelected = true;
-              // Disable Self
+              // Guard cannot inspect himself
               if (role?.id == 4) isDisabled = true;
             }
 

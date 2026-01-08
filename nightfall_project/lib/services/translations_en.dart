@@ -167,15 +167,16 @@ const Map<String, String> enTranslations = {
   'knight_desc':
       'A brave warrior. He has armor that protects him from the first lethal attack. He only dies if attacked a second time.',
   'knight_armor_msg': "The Knight's armor protected him! (-1 Life)",
+  'knight_overwhelmed_msg': "The Knight was overwhelmed by multiple attacks!",
   'villagers_alliance_name': 'Villagers',
   'villagers_alliance_desc':
       'The peaceful inhabitants of the village. Their goal is to find and eliminate all werewolves.',
   'werewolves_alliance_name': 'Werewolves',
   'werewolves_alliance_desc':
       'The predators of the night. Their goal is to outnumber the villagers to take over the town.',
-  'jester_alliance_name': 'Jester',
-  'jester_alliance_desc':
-      'A chaotic soul who wins only if they are voted out by the village during the day.',
+  'specials_alliance_name': 'Specials',
+  'specials_alliance_desc':
+      'Independent roles with unique win conditions and special abilities.',
   'day_timer': 'DAY TIMER',
   'timer_5_min': '5 MIN',
   'timer_10_min': '10 MIN',
@@ -222,9 +223,10 @@ const Map<String, String> enTranslations = {
       'The Plague Doctor tried to help {name}... but failed.',
   'plague_doctor_killed_msg':
       "The Plague Doctor's 'treatment' was fatal to {name}.",
+  'plague_doctor_treated_msg': 'The Plague Doctor treated {name}.',
   'winning_team_village': 'THE VILLAGE',
   'winning_team_werewolves': 'THE WEREWOLVES',
-  'winning_team_jester': 'THE JESTER',
+  'winning_team_specials': 'THE SPECIALS',
   'game_over_title': 'GAME OVER',
   'points_distributed_label': 'POINTS DISTRIBUTED',
   'no_points_awarded_msg': 'No points awarded.',

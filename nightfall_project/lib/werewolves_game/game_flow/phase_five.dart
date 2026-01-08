@@ -41,7 +41,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
     final team = widget.winningTeam.toLowerCase();
     if (team.contains('werewolves')) return const Color(0xFFE63946); // Red
     if (team.contains('village')) return const Color(0xFF52B788); // Green
-    if (team.contains('jester')) return const Color(0xFF9D4EDD); // Purple
+    if (team.contains('specials')) return const Color(0xFF9D4EDD); // Purple
     return Colors.white;
   }
 
@@ -63,7 +63,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
       soundPath = 'audio/werewolves/werewolf_win.mp3';
     } else if (team.contains('village')) {
       soundPath = 'audio/werewolves/village_win.mp3';
-    } else if (team.contains('jester')) {
+    } else if (team.contains('specials')) {
       soundPath = 'audio/werewolves/jester_win.mp3';
     }
 
@@ -90,7 +90,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
     final team = widget.winningTeam.toLowerCase();
     if (team.contains('village')) winningAllianceId = 1;
     if (team.contains('werewolves')) winningAllianceId = 2;
-    if (team.contains('jester')) winningAllianceId = 3;
+    if (team.contains('specials')) winningAllianceId = 3;
 
     // 2. Load Current Players form DB (to get current points state)
     List<WerewolfPlayer> currentDbPlayers = await _playerService.loadPlayers();
@@ -276,7 +276,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
     final team = widget.winningTeam.toLowerCase();
     if (team.contains('village')) winningAllianceId = 1;
     if (team.contains('werewolves')) winningAllianceId = 2;
-    if (team.contains('jester')) winningAllianceId = 3;
+    if (team.contains('specials')) winningAllianceId = 3;
 
     List<Widget> list = [];
 

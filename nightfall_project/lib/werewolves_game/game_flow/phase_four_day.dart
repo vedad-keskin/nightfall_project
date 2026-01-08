@@ -134,7 +134,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
       final role = widget.playerRoles[_selectedForHangingId];
       if (role?.id == 9) {
         // Jester Wins immediately if hanged
-        _navigateToGameEnd("jester");
+        _navigateToGameEnd("specials", widget.playerRoles);
         return;
       }
     }
@@ -190,21 +190,24 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
 
     if (aliveWerewolves == 0) {
       // Village Wins
-      _navigateToGameEnd("village");
+      _navigateToGameEnd("village", updatedRoles);
     } else if (aliveWerewolves >= aliveVillagers) {
       // Werewolves Win (including after Twin transformation)
-      _navigateToGameEnd("werewolves");
+      _navigateToGameEnd("werewolves", updatedRoles);
     } else {
       // Game Continues -> Night Phase (pass updated roles)
       _navigateToNextNight(nextDeadIds, updatedRoles);
     }
   }
 
-  void _navigateToGameEnd(String winningTeam) {
+  void _navigateToGameEnd(
+    String winningTeam,
+    Map<String, WerewolfRole> playerRoles,
+  ) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => WerewolfPhaseFiveScreen(
-          playerRoles: widget.playerRoles,
+          playerRoles: playerRoles,
           players: widget.players,
           winningTeam: winningTeam,
         ),

@@ -34,11 +34,11 @@ class WerewolfAllianceService {
     ),
     WerewolfAlliance(
       id: 3,
-      name: 'Jester',
+      name: 'Specials',
       description:
-          'A chaotic soul who wins only if they are voted out by the village during the day.',
-      translationKey: 'jester_alliance_name',
-      descriptionKey: 'jester_alliance_desc',
+          'Independent roles with unique win conditions and special abilities.',
+      translationKey: 'specials_alliance_name',
+      descriptionKey: 'specials_alliance_desc',
     ),
   ];
 
