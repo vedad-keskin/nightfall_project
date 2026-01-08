@@ -176,7 +176,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         // Guard must select someone OR proceed if they want to skip (handled by null check in nextStep)
         // But if they selected someone, we allow proceed (which becomes Investigate)
         // If they didn't select, we allow proceed (which becomes Skip/Next)
-        return true;
+        return _guardTargetId != null;
       case NightStep.plagueDoctor:
         return _targetHealedId != null; // Plague Doctor must select someone
     }

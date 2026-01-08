@@ -30,7 +30,7 @@ class _GuardScannerDialogState extends State<GuardScannerDialog>
     super.initState();
     _scanController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 600),
     )..repeat(reverse: true);
 
     // Sequence
@@ -38,7 +38,7 @@ class _GuardScannerDialogState extends State<GuardScannerDialog>
       if (mounted) setState(() => _stage = 1);
     });
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) {
         _scanController.stop();
         setState(() => _stage = 2);
