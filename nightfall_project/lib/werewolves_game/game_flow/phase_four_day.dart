@@ -194,8 +194,38 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     } else if (aliveWerewolves >= aliveVillagers) {
       // Werewolves Win (including after Twin transformation)
       _navigateToGameEnd("werewolves", updatedRoles);
+    } else if (aliveWerewolves == aliveVillagers - 1) {
+      // 5. Advanced Win Condition Check (Inevitable Werewolf Victory)
+      // If werewolves are 1 kill away from winning, and no one can prevent a kill tonight,
+      // then their victory is already guaranteed.
+      bool canPreventCasualty = false;
+      for (final player in widget.players) {
+        if (!nextDeadIds.contains(player.id)) {
+          final role = updatedRoles[player.id];
+          if (role != null) {
+            // Doctor (3) or Plague Doctor (5) can save someone
+            if (role.id == 3 || role.id == 5) {
+              canPreventCasualty = true;
+              break;
+            }
+            // Knight with 2 lives (11) can survive a hit
+            if (role.id == 11 && (widget.knightLives?[player.id] ?? 0) >= 2) {
+              canPreventCasualty = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!canPreventCasualty) {
+        // No way to stop a kill tonight. Werewolves will inevitably reach parity or majority.
+        _navigateToGameEnd("werewolves", updatedRoles);
+      } else {
+        // Possible to block the kill - Game Continues to Night
+        _navigateToNextNight(nextDeadIds, updatedRoles);
+      }
     } else {
-      // Game Continues -> Night Phase (pass updated roles)
+      // Game Continues -> Night Phase
       _navigateToNextNight(nextDeadIds, updatedRoles);
     }
   }
