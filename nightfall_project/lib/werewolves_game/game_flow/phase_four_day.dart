@@ -521,7 +521,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                                               ),
                                             ),
                                             child: Image.asset(
-                                              'assets/images/hanging_noose_alt.png',
+                                              'assets/images/hanging_noose.png',
                                               fit: BoxFit.contain,
                                             ),
                                           ),
