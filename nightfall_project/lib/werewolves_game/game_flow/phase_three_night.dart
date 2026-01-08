@@ -253,10 +253,10 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     final role = widget.playerRoles[player.id];
     bool isWerewolf = false;
 
-    // Check Logic: Werewolf (2) or Avenging Twin (7) -> "W"
-    // Everyone else (including Vampire 8, Jester 9) -> "V"
+    // Check Logic: Werewolf (2), Avenging Twin (7), or Drunk (10) -> "W" (Threat)
+    // Everyone else (including Vampire 8, Jester 9) -> "V" (Clear)
     if (role != null) {
-      if (role.id == 2 || role.id == 7) {
+      if (role.id == 2 || role.id == 7 || role.id == 10) {
         isWerewolf = true;
       }
     }
@@ -754,6 +754,8 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         return const Color(0xFFFFD166); // Yellow
       case 9: // Jester
         return const Color(0xFF9D4EDD); // Purple
+      case 10: // Drunk
+        return const Color(0xFFCD9777); // Brown/Beer
       default:
         return Colors.white; // Villager etc.
     }
@@ -854,7 +856,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                               _guardTargetId != null)
                         ? context.watch<LanguageService>().translate(
                             'investigate_button',
-                          ) 
+                          )
                         : context.watch<LanguageService>().translate(
                             'next_step_button',
                           ),

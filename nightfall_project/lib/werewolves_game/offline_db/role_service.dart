@@ -120,6 +120,17 @@ class WerewolfRoleService {
       translationKey: 'jester_name',
       descriptionKey: 'jester_desc',
     ),
+    WerewolfRole(
+      id: 10,
+      name: 'Drunk',
+      points: 1,
+      allianceId: 1, // Villagers
+      description:
+          'A confused townsperson who appears as a Werewolf to the Guard, but is actually a Villager.',
+      imagePath: 'assets/images/werewolves/Drunk.png',
+      translationKey: 'drunk_name',
+      descriptionKey: 'drunk_desc',
+    ),
   ];
 
   List<WerewolfRole> getRoles() => _roles;

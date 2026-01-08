@@ -160,6 +160,9 @@ const Map<String, String> enTranslations = {
   'jester_name': 'Jester',
   'jester_desc':
       'A silly trickster. Wants to be hanged by the village to claim victory.',
+  'drunk_name': 'Drunk',
+  'drunk_desc':
+      'A confused drinker. Due to intoxication, he appears as a Werewolf to the Guard, but is actually a loyal Villager.',
   'villagers_alliance_name': 'Villagers',
   'villagers_alliance_desc':
       'The peaceful inhabitants of the village. Their goal is to find and eliminate all werewolves.',

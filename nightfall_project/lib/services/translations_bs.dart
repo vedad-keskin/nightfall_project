@@ -160,6 +160,9 @@ const Map<String, String> bsTranslations = {
   'jester_name': 'Luda',
   'jester_desc':
       'Smiješni šaljivdžija. Želi da ga selo objesi kako bi proglasio pobjedu.',
+  'drunk_name': 'Pijanica',
+  'drunk_desc':
+      'Zbunjeni pijanac. Zbog opijenosti, Stražaru izgleda kao Vukodlak, ali njegovo srce kuca za selo.',
   'villagers_alliance_name': 'Seljani',
   'villagers_alliance_desc':
       'Mirni stanovnici sela. Njihov cilj je pronaći i eliminisati sve vukove.',
@@ -207,7 +210,7 @@ const Map<String, String> bsTranslations = {
   'start_day_button': 'ZAPOČNI DAN',
   'the_pack_alliance_title': 'ČOPOR',
   'the_village_alliance_title': 'SELO',
-  'specials_alliance_title': 'SPECIJALNE ULOGE',
+  'specials_alliance_title': 'POSEBNI',
   'doctor_saved_msg': 'Doktor je spasio igrača {name}!',
   'plague_doctor_saved_msg': 'Vrač je liječio igrača {name}... i preživio je!',
   'plague_doctor_failed_msg':
