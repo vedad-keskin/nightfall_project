@@ -907,6 +907,8 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
         return const Color(0xFF9E2A2B); // Dark Red
       case 12: // Puppet Master
         return const Color(0xFF7209B7); // Indigo/Deep Purple
+      case 13: // Executioner
+        return const Color(0xFF6B4226); // Executioner-like Brown/Dark
       default:
         return Colors.white; // Villager etc.
     }

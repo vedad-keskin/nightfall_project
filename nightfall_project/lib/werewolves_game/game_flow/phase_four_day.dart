@@ -42,6 +42,8 @@ class WerewolfPhaseFourScreen extends StatefulWidget {
 
 class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
   String? _selectedForHangingId;
+  String? _selectedForRetaliationId;
+  bool _isRetaliationPhase = false;
   int _secondsRemaining = 300; // 5 minutes
   Timer? _timer;
 
@@ -128,36 +130,93 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
         return const Color(0xFF9D4EDD); // Purple
       case 12: // Puppet Master
         return const Color(0xFF7209B7); // Indigo/Deep Purple
+      case 13: // Executioner
+        return const Color(0xFF6B4226); // Executioner-like Brown/Dark
       default:
         return Colors.white; // Villager etc.
     }
   }
 
-  void _handleVote() async {
+  void _handleVote() {
+    if (_isRetaliationPhase) {
+      if (_selectedForRetaliationId != null) {
+        _finalizeDayPhase();
+      }
+      return;
+    }
+
+    if (_selectedForHangingId == null) return;
+
+    final role = widget.playerRoles[_selectedForHangingId];
+
     // 1. Jester Check (Specific Win Condition)
-    if (_selectedForHangingId != null) {
-      final role = widget.playerRoles[_selectedForHangingId];
-      if (role?.id == 9) {
-        // Jester Wins immediately if hanged
-        _navigateToGameEnd("jester", widget.playerRoles);
+    if (role?.id == 9) {
+      // Jester Wins immediately if hanged
+      _navigateToGameEnd("jester", widget.playerRoles);
+      return;
+    }
+
+    // 2. Executioner Check
+    if (role?.id == 13) {
+      // Only allow retaliation if there are other players alive at this point
+      final remainingPlayersCount = widget.players
+          .where(
+            (p) =>
+                !widget.deadPlayerIds.contains(p.id) &&
+                p.id != _selectedForHangingId,
+          )
+          .length;
+
+      if (remainingPlayersCount > 0) {
+        setState(() {
+          _isRetaliationPhase = true;
+          _timer?.cancel(); // Stop timer during retaliation decision
+        });
         return;
       }
     }
 
-    // 2. Update Dead List
+    // 3. Normal finalize if not Executioner or no one left to kill
+    _finalizeDayPhase();
+  }
+
+  void _finalizeDayPhase() async {
+    // 1. Compute Dead List
     List<String> nextDeadIds = List.from(widget.deadPlayerIds);
     if (_selectedForHangingId != null) {
       nextDeadIds.add(_selectedForHangingId!);
     }
+    if (_isRetaliationPhase && _selectedForRetaliationId != null) {
+      nextDeadIds.add(_selectedForRetaliationId!);
+    }
 
-    // 3. Transformation Logic (Puppet Master & Twins)
     Map<String, WerewolfRole> updatedRoles = Map.from(widget.playerRoles);
     Map<String, int> updatedKnightLives = Map.from(widget.knightLives ?? {});
+
+    // --- PRELIMINARY WIN CHECK ---
+    // If the Executioner's kill results in all werewolves dead, we end now
+    // so the Puppet Master doesn't transform needlessly.
+    int preliminaryWerewolves = 0;
+    for (final player in widget.players) {
+      if (!nextDeadIds.contains(player.id)) {
+        final role = widget.playerRoles[player.id];
+        // Werewolf Alliance (2: Werewolf, 7: Avenging Twin, 8: Vampire)
+        if (role?.id == 2 || role?.id == 7 || role?.id == 8) {
+          preliminaryWerewolves++;
+        }
+      }
+    }
+
+    if (preliminaryWerewolves == 0) {
+      _navigateToGameEnd("village", updatedRoles);
+      return;
+    }
+    // ----------------------------
 
     if (_selectedForHangingId != null) {
       final hangedRole = widget.playerRoles[_selectedForHangingId];
 
-      // Puppet Master Transformation
+      // 3b. Puppet Master Transformation (happens after retaliation decision if Executioner)
       String? puppetMasterId;
       for (final player in widget.players) {
         if (!nextDeadIds.contains(player.id) &&
@@ -185,7 +244,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
         }
       }
 
-      // Twin Transformation
+      // 3c. Twin Transformation
       if (hangedRole?.id == 6) {
         for (final player in widget.players) {
           if (player.id != _selectedForHangingId &&
@@ -223,26 +282,19 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     }
 
     if (aliveWerewolves == 0) {
-      // Village Wins
       _navigateToGameEnd("village", updatedRoles);
     } else if (aliveWerewolves >= aliveVillagers) {
-      // Werewolves Win (including after Twin transformation)
       _navigateToGameEnd("werewolves", updatedRoles);
     } else if (aliveWerewolves == aliveVillagers - 1) {
-      // 5. Advanced Win Condition Check (Inevitable Werewolf Victory)
-      // If werewolves are 1 kill away from winning, and no one can prevent a kill tonight,
-      // then their victory is already guaranteed.
       bool canPreventCasualty = false;
       for (final player in widget.players) {
         if (!nextDeadIds.contains(player.id)) {
           final role = updatedRoles[player.id];
           if (role != null) {
-            // Doctor (3) or Plague Doctor (5) can save someone
             if (role.id == 3 || role.id == 5) {
               canPreventCasualty = true;
               break;
             }
-            // Knight with 2 lives (11) can survive a hit
             if (role.id == 11 && (updatedKnightLives[player.id] ?? 0) >= 2) {
               canPreventCasualty = true;
               break;
@@ -252,14 +304,11 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
       }
 
       if (!canPreventCasualty) {
-        // No way to stop a kill tonight. Werewolves will inevitably reach parity or majority.
         _navigateToGameEnd("werewolves", updatedRoles);
       } else {
-        // Possible to block the kill - Game Continues to Night
         _navigateToNextNight(nextDeadIds, updatedRoles, updatedKnightLives);
       }
     } else {
-      // Game Continues -> Night Phase
       _navigateToNextNight(nextDeadIds, updatedRoles, updatedKnightLives);
     }
   }
@@ -284,7 +333,6 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     Map<String, WerewolfRole> updatedRoles,
     Map<String, int> updatedKnightLives,
   ) async {
-    // Play night transition sound if not muted
     final isMuted = context.read<SoundSettingsService>().isMuted;
 
     if (!isMuted) {
@@ -301,9 +349,6 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
         MaterialPageRoute(
           builder: (context) => WerewolfPhaseThreeScreen(
             playerRoles: updatedRoles,
-            // We pass ONLY the alive players to the next night phase?
-            // Phase 3 expects a list of players. If we filter it, dead players are gone from the UI.
-            // This matches the "Moderator View" requirement where they only see relevant info.
             players: widget.players
                 .where((p) => !nextDeadIds.contains(p.id))
                 .toList(),
@@ -347,18 +392,24 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                     children: [
                       Text(
                         context.watch<LanguageService>().translate(
-                          'day_phase_title',
+                          _isRetaliationPhase
+                              ? 'executioner_retaliation_title'
+                              : 'day_phase_title',
                         ),
                         style: GoogleFonts.pressStart2p(
-                          color: const Color(0xFFFCA311),
-                          fontSize: 20,
+                          color: _isRetaliationPhase
+                              ? const Color(0xFFE63946)
+                              : const Color(0xFFFCA311),
+                          fontSize: 18,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         context.watch<LanguageService>().translate(
-                          'discuss_and_vote_instruction',
+                          _isRetaliationPhase
+                              ? 'executioner_retaliation_desc'
+                              : 'discuss_and_vote_instruction',
                         ),
                         style: GoogleFonts.vt323(
                           color: Colors.white,
@@ -366,43 +417,45 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: const Color(0xFFFCA311).withOpacity(0.5),
+                      if (!_isRetaliationPhase) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: const Color(0xFFFCA311).withOpacity(0.5),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                context.watch<LanguageService>().translate(
+                                  'votes_needed_label',
+                                ),
+                                style: GoogleFonts.pressStart2p(
+                                  color: Colors.white70,
+                                  fontSize: 9,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${(alivePlayers.length / 2).floor() + 1}',
+                                style: GoogleFonts.pressStart2p(
+                                  color: const Color(0xFFFCA311),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              context.watch<LanguageService>().translate(
-                                'votes_needed_label',
-                              ),
-                              style: GoogleFonts.pressStart2p(
-                                color: Colors.white70,
-                                fontSize: 9,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              '${(alivePlayers.length / 2).floor() + 1}',
-                              style: GoogleFonts.pressStart2p(
-                                color: const Color(0xFFFCA311),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -422,203 +475,248 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                     itemBuilder: (context, index) {
                       final player = alivePlayers[index];
                       final role = widget.playerRoles[player.id];
-                      final isSelected = _selectedForHangingId == player.id;
+                      final isSelectedForHanging =
+                          _selectedForHangingId == player.id;
+                      final isSelectedForRetaliation =
+                          _selectedForRetaliationId == player.id;
+                      final isSelected = _isRetaliationPhase
+                          ? isSelectedForRetaliation
+                          : isSelectedForHanging;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              _selectedForHangingId = null;
-                            } else {
-                              _selectedForHangingId = player.id;
-                            }
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFFE63946).withOpacity(0.4)
-                                : const Color(0xFF1B263B),
-                            border: Border.all(
+                      // Dim players already selected for hanging during retaliation phase
+                      final bool isDimmed =
+                          _isRetaliationPhase && isSelectedForHanging;
+
+                      return Opacity(
+                        opacity: isDimmed ? 0.5 : 1.0,
+                        child: GestureDetector(
+                          onTap: isDimmed
+                              ? null
+                              : () {
+                                  setState(() {
+                                    if (_isRetaliationPhase) {
+                                      if (isSelectedForRetaliation) {
+                                        _selectedForRetaliationId = null;
+                                      } else {
+                                        _selectedForRetaliationId = player.id;
+                                      }
+                                    } else {
+                                      if (isSelectedForHanging) {
+                                        _selectedForHangingId = null;
+                                      } else {
+                                        _selectedForHangingId = player.id;
+                                      }
+                                    }
+                                  });
+                                },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
                               color: isSelected
-                                  ? const Color(0xFFE63946)
-                                  : const Color(0xFF415A77),
-                              width: isSelected ? 3 : 1,
-                            ),
-                            boxShadow: isSelected
-                                ? [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFFE63946,
-                                      ).withOpacity(0.6),
-                                      blurRadius: 15,
-                                      spreadRadius: 2,
-                                    ),
-                                  ]
-                                : null,
-                          ),
-                          child: Column(
-                            children: [
-                              // Image Top (Expanded)
-                              Expanded(
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child: role != null
-                                          ? Image.asset(
-                                              role.imagePath,
-                                              fit: BoxFit.cover,
-                                              alignment: Alignment.topCenter,
-                                            )
-                                          : const Center(
-                                              child: Icon(
-                                                Icons.person,
-                                                color: Colors.white,
-                                                size: 40,
-                                              ),
-                                            ),
-                                    ),
-                                    if (role?.id == 11)
-                                      Positioned(
-                                        top: 4,
-                                        left: 4,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 2,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(
-                                              0.5,
-                                            ),
-                                            border: Border.all(
-                                              color: Colors.white.withOpacity(
-                                                0.2,
-                                              ),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              PixelHeart(
-                                                isFull:
-                                                    (widget.knightLives?[player
-                                                            .id] ??
-                                                        0) >=
-                                                    1,
-                                                size: 13,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              PixelHeart(
-                                                isFull:
-                                                    (widget.knightLives?[player
-                                                            .id] ??
-                                                        0) >=
-                                                    2,
-                                                size: 13,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                  ? const Color(0xFFE63946).withOpacity(0.4)
+                                  : isDimmed
+                                  ? Colors.black54
+                                  : const Color(0xFF1B263B),
+                              border: Border.all(
+                                color: isSelected
+                                    ? const Color(0xFFE63946)
+                                    : isDimmed
+                                    ? Colors.white10
+                                    : const Color(0xFF415A77),
+                                width: isSelected ? 3 : 1,
+                              ),
+                              boxShadow: isSelected
+                                  ? [
+                                      BoxShadow(
+                                        color: const Color(
+                                          0xFFE63946,
+                                        ).withOpacity(0.6),
+                                        blurRadius: 15,
+                                        spreadRadius: 2,
                                       ),
-                                    // Hanging Noose Icon Overlay
-                                    if (isSelected)
-                                      Positioned(
-                                        top: 4,
-                                        right: 4,
-                                        child: TweenAnimationBuilder<double>(
-                                          duration: const Duration(
-                                            milliseconds: 400,
-                                          ),
-                                          tween: Tween(begin: 0.0, end: 1.0),
-                                          curve: Curves.elasticOut,
-                                          builder: (context, value, child) {
-                                            return Transform.scale(
-                                              scale: value,
-                                              child: Opacity(
-                                                opacity: value.clamp(0.0, 1.0),
-                                                child: child,
+                                    ]
+                                  : null,
+                            ),
+                            child: Column(
+                              children: [
+                                // Image Top (Expanded)
+                                Expanded(
+                                  child: Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: role != null
+                                            ? Image.asset(
+                                                role.imagePath,
+                                                fit: BoxFit.cover,
+                                                alignment: Alignment.topCenter,
+                                              )
+                                            : const Center(
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 40,
+                                                ),
                                               ),
-                                            );
-                                          },
+                                      ),
+                                      if (role?.id == 11)
+                                        Positioned(
+                                          top: 4,
+                                          left: 4,
                                           child: Container(
-                                            width: 30,
-                                            height: 30,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 2,
+                                              vertical: 2,
+                                            ),
                                             decoration: BoxDecoration(
                                               color: Colors.black.withOpacity(
-                                                0.6,
+                                                0.5,
                                               ),
                                               border: Border.all(
-                                                color: const Color(
-                                                  0xFFE63946,
-                                                ).withOpacity(0.4),
+                                                color: Colors.white.withOpacity(
+                                                  0.2,
+                                                ),
                                                 width: 1,
                                               ),
                                             ),
-                                            child: Image.asset(
-                                              'assets/images/hanging_noose.png',
-                                              fit: BoxFit.contain,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                PixelHeart(
+                                                  isFull:
+                                                      (widget.knightLives?[player
+                                                              .id] ??
+                                                          0) >=
+                                                      1,
+                                                  size: 13,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                PixelHeart(
+                                                  isFull:
+                                                      (widget.knightLives?[player
+                                                              .id] ??
+                                                          0) >=
+                                                      2,
+                                                  size: 13,
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ),
-                                  ],
+                                      if (isSelected || isSelectedForHanging)
+                                        Positioned(
+                                          top: 4,
+                                          right: 4,
+                                          child: TweenAnimationBuilder<double>(
+                                            duration: const Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            tween: Tween(
+                                              begin: 1.0,
+                                              end: 1.0,
+                                            ), // No animation needed if static but keeping structure
+                                            builder: (context, value, child) {
+                                              return Transform.scale(
+                                                scale: value,
+                                                child: Opacity(
+                                                  opacity: value.clamp(
+                                                    0.0,
+                                                    1.0,
+                                                  ),
+                                                  child: child,
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(
+                                                  0.6,
+                                                ),
+                                                border: Border.all(
+                                                  color: const Color(
+                                                    0xFFE63946,
+                                                  ).withOpacity(0.4),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Image.asset(
+                                                isSelectedForRetaliation
+                                                    ? 'assets/images/executioner_kill.png'
+                                                    : 'assets/images/hanging_noose.png',
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              // Footer Text
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 2,
-                                ),
-                                color: Colors.black87,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      player.name,
-                                      style: GoogleFonts.vt323(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    if (role != null)
+                                const SizedBox(height: 4),
+                                // Footer Text
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                    vertical: 2,
+                                  ),
+                                  color: Colors.black87,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
                                       Text(
-                                        context
-                                            .watch<LanguageService>()
-                                            .translate(role.translationKey)
-                                            .toUpperCase(),
-                                        style: GoogleFonts.pressStart2p(
-                                          color: _getRoleColor(role.id),
-                                          fontSize: 8,
-                                          height: 1.5,
+                                        player.name,
+                                        style: GoogleFonts.vt323(
+                                          color: Colors.white,
+                                          fontSize: 16,
                                         ),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                  ],
-                                ),
-                              ),
-                              if (isSelected)
-                                Text(
-                                  context.watch<LanguageService>().translate(
-                                    'hang_button',
+                                      if (role != null)
+                                        Text(
+                                          context
+                                              .watch<LanguageService>()
+                                              .translate(role.translationKey)
+                                              .toUpperCase(),
+                                          style: GoogleFonts.pressStart2p(
+                                            color: _getRoleColor(role.id),
+                                            fontSize: 8,
+                                            height: 1.5,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                    ],
                                   ),
-                                  style: GoogleFonts.pressStart2p(
-                                    color: Colors.redAccent,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
                                 ),
-                            ],
+                                if (isSelected && !_isRetaliationPhase)
+                                  Text(
+                                    context.watch<LanguageService>().translate(
+                                      'hang_button',
+                                    ),
+                                    style: GoogleFonts.pressStart2p(
+                                      color: Colors.redAccent,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                if (isSelected && _isRetaliationPhase)
+                                  Text(
+                                    context
+                                        .watch<LanguageService>()
+                                        .translate('execute_button')
+                                        .toUpperCase(),
+                                    style: GoogleFonts.pressStart2p(
+                                      color: Colors.redAccent,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -669,33 +767,43 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                       ),
                       const SizedBox(width: 12),
                       // Buttons
-                      Expanded(
-                        child: PixelButton(
-                          label: context.watch<LanguageService>().translate(
-                            'skip_button',
+                      if (!_isRetaliationPhase)
+                        Expanded(
+                          child: PixelButton(
+                            label: context.watch<LanguageService>().translate(
+                              'skip_button',
+                            ),
+                            color: const Color(0xFF415A77),
+                            onPressed: () {
+                              _selectedForHangingId = null;
+                              _handleVote();
+                            },
                           ),
-                          color: const Color(0xFF415A77),
-                          onPressed: () {
-                            _selectedForHangingId = null;
-                            _handleVote();
-                          },
                         ),
-                      ),
-                      const SizedBox(width: 12),
+                      if (!_isRetaliationPhase) const SizedBox(width: 12),
                       Expanded(
-                        // flex: 2,
                         child: PixelButton(
-                          label: _selectedForHangingId == null
+                          label: _isRetaliationPhase
+                              ? context.watch<LanguageService>().translate(
+                                  'execute_button',
+                                )
+                              : _selectedForHangingId == null
                               ? context.watch<LanguageService>().translate(
                                   'select_button',
                                 )
                               : context.watch<LanguageService>().translate(
                                   'hang_button',
                                 ),
-                          color: _selectedForHangingId == null
+                          color:
+                              (_isRetaliationPhase
+                                  ? _selectedForRetaliationId == null
+                                  : _selectedForHangingId == null)
                               ? Colors.grey
                               : const Color(0xFFE63946),
-                          onPressed: _selectedForHangingId == null
+                          onPressed:
+                              (_isRetaliationPhase
+                                  ? _selectedForRetaliationId == null
+                                  : _selectedForHangingId == null)
                               ? null
                               : _handleVote,
                         ),

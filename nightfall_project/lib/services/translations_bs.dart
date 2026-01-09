@@ -281,4 +281,12 @@ const Map<String, String> bsTranslations = {
   'target_is_villager': 'Meta je SELJAK',
   'processing': 'OBRADA...',
   'investigate_button': 'PROVJERI',
+  'executioner_name': 'Dželat',
+  'executioner_desc':
+      'Osvetoljubivi seljak. Ako bude obješen od strane sela, može povesti jednog igrača sa sobom u grob.',
+  'executioner_retaliation_title': 'OSVETA DŽELATA',
+  'executioner_retaliation_desc':
+      'Dželat je obješen! On vodi nekoga sa sobom. Odaberi žrtvu.',
+  'confirm_button': 'POTVRDI',
+  'execute_button': 'POGUBI',
 };

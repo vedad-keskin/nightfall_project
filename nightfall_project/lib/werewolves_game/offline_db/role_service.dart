@@ -153,6 +153,17 @@ class WerewolfRoleService {
       translationKey: 'puppet_master_name',
       descriptionKey: 'puppet_master_desc',
     ),
+    WerewolfRole(
+      id: 13,
+      name: 'Executioner',
+      points: 1,
+      allianceId: 1, // Villagers
+      description:
+          'A vengeful villager. If hanged by the village, he can take one player with him to the grave.',
+      imagePath: 'assets/images/werewolves/Executioner.png',
+      translationKey: 'executioner_name',
+      descriptionKey: 'executioner_desc',
+    ),
   ];
 
   List<WerewolfRole> getRoles() => _roles;

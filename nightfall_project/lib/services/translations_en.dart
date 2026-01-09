@@ -282,4 +282,12 @@ const Map<String, String> enTranslations = {
   'target_is_villager': 'Target is a VILLAGER',
   'processing': 'PROCESSING...',
   'investigate_button': 'INVESTIGATE',
+  'executioner_name': 'Executioner',
+  'executioner_desc':
+      'A vengeful villager. If hanged by the village, he can take one player with him to the grave.',
+  'executioner_retaliation_title': 'EXECUTIONER RETALIATION',
+  'executioner_retaliation_desc':
+      'The Executioner has been hanged! He takes someone with him. Select a victim.',
+  'confirm_button': 'CONFIRM',
+  'execute_button': 'EXECUTE',
 };
