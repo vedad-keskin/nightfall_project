@@ -87,29 +87,31 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                               isRevealed = true;
                             });
                           },
-                          child: TweenAnimationBuilder<double>(
-                            tween: Tween<double>(
-                              begin: 0,
-                              end: isRevealed ? 1.57 : 0, // 0 → 90°
-                            ),
-                            duration: const Duration(milliseconds: 800),
-                            curve: Curves.easeInOutCubic,
-                            builder: (context, value, child) {
-                              final isBackVisible = value > 0.78; // ~45°
+                          child: Center(
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                begin: 0,
+                                end: isRevealed ? 1.57 : 0, // 0 → 90°
+                              ),
+                              duration: const Duration(milliseconds: 800),
+                              curve: Curves.easeInOutCubic,
+                              builder: (context, value, child) {
+                                final isBackVisible = value > 0.78; // ~45°
 
-                              return Transform(
-                                alignment: Alignment.center,
-                                transform: Matrix4.identity()
-                                  ..setEntry(3, 2, 0.001)
-                                  ..rotateY(value),
-                                child: isBackVisible
-                                    ? _buildCardBack(
-                                        isImpostor,
-                                        languageService,
-                                      )
-                                    : _buildCardFront(languageService),
-                              );
-                            },
+                                return Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.identity()
+                                    ..setEntry(3, 2, 0.001)
+                                    ..rotateY(value),
+                                  child: isBackVisible
+                                      ? _buildCardBack(
+                                          isImpostor,
+                                          languageService,
+                                        )
+                                      : _buildCardFront(languageService),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ] else ...[
@@ -120,14 +122,16 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
                           ), // 90 to 0 degrees
                           duration: const Duration(milliseconds: 800),
                           builder: (context, value, child) {
-                            return Transform(
-                              transform: Matrix4.identity()
-                                ..setEntry(3, 2, 0.001)
-                                ..rotateY(value),
-                              alignment: Alignment.center,
-                              child: _buildCardBack(
-                                isImpostor,
-                                languageService,
+                            return Center(
+                              child: Transform(
+                                transform: Matrix4.identity()
+                                  ..setEntry(3, 2, 0.001)
+                                  ..rotateY(value),
+                                alignment: Alignment.center,
+                                child: _buildCardBack(
+                                  isImpostor,
+                                  languageService,
+                                ),
                               ),
                             );
                           },
@@ -316,7 +320,8 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
 
   Widget _buildCardFront(LanguageService languageService) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 12),
+      width: 250, // Fixed width for consistency
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 5),
       decoration: BoxDecoration(
         color: const Color(0xFF1B263B),
         border: Border.all(color: const Color(0xFF415A77), width: 4),
@@ -324,14 +329,14 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.security, color: Color(0xFFE63946), size: 64),
-          const SizedBox(height: 16),
+          const Icon(Icons.security, color: Color(0xFFE63946), size: 60),
+          const SizedBox(height: 20),
           Text(
             languageService.translate('top_secret'),
-            style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 14),
+            style: GoogleFonts.pressStart2p(color: Colors.white, fontSize: 13),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             languageService.translate('tap_to_flip'),
             style: GoogleFonts.vt323(color: Colors.white70, fontSize: 18),
@@ -344,7 +349,8 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
 
   Widget _buildCardBack(bool isImpostor, LanguageService languageService) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: 250, // Fixed width for consistency
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
       decoration: BoxDecoration(
         color: const Color(0xFF1B263B),
         border: Border.all(
@@ -360,33 +366,36 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
               languageService.translate('you_are_the'),
               style: GoogleFonts.vt323(color: Colors.white70, fontSize: 24),
             ),
+            const SizedBox(height: 4),
             Text(
               languageService.translate('impostor'),
               style: GoogleFonts.pressStart2p(
                 color: const Color(0xFFE63946), // Red
-                fontSize: 20,
+                fontSize: 18,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Text(
               languageService.translate('category_label'),
-              style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
+              style: GoogleFonts.vt323(color: Colors.white54, fontSize: 18),
             ),
             Text(
               widget.category.name,
-              style: GoogleFonts.vt323(color: Colors.white, fontSize: 29),
+              style: GoogleFonts.vt323(color: Colors.white, fontSize: 28),
+              textAlign: TextAlign.center,
             ),
             if (widget.hintsEnabled) ...[
               const SizedBox(height: 16),
               Text(
                 languageService.translate('hint_label'),
-                style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
+                style: GoogleFonts.vt323(color: Colors.white54, fontSize: 18),
               ),
               Text(
                 widget.word.hint,
                 style: GoogleFonts.vt323(
                   color: const Color(0xFF95D5B2),
-                  fontSize: 24,
+                  fontSize: 22,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -396,23 +405,24 @@ class _PhaseOneScreenState extends State<PhaseOneScreen> {
               languageService.translate('word_is'),
               style: GoogleFonts.vt323(color: Colors.white70, fontSize: 24),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Text(
               widget.word.name,
               style: GoogleFonts.pressStart2p(
                 color: const Color(0xFF4CC9F0), // Blue
-                fontSize: 14,
+                fontSize: 13,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Text(
               languageService.translate('category_label'),
-              style: GoogleFonts.vt323(color: Colors.white54, fontSize: 20),
+              style: GoogleFonts.vt323(color: Colors.white54, fontSize: 18),
             ),
             Text(
               widget.category.name,
-              style: GoogleFonts.vt323(color: Colors.white, fontSize: 29),
+              style: GoogleFonts.vt323(color: Colors.white, fontSize: 28),
+              textAlign: TextAlign.center,
             ),
           ],
         ],
