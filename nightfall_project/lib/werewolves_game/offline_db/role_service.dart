@@ -164,6 +164,17 @@ class WerewolfRoleService {
       translationKey: 'executioner_name',
       descriptionKey: 'executioner_desc',
     ),
+    WerewolfRole(
+      id: 14,
+      name: 'Infected',
+      points: 1,
+      allianceId: 1, // Villagers
+      description:
+          'A simple villager but carrying a hidden disease. If a healer treats them successfully, the healer will catch the infection and die.',
+      imagePath: 'assets/images/werewolves/Infected.png',
+      translationKey: 'infected_name',
+      descriptionKey: 'infected_desc',
+    ),
   ];
 
   List<WerewolfRole> getRoles() => _roles;

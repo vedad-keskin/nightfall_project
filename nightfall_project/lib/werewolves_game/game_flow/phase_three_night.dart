@@ -469,6 +469,42 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
       }
     }
 
+    // --- INFECTED ROLE LOGIC ---
+    // If a healer (Doctor or Plague Doctor) successfully heals an Infected player, the healer dies.
+    void infectHealer(int healerRoleId, String targetId) {
+      String? healerId;
+      for (final entry in widget.playerRoles.entries) {
+        if (entry.value.id == healerRoleId &&
+            !deadPlayerIds.contains(entry.key)) {
+          healerId = entry.key;
+          break;
+        }
+      }
+
+      if (healerId != null && !deadPlayerIds.contains(healerId)) {
+        deadPlayerIds.add(healerId);
+        final victimName = widget.players
+            .firstWhere((p) => p.id == targetId)
+            .name;
+        messages.add(
+          lang
+              .translate('infected_healer_msg')
+              .replaceAll('{name}', victimName),
+        );
+      }
+    }
+
+    if (doctorTarget != null && widget.playerRoles[doctorTarget]?.id == 14) {
+      infectHealer(3, doctorTarget); // Doctor ID is 3
+    }
+
+    if (plagueTarget != null &&
+        !isPlagueAccident &&
+        widget.playerRoles[plagueTarget]?.id == 14) {
+      infectHealer(5, plagueTarget); // Plague Doctor ID is 5
+    }
+    // ---------------------------
+
     // Show Results
     showDialog(
       context: context,

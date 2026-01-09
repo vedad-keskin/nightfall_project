@@ -290,4 +290,9 @@ const Map<String, String> enTranslations = {
       'The Executioner has been hanged! He takes someone with him. Select a victim.',
   'confirm_button': 'CONFIRM',
   'execute_button': 'EXECUTE',
+  'infected_name': 'Infected',
+  'infected_desc':
+      'A villager carrying a hidden sickness. If a healer treats them successfully, the healer gets infected and dies.',
+  'infected_healer_msg':
+      'An infection spread while treating {name}! The healer has DIED!',
 };

@@ -132,6 +132,8 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
         return const Color(0xFF7209B7); // Indigo/Deep Purple
       case 13: // Executioner
         return const Color(0xFF6B4226); // Executioner-like Brown/Dark
+      case 14: // Infected
+        return const Color(0xFF8E9B97); // Sickly Green-Grey
       default:
         return Colors.white; // Villager etc.
     }
@@ -211,8 +213,19 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     }
 
     if (preliminaryWerewolves == 0) {
-      _navigateToGameEnd("village", updatedRoles);
-      return;
+      // Determine if a Puppet Master is still alive to potentially transform
+      bool hasPuppetMaster = widget.players.any(
+        (p) =>
+            !nextDeadIds.contains(p.id) && widget.playerRoles[p.id]?.id == 12,
+      );
+
+      // We end immediately ONLY if:
+      // 1. It was the Executioner's retaliation kill (requested skip)
+      // 2. OR there is no Puppet Master left to transform and keep the game alive.
+      if (_isRetaliationPhase || !hasPuppetMaster) {
+        _navigateToGameEnd("village", updatedRoles);
+        return;
+      }
     }
     // ----------------------------
 
