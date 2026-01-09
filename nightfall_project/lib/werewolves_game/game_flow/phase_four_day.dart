@@ -145,7 +145,10 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
       return;
     }
 
-    if (_selectedForHangingId == null) return;
+    if (_selectedForHangingId == null) {
+      _finalizeDayPhase();
+      return;
+    }
 
     final role = widget.playerRoles[_selectedForHangingId];
 
