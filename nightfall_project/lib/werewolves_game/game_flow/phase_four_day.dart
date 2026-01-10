@@ -469,7 +469,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                                   fontSize: 9,
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 9),
                               Text(
                                 '${(alivePlayers.length / 2).floor() + 1}',
                                 style: GoogleFonts.pressStart2p(

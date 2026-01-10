@@ -31,7 +31,6 @@ const Map<String, String> enTranslations = {
   'top_secret': 'TOP SECRET',
   'tap_to_flip': 'TAP TO FLIP',
   'understood_button': 'UNDERSTOOD',
-  'understood': 'UNDERSTOOD',
   'you_are_the': 'YOU ARE THE',
   'word_is': 'THE WORD IS:',
   'category_label': 'CATEGORY:',
@@ -126,12 +125,11 @@ const Map<String, String> enTranslations = {
       'DOCTOR: Chooses one player each night to protect from being killed.\n'
       'May protect themselves.\n'
       'Cannot protect the same player on two consecutive nights.\n'
-      'GUARD: Inspects one player each night. The Narrator gives a hand sign:\n'
-      'V = Villager\n'
-      'W = Werewolf\n'
-      'Inspection Results:\n'
-      'V: All types of Villagers, Vampires, Jesters\n'
-      'W: Werewolves, Drunks, and the Avenging Twin\n'
+      'GUARD: Inspects one player each night.\n'
+      'The Narrator privately shows the inspection result on their device to the Guard.\n'
+      'Inspection Result:\n'
+      'VILLAGER – All types of Villagers, Vampires, and Jesters.\n'
+      'WEREWOLF – Werewolves, Drunks, and the Avenging Twin.\n\n'
       'PLAGUE DOCTOR: Can protect one player at night, but there is a small chance the target dies instead.\n'
       'TWINS: If one Twin is hanged during the Day Phase, the other immediately becomes a Werewolf.\n'
       'If one Twin is killed during the Night Phase, the other remains a Villager.\n'
@@ -150,7 +148,10 @@ const Map<String, String> enTranslations = {
       'When the first hanging of the game occurs, the Puppet Master transforms into the role of the hanged player.\n'
       'The hanged player is eliminated normally.\n'
       'If the Puppet Master is killed, nothing special happens.\n'
-      'Exception: If the Jester is hanged, the Jester wins immediately and no Puppet Master transformation occurs.\n'
+      'If the Jester is hanged, the Jester wins immediately and no Puppet Master transformation occurs.\n'
+      'If the Gambler is hanged, the Puppet Master inherits the bet the Gambler made at the start of the game.\n'
+      'The Puppet Master does not know what the Gambler bet on.\n'
+      'If the bet is correct, both the Gambler and the Puppet Master receive the win.\n'
       'GAMBLER: A cunning risk-taker who bets on fate.\n'
       'On the first night only, the Gambler is woken first and secretly chooses which alliance they believe will win.\n'
       'After placing their bet, they behave as a normal Villager for the rest of the game with no special powers.\n'

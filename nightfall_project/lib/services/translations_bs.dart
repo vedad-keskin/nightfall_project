@@ -31,7 +31,6 @@ const Map<String, String> bsTranslations = {
   'top_secret': 'STROGO POVJERLJIVO',
   'tap_to_flip': 'DODIRNI ZA OKRETANJE',
   'understood_button': 'RAZUMIJEM',
-  'understood': 'RAZUMIJEM',
   'you_are_the': 'TI SI',
   'word_is': 'RIJEČ JE:',
   'category_label': 'KATEGORIJA:',
