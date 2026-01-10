@@ -31,6 +31,7 @@ const Map<String, String> enTranslations = {
   'top_secret': 'TOP SECRET',
   'tap_to_flip': 'TAP TO FLIP',
   'understood_button': 'UNDERSTOOD',
+  'understood': 'UNDERSTOOD',
   'you_are_the': 'YOU ARE THE',
   'word_is': 'THE WORD IS:',
   'category_label': 'CATEGORY:',

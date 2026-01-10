@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
-import 'package:nightfall_project/base_components/guard_scanner_dialog.dart';
+import 'package:nightfall_project/base_components/guard_inspection_dialog.dart';
 import 'package:nightfall_project/base_components/pixel_heart.dart';
 import 'package:nightfall_project/base_components/gambler_bet_dialog.dart';
 
@@ -352,7 +352,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => GuardScannerDialog(
+      builder: (context) => GuardInspectionDialog(
         playerName: player.name,
         isWerewolf: isWerewolf,
         onClose: () => Navigator.of(context).pop(),
