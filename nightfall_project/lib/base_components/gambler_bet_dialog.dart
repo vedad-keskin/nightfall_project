@@ -69,7 +69,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.85);
+    _pageController = PageController(viewportFraction: 1.0);
 
     // Randomize dice animation offsets
     _dice1RotationOffset = _random.nextDouble() * pi;
@@ -87,10 +87,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
       vsync: this,
     );
     _entranceScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _entranceController,
-        curve: Curves.elasticOut,
-      ),
+      CurvedAnimation(parent: _entranceController, curve: Curves.elasticOut),
     );
     _entranceFade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -101,7 +98,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
 
     // Dice rolling
     _diceController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
     _diceController.addListener(_onDiceRoll);
@@ -173,7 +170,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
     _playDiceSound();
     _diceController.forward();
 
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 1000));
 
     setState(() {
       _isRolling = false;
@@ -246,7 +243,10 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
             opacity: _entranceFade.value.clamp(0.0, 1.0),
             child: Dialog(
               backgroundColor: Colors.transparent,
-              insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              insetPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 24,
+              ),
               child: _buildMainContent(lang),
             ),
           ),
@@ -261,10 +261,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
       decoration: BoxDecoration(
         color: const Color(0xFF0D1B2A),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFF415A77),
-          width: 2,
-        ),
+        border: Border.all(color: const Color(0xFF415A77), width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.6),
@@ -314,8 +311,9 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFD4AF37)
-                        .withOpacity(0.1 + _glowController.value * 0.15),
+                    color: const Color(
+                      0xFFD4AF37,
+                    ).withOpacity(0.1 + _glowController.value * 0.15),
                     blurRadius: 10,
                     spreadRadius: 2,
                   ),
@@ -462,17 +460,24 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
 
         if (_isRolling) {
           final bounce1 =
-              sin((progress * 5 + bouncePhase) * pi) * 12 * pow(1 - progress, 1.5);
+              sin((progress * 5 + bouncePhase) * pi) *
+              12 *
+              pow(1 - progress, 1.5);
           final bounce2 =
-              sin((progress * 12 + bouncePhase) * pi) * 4 * pow(1 - progress, 2);
+              sin((progress * 12 + bouncePhase) * pi) *
+              4 *
+              pow(1 - progress, 2);
           bounceY = (bounce1.abs() + bounce2.abs());
           horizontalShake =
-              sin((progress * 8 + rotationOffset) * pi) * 3 * (1 - easedProgress);
+              sin((progress * 8 + rotationOffset) * pi) *
+              3 *
+              (1 - easedProgress);
         }
 
         final rotationSpeed = _isRolling ? (1 - easedProgress) : 0.0;
         final rotateX = _isRolling
-            ? (progress * 6 + rotationOffset) * pi * rotationSpeed + rotationOffset
+            ? (progress * 6 + rotationOffset) * pi * rotationSpeed +
+                  rotationOffset
             : 0.0;
         final rotateY = _isRolling
             ? (progress * 4 + rotationOffset * 0.7) * pi * rotationSpeed
@@ -483,7 +488,8 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
 
         double scale = 1.0;
         if (_isRolling) {
-          final squash = 1.0 -
+          final squash =
+              1.0 -
               sin(progress * pi * 5 + bouncePhase).abs() * 0.1 * (1 - progress);
           scale = squash;
         }
@@ -525,7 +531,10 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.4 + bounceY * 0.02),
-                    offset: Offset(2 + horizontalShake * 0.3, 2 + bounceY * 0.15),
+                    offset: Offset(
+                      2 + horizontalShake * 0.3,
+                      2 + bounceY * 0.15,
+                    ),
                     blurRadius: 1 + bounceY * 0.2,
                   ),
                   BoxShadow(
@@ -566,7 +575,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
         dots = [
           const Alignment(-0.7, -0.7),
           Alignment.center,
-          const Alignment(0.7, 0.7)
+          const Alignment(0.7, 0.7),
         ];
         break;
       case 4:
@@ -574,7 +583,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
           const Alignment(-0.7, -0.7),
           const Alignment(0.7, -0.7),
           const Alignment(-0.7, 0.7),
-          const Alignment(0.7, 0.7)
+          const Alignment(0.7, 0.7),
         ];
         break;
       case 5:
@@ -583,7 +592,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
           const Alignment(0.7, -0.7),
           Alignment.center,
           const Alignment(-0.7, 0.7),
-          const Alignment(0.7, 0.7)
+          const Alignment(0.7, 0.7),
         ];
         break;
       case 6:
@@ -593,7 +602,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
           const Alignment(-0.7, 0.0),
           const Alignment(0.7, 0.0),
           const Alignment(-0.7, 0.7),
-          const Alignment(0.7, 0.7)
+          const Alignment(0.7, 0.7),
         ];
         break;
     }
@@ -629,7 +638,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
     return Column(
       children: [
         SizedBox(
-          height: 200,
+          height: 260,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -655,13 +664,23 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.chevron_left,
-                      color: Color(0xFFD4AF37), size: 14),
-                  Text('SWIPE',
-                      style:
-                          GoogleFonts.vt323(color: const Color(0xFFD4AF37), fontSize: 12)),
-                  const Icon(Icons.chevron_right,
-                      color: Color(0xFFD4AF37), size: 14),
+                  const Icon(
+                    Icons.chevron_left,
+                    color: Color(0xFFD4AF37),
+                    size: 14,
+                  ),
+                  Text(
+                    'SWIPE',
+                    style: GoogleFonts.vt323(
+                      color: const Color(0xFFD4AF37),
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: Color(0xFFD4AF37),
+                    size: 14,
+                  ),
                 ],
               ),
             );
@@ -681,9 +700,11 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
 
         return GestureDetector(
           onTap: () {
-            _pageController.animateToPage(index,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic);
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutCubic,
+            );
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
@@ -694,8 +715,9 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
               shape: BoxShape.circle,
               color: isCurrentPage ? color : const Color(0xFF415A77),
               border: Border.all(
-                  color: isCurrentPage ? Colors.white : const Color(0xFF415A77),
-                  width: 2),
+                color: isCurrentPage ? Colors.white : const Color(0xFF415A77),
+                width: 2,
+              ),
               boxShadow: isCurrentPage
                   ? [BoxShadow(color: color.withOpacity(0.6), blurRadius: 8)]
                   : [],
@@ -722,7 +744,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
             opacity: isCurrent ? 1.0 : 0.4,
             duration: const Duration(milliseconds: 300),
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -731,15 +753,21 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                     Transform.rotate(
                       angle: _runeController.value * 2 * pi,
                       child: CustomPaint(
-                        size: const Size(180, 180),
+                        size: const Size(220, 220),
                         painter: _CardRunePainter(
-                          color: color.withOpacity(0.2 + _glowController.value * 0.1),
+                          color: color.withOpacity(
+                            0.2 + _glowController.value * 0.1,
+                          ),
                         ),
                       ),
                     ),
                   // Card content
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 24,
+                    ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -768,8 +796,8 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                       children: [
                         // Icon
                         Container(
-                          width: 60,
-                          height: 60,
+                          width: 80,
+                          height: 80,
                           decoration: BoxDecoration(
                             color: color.withOpacity(0.3),
                             shape: BoxShape.circle,
@@ -781,8 +809,10 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                                 ? [
                                     BoxShadow(
                                       color: color.withOpacity(
-                                          0.4 + _glowController.value * 0.3),
-                                      blurRadius: 10 + _glowController.value * 8,
+                                        0.4 + _glowController.value * 0.3,
+                                      ),
+                                      blurRadius:
+                                          10 + _glowController.value * 8,
                                     ),
                                   ]
                                 : [],
@@ -790,7 +820,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                           child: Icon(
                             _getBetIcon(bet),
                             color: isSelected ? Colors.white : color,
-                            size: 30,
+                            size: 40,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -799,7 +829,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                           _getBetLabel(bet),
                           style: GoogleFonts.pressStart2p(
                             color: Colors.white,
-                            fontSize: 10,
+                            fontSize: 14,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -807,7 +837,9 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                         // Reward badge
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 5),
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.amber.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
@@ -820,7 +852,7 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                             _getBetReward(bet),
                             style: GoogleFonts.pressStart2p(
                               color: Colors.amber,
-                              fontSize: 10,
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -854,14 +886,18 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                 ],
               ),
               border: Border.all(
-                color: Color.lerp(const Color(0xFFD4AF37), const Color(0xFFFFD700),
-                    _pulseController.value)!,
+                color: Color.lerp(
+                  const Color(0xFFD4AF37),
+                  const Color(0xFFFFD700),
+                  _pulseController.value,
+                )!,
                 width: 3,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFD4AF37)
-                      .withOpacity(0.2 + _pulseController.value * 0.3),
+                  color: const Color(
+                    0xFFD4AF37,
+                  ).withOpacity(0.2 + _pulseController.value * 0.3),
                   blurRadius: 15,
                   spreadRadius: 2,
                 ),
@@ -884,9 +920,13 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                 Text(
                   _isRolling
                       ? '...'
-                      : context.read<LanguageService>().translate('gambler_roll_dice'),
+                      : context.read<LanguageService>().translate(
+                          'gambler_roll_dice',
+                        ),
                   style: GoogleFonts.pressStart2p(
-                      color: const Color(0xFFD4AF37), fontSize: 9),
+                    color: const Color(0xFFD4AF37),
+                    fontSize: 9,
+                  ),
                 ),
               ],
             ),
@@ -902,8 +942,9 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
     return AnimatedBuilder(
       animation: _confirmationController,
       builder: (context, child) {
-        final scale = Curves.elasticOut
-            .transform(_confirmationController.value.clamp(0.0, 1.0));
+        final scale = Curves.elasticOut.transform(
+          _confirmationController.value.clamp(0.0, 1.0),
+        );
 
         return Transform.scale(
           scale: scale,
@@ -914,7 +955,8 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                 children: [
                   ...List.generate(8, (index) {
                     return Transform.rotate(
-                      angle: index * pi / 4 + _confirmationController.value * pi,
+                      angle:
+                          index * pi / 4 + _confirmationController.value * pi,
                       child: Container(
                         width: 4,
                         height: 70 * _confirmationController.value,
@@ -922,7 +964,10 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [color.withOpacity(0.5), Colors.transparent],
+                            colors: [
+                              color.withOpacity(0.5),
+                              Colors.transparent,
+                            ],
                           ),
                         ),
                       ),
@@ -932,7 +977,10 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
-                        colors: [color.withOpacity(0.4), color.withOpacity(0.1)],
+                        colors: [
+                          color.withOpacity(0.4),
+                          color.withOpacity(0.1),
+                        ],
                       ),
                       border: Border.all(color: color, width: 4),
                       boxShadow: [
@@ -954,16 +1002,23 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                               scale: value,
                               child: Transform.rotate(
                                 angle: (1 - value) * pi,
-                                child: Icon(_getBetIcon(_selectedBet),
-                                    color: Colors.white, size: 48),
+                                child: Icon(
+                                  _getBetIcon(_selectedBet),
+                                  color: Colors.white,
+                                  size: 48,
+                                ),
                               ),
                             );
                           },
                         ),
                         const SizedBox(height: 12),
-                        Text(_getBetLabel(_selectedBet),
-                            style: GoogleFonts.pressStart2p(
-                                color: Colors.white, fontSize: 12)),
+                        Text(
+                          _getBetLabel(_selectedBet),
+                          style: GoogleFonts.pressStart2p(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         TweenAnimationBuilder<double>(
                           tween: Tween(begin: 0.0, end: 1.0),
@@ -974,15 +1029,23 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                               scale: value,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 6),
+                                  horizontal: 14,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.amber.withOpacity(0.3),
-                                  border:
-                                      Border.all(color: Colors.amber, width: 2),
+                                  border: Border.all(
+                                    color: Colors.amber,
+                                    width: 2,
+                                  ),
                                 ),
-                                child: Text(_getBetReward(_selectedBet),
-                                    style: GoogleFonts.pressStart2p(
-                                        color: Colors.amber, fontSize: 14)),
+                                child: Text(
+                                  _getBetReward(_selectedBet),
+                                  style: GoogleFonts.pressStart2p(
+                                    color: Colors.amber,
+                                    fontSize: 14,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -995,16 +1058,17 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
               const SizedBox(height: 16),
               TweenAnimationBuilder<int>(
                 tween: IntTween(
-                    begin: 0,
-                    end: context
-                        .read<LanguageService>()
-                        .translate('gambler_fate_sealed')
-                        .length),
+                  begin: 0,
+                  end: context
+                      .read<LanguageService>()
+                      .translate('gambler_fate_sealed')
+                      .length,
+                ),
                 duration: const Duration(milliseconds: 1000),
                 builder: (context, value, child) {
-                  final text = context
-                      .read<LanguageService>()
-                      .translate('gambler_fate_sealed');
+                  final text = context.read<LanguageService>().translate(
+                    'gambler_fate_sealed',
+                  );
                   return Text(
                     text.substring(0, value),
                     style: GoogleFonts.pressStart2p(
@@ -1012,8 +1076,9 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                       fontSize: 9,
                       shadows: [
                         Shadow(
-                            color: const Color(0xFFD4AF37).withOpacity(0.5),
-                            blurRadius: 10),
+                          color: const Color(0xFFD4AF37).withOpacity(0.5),
+                          blurRadius: 10,
+                        ),
                       ],
                     ),
                   );
@@ -1056,14 +1121,22 @@ class _CardRunePainter extends CustomPainter {
 
       // Diamond marker at outer edge
       final path = Path()
-        ..moveTo(center.dx + cos(angle) * radius,
-            center.dy + sin(angle) * radius - 4)
-        ..lineTo(center.dx + cos(angle) * radius + 3,
-            center.dy + sin(angle) * radius)
-        ..lineTo(center.dx + cos(angle) * radius,
-            center.dy + sin(angle) * radius + 4)
-        ..lineTo(center.dx + cos(angle) * radius - 3,
-            center.dy + sin(angle) * radius)
+        ..moveTo(
+          center.dx + cos(angle) * radius,
+          center.dy + sin(angle) * radius - 4,
+        )
+        ..lineTo(
+          center.dx + cos(angle) * radius + 3,
+          center.dy + sin(angle) * radius,
+        )
+        ..lineTo(
+          center.dx + cos(angle) * radius,
+          center.dy + sin(angle) * radius + 4,
+        )
+        ..lineTo(
+          center.dx + cos(angle) * radius - 3,
+          center.dy + sin(angle) * radius,
+        )
         ..close();
       canvas.drawPath(path, paint..style = PaintingStyle.fill);
       paint.style = PaintingStyle.stroke;
