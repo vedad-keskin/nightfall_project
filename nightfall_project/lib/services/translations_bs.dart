@@ -1,6 +1,6 @@
 const Map<String, String> bsTranslations = {
   'werewolves': 'VUKOVI',
-  'impostor': 'VARALICA',
+  'impostor': 'ULJEZI',
   'impostor-game': 'VARALICA',
   'play_now': 'ZAIGRAJ',
   'back': 'NAZAD',
@@ -38,23 +38,23 @@ const Map<String, String> bsTranslations = {
   'discussion_time': 'VRIJEME ZA DISKUSIJU',
   'inst_1': 'Idite u krug 2 ili 3 runde.',
   'inst_2': 'Svaki igrač mora reći JEDNU RIJEČ vezanu za tajnu.',
-  'inst_3': 'Nakon rundi, izglasajte VARALICU!',
+  'inst_3': 'Nakon rundi, izglasajte ULJEZA!',
   'starting_player_label': 'POČETNI IGRAČ',
   'start_voting_button': 'ZAPOČNI GLASANJE',
-  'who_is_impostor': 'KO JE VARALICA?',
+  'who_is_impostor': 'KO JE ULJEZ?',
   'drag_suspect_here': 'PREVUCI SUMNJIVCA OVDJE',
-  'reveal_impostor_button': 'OTKRIJ VARALICU',
+  'reveal_impostor_button': 'OTKRIJ ULJEZA',
   'vote_instruction': 'Prevuci igrača u prostor za glasanje',
   'verdict_title': 'PRESUDA',
-  'voted_as_impostor': 'GLASANO KAO VARALICA:',
+  'voted_as_impostor': 'GLASANO KAO ULJEZ:',
   'verdict_innocent': 'BIO/LA JE NEVIN!',
-  'verdict_impostor': 'BIO/LA JE VARALICA!',
-  'real_impostor_was': 'PRAVA VARALICA JE BILA:',
+  'verdict_impostor': 'BIO/LA JE ULJEZ!',
+  'real_impostor_was': 'PRAVI ULJEZ JE BIO:',
   'secret_word': 'TAJNA RIJEČ',
-  'impostor_escaped': 'VARALICA JE POBJEGLA!',
+  'impostor_escaped': 'ULJEZ JE POBJEGAO!',
   'point_to': '+1 BOD ZA',
   'innocents_win': 'NEVINI POBJEĐUJU!',
-  'caught_impostor': 'Uhvatili ste Varalicu!',
+  'caught_impostor': 'Uhvatili ste Uljeza!',
   'back_to_menu': 'NAZAD NA MENI',
   'reset_points_q': 'RESETUJ BODOVE?',
   'reset_undo_warn':
@@ -63,32 +63,32 @@ const Map<String, String> bsTranslations = {
   'top_players_title': 'NAJBOLJI IGRAČI',
   'no_players_found': 'Nema igrača.',
   'how_to_play': 'PRAVILA',
-  'rules_impostor_title': 'PRAVILA: VARALICA',
+  'rules_impostor_title': 'PRAVILA: ULJEZI',
   'rules_impostor_content':
       '1. Postavljanje igre:\n'
       'Dodajte uređaj svakom igraču kako bi svi mogli vidjeti svoju ulogu i/ili riječ.\n\n'
       '2. Uloge:\n'
-      'Jedan igrač je VARALICA.\n'
+      'Jedan igrač je ULJEZ.\n'
       'Ostali su NEVINI.\n\n'
       '3. Tajna riječ:\n'
       'NEVINI vide tajnu riječ.\n'
-      'VARALICA vidi samo kategoriju i, ako je omogućeno, hintove.\n'
+      'ULJEZ vidi samo kategoriju i, ako je omogućeno, hintove.\n'
       'Hintovi se preporučuju za grupe od 5 ili manje igrača. Za veće grupe, igranje bez hintova je obično zabavnije.\n\n'
       '4. Redoslijed:\n'
       'Igrači naizmjenično igraju u krugu, počevši od igrača kojeg igra odredi kao prvog.\n'
       'Na svom potezu recite JEDNU riječ povezanu s tajnom riječi.\n'
       'Riječi koje su dio tajne riječi obično nisu dozvoljene osim ako se unaprijed ne dogovori.\n'
-      'Ako ne znate riječ, možete je potražiti na internetu. VARALICA također može pretraživati da bi zavarao druge.\n'
+      'Ako ne znate riječ, možete je potražiti na internetu. ULJEZ također može pretraživati da bi zavarao druge.\n'
       'Ponavljanje riječi nije dozvoljeno.\n\n'
       '5. Glasanje:\n'
-      'Nakon 2. ili 3. runde, raspravite i glasajte ko je VARALICA.\n'
-      'Glasanje se može obaviti i ranije ako NEVINI sigurno znaju ko je VARALICA ili ako se VARALICA preda.\n\n'
+      'Nakon 2. ili 3. runde, raspravite i glasajte ko je ULJEZ.\n'
+      'Glasanje se može obaviti i ranije ako NEVINI sigurno znaju ko je ULJEZ ili ako se ULJEZ preda.\n\n'
       '6. Pobjeda:\n'
-      'Ako je VARALICA uhvaćen, NEVINI pobjeđuju.\n'
-      'Ako je NEVIN izbačen, VARALICA pobjeđuje i dobija bod.\n'
+      'Ako je ULJEZ uhvaćen, NEVINI pobjeđuju.\n'
+      'Ako je NEVIN izbačen, ULJEZ pobjeđuje i dobija bod.\n'
       'Bodovi se prate na Rang-listi.\n\n'
       '7. Zabavite se!\n'
-      'Uživajte u igri, budite lukavi ako ste VARALICA i pokušajte uhvatiti VARALICU ako ste NEVINI. Sretno!\n\n',
+      'Uživajte u igri, budite lukavi ako ste ULJEZ i pokušajte uhvatiti ULJEZA ako ste NEVINI. Sretno!\n\n',
   'rules_werewolves_title': 'PRAVILA: VUKOVI',
   'rules_werewolves_content':
       '1. Dodjela Uloga:\n'
