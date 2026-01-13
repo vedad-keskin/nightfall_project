@@ -11,7 +11,6 @@ import 'phase_five.dart';
 import 'phase_three_night.dart';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:nightfall_project/base_components/puppet_master_transformation.dart';
 import 'package:nightfall_project/base_components/gambler_bet_dialog.dart';
@@ -360,12 +359,10 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
     final isMuted = context.read<SoundSettingsService>().isMuted;
 
     if (!isMuted) {
-      final player = AudioPlayer();
-      try {
-        await player.play(AssetSource('audio/werewolves/owl_howl_night.mp3'));
-      } catch (e) {
-        debugPrint('Error playing night sound: $e');
-      }
+      context.read<SoundSettingsService>().playGlobal(
+        'audio/werewolves/owl_howl_night.mp3',
+        loop: false,
+      );
     }
 
     if (mounted) {

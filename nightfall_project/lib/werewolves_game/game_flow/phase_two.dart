@@ -9,7 +9,6 @@ import 'phase_three_night.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 
 class WerewolfPhaseTwoScreen extends StatefulWidget {
@@ -595,7 +594,7 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                       ignoring: !allViewed,
                       child: SizedBox(
                         width: double.infinity,
-                          child: PixelButton(
+                        child: PixelButton(
                           label: context.watch<LanguageService>().translate(
                             'commence_night_button',
                           ),
@@ -607,16 +606,10 @@ class _WerewolfPhaseTwoScreenState extends State<WerewolfPhaseTwoScreen> {
                                 .isMuted;
 
                             if (!isMuted) {
-                              final player = AudioPlayer();
-                              try {
-                                await player.play(
-                                  AssetSource(
-                                    'audio/werewolves/owl_howl_night.mp3',
-                                  ),
-                                );
-                              } catch (e) {
-                                debugPrint('Error playing night sound: $e');
-                              }
+                              context.read<SoundSettingsService>().playGlobal(
+                                'audio/werewolves/owl_howl_night.mp3',
+                                loop: false,
+                              );
                             }
 
                             if (mounted) {

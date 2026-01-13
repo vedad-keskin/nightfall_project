@@ -11,6 +11,7 @@ class PixelDialog extends StatelessWidget {
   final String? soundPath;
   final VoidCallback? onPressed;
   final double? titleFontSize;
+  final bool useGlobalPlayer;
 
   const PixelDialog({
     super.key,
@@ -20,6 +21,7 @@ class PixelDialog extends StatelessWidget {
     this.soundPath,
     this.onPressed,
     this.titleFontSize,
+    this.useGlobalPlayer = false,
   });
 
   @override
@@ -100,6 +102,7 @@ class PixelDialog extends StatelessWidget {
                   color: const Color(0xFF415A77),
                   soundPath: soundPath,
                   onPressed: onPressed,
+                  useGlobalPlayer: useGlobalPlayer,
                 ),
               ],
             ),

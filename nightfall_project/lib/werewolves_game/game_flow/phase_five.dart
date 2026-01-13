@@ -6,7 +6,6 @@ import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/player_service.dart';
 import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'package:nightfall_project/werewolves_game/layouts/game_layout.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
@@ -37,7 +36,6 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
   Timer? _titleTimer;
   bool _showWinners = false;
   List<WerewolfPlayer> _appPlayersUpdated = [];
-  late AudioPlayer _winPlayer;
 
   // Gambler tracking
   bool _gamblerWonBet = false;
@@ -56,7 +54,6 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
   @override
   void initState() {
     super.initState();
-    _winPlayer = AudioPlayer();
     _distributePoints();
     _startTypewriter();
     _playWinSound();
@@ -78,19 +75,14 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
     }
 
     if (soundPath.isNotEmpty) {
-      try {
-        await _winPlayer.play(AssetSource(soundPath));
-      } catch (e) {
-        debugPrint('Error playing win sound: $e');
-      }
+      context.read<SoundSettingsService>().playGlobal(soundPath, loop: false);
     }
   }
 
   @override
   void dispose() {
     _titleTimer?.cancel();
-    _winPlayer.stop();
-    _winPlayer.dispose();
+    // Note: We don't stop/dispose the global player here as the layout's Back button handles it
     super.dispose();
   }
 
@@ -301,7 +293,6 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
                         ),
                         color: const Color(0xFF415A77),
                         onPressed: () async {
-                          await _winPlayer.stop();
                           if (mounted) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
@@ -391,14 +382,16 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
                     children: [
                       Text(
                         dbPlayer.name,
-                        style:
-                            GoogleFonts.vt323(color: Colors.white, fontSize: 20),
+                        style: GoogleFonts.vt323(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                       if (isGamblerWinner)
                         Text(
-                          context
-                              .watch<LanguageService>()
-                              .translate('gambler_won_bet'),
+                          context.watch<LanguageService>().translate(
+                            'gambler_won_bet',
+                          ),
                           style: GoogleFonts.vt323(
                             color: const Color(0xFFD4AF37),
                             fontSize: 14,

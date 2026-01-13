@@ -155,6 +155,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                 accentColor: Colors.redAccent,
                                 titleFontSize: 19,
                                 soundPath: 'audio/werewolves/wolf_howl.mp3',
+                                useGlobalPlayer: true,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
@@ -214,6 +215,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                                 accentColor: Colors.black87,
                                 soundPath: 'audio/impostor/mystery_mist.mp3',
                                 titleFontSize: 19,
+                                useGlobalPlayer: true,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
@@ -309,7 +311,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     _easterEggTimer?.cancel();
                   },
                   child: Text(
-                    'Nightfall Project v3.6.7',
+                    'Nightfall Project v3.6.8',
                     style: GoogleFonts.vt323(
                       color: Colors.white24,
                       fontSize: 14,

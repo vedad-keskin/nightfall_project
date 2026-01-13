@@ -9,7 +9,6 @@ import 'phase_five.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:nightfall_project/services/language_service.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:nightfall_project/base_components/guard_inspection_dialog.dart';
 import 'package:nightfall_project/base_components/pixel_heart.dart';
@@ -67,13 +66,9 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
   GamblerBet? _gamblerBet;
   bool _gamblerBetMade = false;
 
-  // Ambient night sound player
-  late AudioPlayer _ambientPlayer;
-
   @override
   void initState() {
     super.initState();
-    _ambientPlayer = AudioPlayer();
 
     // Initialize Gambler bet from widget (if passed from previous state)
     _gamblerBet = widget.gamblerBet;
@@ -109,11 +104,9 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
       await Future.delayed(const Duration(seconds: 4));
 
       if (!mounted) return;
-      if (context.read<SoundSettingsService>().isMuted) return;
-
-      await _ambientPlayer.setReleaseMode(ReleaseMode.loop);
-      await _ambientPlayer.play(
-        AssetSource('audio/werewolves/birds_frogs_night.mp3'),
+      await context.read<SoundSettingsService>().playGlobal(
+        'audio/werewolves/birds_frogs_night.mp3',
+        loop: true,
       );
     } catch (e) {
       debugPrint('Error playing ambient night sounds: $e');
@@ -122,8 +115,8 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
 
   @override
   void dispose() {
-    _ambientPlayer.stop();
-    _ambientPlayer.dispose();
+    // Note: We don't stop the global player here as we want it to persist across steps,
+    // but it will be stopped by the Back button in the layout if the user exits.
     super.dispose();
   }
 
@@ -668,14 +661,10 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                   final isMuted = context.read<SoundSettingsService>().isMuted;
 
                   if (!isMuted) {
-                    final player = AudioPlayer();
-                    try {
-                      await player.play(
-                        AssetSource('audio/werewolves/rooster_daylight.mp3'),
-                      );
-                    } catch (e) {
-                      debugPrint('Error playing day sound: $e');
-                    }
+                    context.read<SoundSettingsService>().playGlobal(
+                      'audio/werewolves/rooster_daylight.mp3',
+                      loop: false,
+                    );
                   }
 
                   if (mounted) {

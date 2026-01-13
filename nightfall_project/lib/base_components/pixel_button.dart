@@ -9,6 +9,7 @@ class PixelButton extends StatefulWidget {
   final Color color;
   final VoidCallback? onPressed;
   final String? soundPath;
+  final bool useGlobalPlayer;
 
   const PixelButton({
     super.key,
@@ -16,6 +17,7 @@ class PixelButton extends StatefulWidget {
     required this.color,
     this.onPressed,
     this.soundPath,
+    this.useGlobalPlayer = false,
   });
 
   @override
@@ -42,13 +44,17 @@ class _PixelButtonState extends State<PixelButton> {
   Future<void> _playSound() async {
     if (widget.soundPath == null) return;
 
-    // Check mute setting
-    if (context.read<SoundSettingsService>().isMuted) return;
+    final soundService = context.read<SoundSettingsService>();
+    if (soundService.isMuted) return;
 
-    try {
-      await _audioPlayer.play(AssetSource(widget.soundPath!));
-    } catch (e) {
-      debugPrint('Error playing sound: $e');
+    if (widget.useGlobalPlayer) {
+      await soundService.playGlobal(widget.soundPath!, loop: false);
+    } else {
+      try {
+        await _audioPlayer.play(AssetSource(widget.soundPath!));
+      } catch (e) {
+        debugPrint('Error playing sound: $e');
+      }
     }
   }
 
