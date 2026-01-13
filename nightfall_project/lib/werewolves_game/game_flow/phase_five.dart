@@ -293,6 +293,7 @@ class _WerewolfPhaseFiveScreenState extends State<WerewolfPhaseFiveScreen> {
                         ),
                         color: const Color(0xFF415A77),
                         onPressed: () async {
+                          context.read<SoundSettingsService>().stopAll();
                           if (mounted) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(

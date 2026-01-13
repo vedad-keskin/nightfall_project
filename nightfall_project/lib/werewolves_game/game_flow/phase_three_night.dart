@@ -662,7 +662,7 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
 
                   if (!isMuted) {
                     context.read<SoundSettingsService>().playGlobal(
-                      'audio/werewolves/rooster_daylight.mp3',
+                      'audio/werewolves/cardinal_daylight.mp3',
                       loop: false,
                     );
                   }
