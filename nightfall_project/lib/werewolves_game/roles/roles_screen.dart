@@ -351,7 +351,10 @@ class _WerewolfRolesScreenState extends State<WerewolfRolesScreen> {
                     context
                         .watch<LanguageService>()
                         .translate('win_pts_label')
-                        .replaceAll('{points}', role.points.toString()),
+                        .replaceAll(
+                          '{points}',
+                          role.points == 0 ? "?" : role.points.toString(),
+                        ),
                     style: GoogleFonts.pressStart2p(
                       color: Colors.amber,
                       fontSize: 12,
