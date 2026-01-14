@@ -157,7 +157,7 @@ const Map<String, String> bsTranslations = {
       'Lutkar ne zna na koju je stranu Kockar položio opkladu.\n'
       'Ako je opklada tačna, i Kockar i Lutkar ostvaruju pobjedu.\n'
       'DŽELAT: Osvetoljubivi seljak. Ako bude obješen od strane sela, može povesti jednog igrača sa sobom u grob.\n'
-      'ZARAŽENA: Seljak koji nosi skrivenu bolest. Ako ga Doktor liječi, Doktor se zarazi i umire. Ako ga vukovi eliminiraju noću dok imaju Vampira u svom timu, Vampir se zarazi i umire.\n'
+      'ZARAŽENA: Seljak koji nosi skrivenu bolest. Ako ga Doktor izliječi, Doktor se zarazi i umire. Ako ga vukovi eliminiraju noću dok imaju Vampira u svom timu, Vampir se zarazi i umire.\n'
       'KOCKAR: Lukavi rizičar koji se kladi na sudbinu.\n'
       'Samo prve noći, Kockar se budi prvi i tajno bira za koji savez misli da će pobijediti.\n'
       'Nakon klađenja, ponaša se kao običan Seljak ostatak igre bez posebnih moći.\n'
