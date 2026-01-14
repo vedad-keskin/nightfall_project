@@ -156,7 +156,7 @@ const Map<String, String> enTranslations = {
       'The Puppet Master does not know what the Gambler bet on.\n'
       'If the bet is correct, both the Gambler and the Puppet Master receive the win.\n'
       'EXECUTIONER: A vengeful villager. If hanged by the village, he can take one player with him to the grave.\n'
-      'INFECTED: A villager carrying a hidden sickness. If a healer treats them successfully, the healer gets infected and dies.\n'
+      'INFECTED: A villager carrying a hidden sickness. If the Doctor heals them, the Doctor gets infected and dies. If the werewolves target them at night while they have a Vampire in their team, the Vampire gets infected and dies.\n'
       'GAMBLER: A cunning risk-taker who bets on fate.\n'
       'On the first night only, the Gambler is woken first and secretly chooses which alliance they believe will win.\n'
       'After placing their bet, they behave as a normal Villager for the rest of the game with no special powers.\n'
@@ -304,9 +304,11 @@ const Map<String, String> enTranslations = {
   'execute_button': 'EXECUTE',
   'infected_name': 'Infected',
   'infected_desc':
-      'A villager carrying a hidden sickness. If a healer treats them successfully, the healer gets infected and dies.',
-  'infected_healer_msg':
-      'An infection spread while treating {name}! The healer has DIED!',
+      'A villager carrying a hidden sickness. If the Doctor heals them, the Doctor gets infected and dies. If the werewolves target them at night while they have a vampire in their team, the vampire gets infected and dies.',
+  'infected_doctor_msg':
+      'An infection spread from {name} while the Doctor was treating them! The Doctor has DIED!',
+  'infected_vampire_msg':
+      'The infection spread to the Vampire during the attack on {name}! The Vampire has DIED!',
   'gambler_name': 'Gambler',
   'gambler_desc':
       'A cunning risk-taker who bets on fate. On the first night, they secretly choose which alliance they believe will win. If correct, they share in the victory points. Behaves as a normal villager otherwise.',

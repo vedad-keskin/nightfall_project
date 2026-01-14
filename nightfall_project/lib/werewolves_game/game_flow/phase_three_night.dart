@@ -540,38 +540,51 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
     }
 
     // --- INFECTED ROLE LOGIC ---
-    // If a healer (Doctor or Plague Doctor) successfully heals an Infected player, the healer dies.
-    void infectHealer(int healerRoleId, String targetId) {
-      String? healerId;
+    // 1. Doctor Side-Effect: If Doctor heals Infected, Doctor dies.
+    if (doctorTarget != null && widget.playerRoles[doctorTarget]?.id == 14) {
+      String? doctorId;
       for (final entry in widget.playerRoles.entries) {
-        if (entry.value.id == healerRoleId &&
-            !deadPlayerIds.contains(entry.key)) {
-          healerId = entry.key;
+        if (entry.value.id == 3 && !deadPlayerIds.contains(entry.key)) {
+          doctorId = entry.key;
           break;
         }
       }
 
-      if (healerId != null && !deadPlayerIds.contains(healerId)) {
-        deadPlayerIds.add(healerId);
-        final victimName = widget.players
-            .firstWhere((p) => p.id == targetId)
+      if (doctorId != null) {
+        deadPlayerIds.add(doctorId);
+        final infectedName = widget.players
+            .firstWhere((p) => p.id == doctorTarget)
             .name;
         messages.add(
           lang
-              .translate('infected_healer_msg')
-              .replaceAll('{name}', victimName),
+              .translate('infected_doctor_msg')
+              .replaceAll('{name}', infectedName),
         );
       }
     }
 
-    if (doctorTarget != null && widget.playerRoles[doctorTarget]?.id == 14) {
-      infectHealer(3, doctorTarget); // Doctor ID is 3
-    }
+    // 2. Vampire Side-Effect: If werewolves target Infected, Vampire dies.
+    if (werewolfTarget != null &&
+        widget.playerRoles[werewolfTarget]?.id == 14) {
+      String? vampireId;
+      for (final entry in widget.playerRoles.entries) {
+        if (entry.value.id == 8 && !deadPlayerIds.contains(entry.key)) {
+          vampireId = entry.key;
+          break;
+        }
+      }
 
-    if (plagueTarget != null &&
-        !isPlagueAccident &&
-        widget.playerRoles[plagueTarget]?.id == 14) {
-      infectHealer(5, plagueTarget); // Plague Doctor ID is 5
+      if (vampireId != null) {
+        deadPlayerIds.add(vampireId);
+        final infectedName = widget.players
+            .firstWhere((p) => p.id == werewolfTarget)
+            .name;
+        messages.add(
+          lang
+              .translate('infected_vampire_msg')
+              .replaceAll('{name}', infectedName),
+        );
+      }
     }
     // ---------------------------
 

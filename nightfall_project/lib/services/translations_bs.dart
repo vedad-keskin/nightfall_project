@@ -157,7 +157,7 @@ const Map<String, String> bsTranslations = {
       'Lutkar ne zna na koju je stranu Kockar položio opkladu.\n'
       'Ako je opklada tačna, i Kockar i Lutkar ostvaruju pobjedu.\n'
       'DŽELAT: Osvetoljubivi seljak. Ako bude obješen od strane sela, može povesti jednog igrača sa sobom u grob.\n'
-      'ZARAŽENA: Seljak koji nosi skrivenu bolest. Ako ga doktor uspješno liječi, doktor se zarazi i umire.\n'
+      'ZARAŽENA: Seljak koji nosi skrivenu bolest. Ako ga Doktor liječi, Doktor se zarazi i umire. Ako ga vukovi eliminiraju noću dok imaju Vampira u svom timu, Vampir se zarazi i umire.\n'
       'KOCKAR: Lukavi rizičar koji se kladi na sudbinu.\n'
       'Samo prve noći, Kockar se budi prvi i tajno bira za koji savez misli da će pobijediti.\n'
       'Nakon klađenja, ponaša se kao običan Seljak ostatak igre bez posebnih moći.\n'
@@ -303,9 +303,11 @@ const Map<String, String> bsTranslations = {
   'execute_button': 'POGUBI',
   'infected_name': 'Zaražena',
   'infected_desc':
-      'Seljak koji nosi skrivenu bolest. Ako ga doktor uspješno liječi, doktor se zarazi i umire.',
-  'infected_healer_msg':
-      'Infekcija se proširila tokom liječenja {name}! Iscjelitelj je UMRO!',
+      'Seljak koji nosi skrivenu bolest. Ako ga doktor liječi, doktor se zarazi i umire. Ako ga vukovi ciljaju noću dok imaju vampira u svom timu, vampir se zarazi i umire.',
+  'infected_doctor_msg':
+      'Infekcija se prenijela sa igrača {name} dok ga je Doktor liječio! Doktor je UMRO!',
+  'infected_vampire_msg':
+      'Infekcija se prenijela na Vampira tokom napada na igrača {name}! Vampir je UMRO!',
   'gambler_name': 'Kockar',
   'gambler_desc':
       'Lukavi rizičar koji se kladi na sudbinu. Prve noći, tajno bira za koji savez misli da će pobijediti. Ako pogodi, dijeli bodove sa pobjednicima. Inače se ponaša kao običan seljak.',

@@ -170,7 +170,7 @@ class WerewolfRoleService {
       points: 1,
       allianceId: 1, // Villagers
       description:
-          'A simple villager but carrying a hidden disease. If a healer treats them successfully, the healer will catch the infection and die.',
+          'A simple villager but carrying a hidden disease. If the Doctor heals them, the Doctor gets infected and dies. If the werewolves target them at night while they have a vampire in their team, the vampire gets infected and dies.',
       imagePath: 'assets/images/werewolves/Infected.png',
       translationKey: 'infected_name',
       descriptionKey: 'infected_desc',
@@ -178,7 +178,8 @@ class WerewolfRoleService {
     WerewolfRole(
       id: 15,
       name: 'Gambler',
-      points: 0, // Points are determined by bet outcome: +1 Village, +2 Werewolves, +3 Specials
+      points:
+          0, // Points are determined by bet outcome: +1 Village, +2 Werewolves, +3 Specials
       allianceId: 3, // Specials
       description:
           'A cunning risk-taker who bets on fate. On the first night, they secretly choose which alliance they believe will win. If correct, they share in the victory points. Behaves as a normal villager otherwise.',
