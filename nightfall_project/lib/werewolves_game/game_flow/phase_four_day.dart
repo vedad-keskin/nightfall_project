@@ -258,6 +258,7 @@ class _WerewolfPhaseFourScreenState extends State<WerewolfPhaseFourScreen> {
                 .firstWhere((p) => p.id == puppetMasterId)
                 .name,
             targetRole: hangedRole,
+            gamblerBet: widget.gamblerBet,
           ),
         );
         updatedRoles[puppetMasterId] = hangedRole;

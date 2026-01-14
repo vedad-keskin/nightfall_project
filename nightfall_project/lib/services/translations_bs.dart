@@ -213,6 +213,8 @@ const Map<String, String> bsTranslations = {
       'Mistični posmatrač. Transformiše se u ulogu prve osobe koju selo objesi.',
   'puppet_master_transforming': 'LUTKAR EVOLUIRA...',
   'puppet_master_new_role': 'NOVI {role} SE PRIDRUŽIO GRADU!',
+  'puppet_master_gambler_bet_info':
+      'Prvobitni Kockar se kladio da će {alliance} savez pobijediti. Naslijedili ste ovu opkladu!',
   'puppet_master_ritual': 'DREVNI RITUAL U TOKU',
   'puppet_master_unleash': 'OSLOBODI LUTKE',
   'puppet_master_evolving': '--- EVOLUCIJA ---',
@@ -316,7 +318,7 @@ const Map<String, String> bsTranslations = {
   'gambler_bet_title': 'POSTAVI OKLADU',
   'gambler_bet_subtitle': 'Odaberi ko će po tebi pobijediti...',
   'gambler_bet_village': 'SELO',
-  'gambler_bet_werewolves': 'ČOPOR',
+  'gambler_bet_werewolves': 'VUKOVI',
   'gambler_bet_specials': 'POSEBNI',
   'gambler_village_reward': '+1 BOD',
   'gambler_werewolves_reward': '+2 BODA',

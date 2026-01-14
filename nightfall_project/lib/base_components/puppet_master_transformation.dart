@@ -8,15 +8,18 @@ import 'package:nightfall_project/werewolves_game/offline_db/role_service.dart';
 import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
+import 'package:nightfall_project/base_components/gambler_bet_dialog.dart';
 
 class PuppetMasterTransformationDialog extends StatefulWidget {
   final String playerName;
   final WerewolfRole targetRole;
+  final GamblerBet? gamblerBet;
 
   const PuppetMasterTransformationDialog({
     super.key,
     required this.playerName,
     required this.targetRole,
+    this.gamblerBet,
   });
 
   @override
@@ -100,6 +103,28 @@ class _PuppetMasterTransformationDialogState
         .translate('puppet_master_new_role')
         .replaceAll('{role}', roleName);
     await _type(text2);
+
+    // Puppet Master Edge Case: Gambler Bet
+    if (widget.targetRole.id == 15 && widget.gamblerBet != null) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      String allianceKey = '';
+      switch (widget.gamblerBet!) {
+        case GamblerBet.village:
+          allianceKey = lang.translate('gambler_bet_village');
+          break;
+        case GamblerBet.werewolves:
+          allianceKey = lang.translate('gambler_bet_werewolves');
+          break;
+        case GamblerBet.specials:
+          allianceKey = lang.translate('gambler_bet_specials');
+          break;
+      }
+
+      String betInfo = lang
+          .translate('puppet_master_gambler_bet_info')
+          .replaceAll('{alliance}', allianceKey);
+      await _type(betInfo);
+    }
   }
 
   Future<void> _type(String text) async {
