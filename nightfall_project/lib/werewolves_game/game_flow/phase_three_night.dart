@@ -472,11 +472,15 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                       .replaceAll('{name}', player.name),
                 );
               } else {
-                messages.add(
-                  lang
-                      .translate('plague_doctor_saved_msg')
-                      .replaceAll('{name}', player.name),
-                );
+                if (role.id == 5) {
+                  messages.add(lang.translate('plague_doctor_self_saved_msg'));
+                } else {
+                  messages.add(
+                    lang
+                        .translate('plague_doctor_saved_msg')
+                        .replaceAll('{name}', player.name),
+                  );
+                }
               }
             } else {
               // Not saved -> Death
@@ -500,11 +504,15 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
                   .replaceAll('{name}', player.name),
             );
           } else if (savedByPlagueHeal) {
-            messages.add(
-              lang
-                  .translate('plague_doctor_saved_msg')
-                  .replaceAll('{name}', player.name),
-            );
+            if (role.id == 5) {
+              messages.add(lang.translate('plague_doctor_self_saved_msg'));
+            } else {
+              messages.add(
+                lang
+                    .translate('plague_doctor_saved_msg')
+                    .replaceAll('{name}', player.name),
+              );
+            }
           } else {
             deadPlayerIds.add(playerId);
           }
@@ -534,11 +542,15 @@ class _WerewolfPhaseThreeScreenState extends State<WerewolfPhaseThreeScreen> {
 
         // Informative message for successful Plague Doctor treatment without werewolf attack
         if (savedByPlagueHeal && !hitByWerewolves) {
-          messages.add(
-            lang
-                .translate('plague_doctor_treated_msg')
-                .replaceAll('{name}', player.name),
-          );
+          if (role.id == 5) {
+            messages.add(lang.translate('plague_doctor_self_treated_msg'));
+          } else {
+            messages.add(
+              lang
+                  .translate('plague_doctor_treated_msg')
+                  .replaceAll('{name}', player.name),
+            );
+          }
         }
       }
     }

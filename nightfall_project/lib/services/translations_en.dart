@@ -267,6 +267,8 @@ const Map<String, String> enTranslations = {
   'doctor_saved_msg': 'The Doctor saved {name}!',
   'plague_doctor_saved_msg':
       'The Plague Doctor treated {name}... and they survived!',
+  'plague_doctor_self_saved_msg':
+      'The Plague Doctor treated himself... and he survived!',
   'plague_doctor_failed_msg':
       'The Plague Doctor tried to help {name}... but failed.',
   'plague_doctor_killed_msg':
@@ -274,6 +276,7 @@ const Map<String, String> enTranslations = {
   'plague_doctor_self_killed_msg':
       "The Plague Doctor's 'treatment' on himself was fatal!",
   'plague_doctor_treated_msg': 'The Plague Doctor treated {name}.',
+  'plague_doctor_self_treated_msg': 'The Plague Doctor treated himself.',
   'win_title_village': 'THE VILLAGE WINS!',
   'win_title_werewolves': 'THE WEREWOLVES WIN!',
   'win_title_specials': 'THE SPECIALS WIN!',

@@ -267,12 +267,15 @@ const Map<String, String> bsTranslations = {
   'specials_alliance_title': 'POSEBNI',
   'doctor_saved_msg': 'Doktor je spasio igrača {name}!',
   'plague_doctor_saved_msg': 'Vrač je liječio igrača {name}... i preživio je!',
+  'plague_doctor_self_saved_msg':
+      'Vrač je liječio samog sebe... i preživio je!',
   'plague_doctor_failed_msg':
       'Vrač je pokušao pomoći igraču {name}... ali nije uspio.',
   'plague_doctor_killed_msg': 'Vračev tretman je bio fatalan za igrača {name}.',
   'plague_doctor_self_killed_msg':
       'Vračev tretman na samom sebi je bio fatalan!',
   'plague_doctor_treated_msg': 'Vrač je liječio igrača {name}.',
+  'plague_doctor_self_treated_msg': 'Vrač je liječio samog sebe.',
   'win_title_village': 'SELO POBJEĐUJE!',
   'win_title_werewolves': 'VUKOVI POBJEĐUJU!',
   'win_title_specials': 'POSEBNI POBJEĐUJU!',
