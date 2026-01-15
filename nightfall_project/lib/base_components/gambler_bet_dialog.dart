@@ -219,14 +219,14 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
     }
   }
 
-  dynamic _getBetIcon(GamblerBet bet) {
+  String _getBetIcon(GamblerBet bet) {
     switch (bet) {
       case GamblerBet.village:
-        return Icons.home;
+        return 'assets/images/gambler_village.png';
       case GamblerBet.werewolves:
-        return 'assets/images/claw_icon.png';
+        return 'assets/images/gambler_werewolves.png';
       case GamblerBet.specials:
-        return Icons.auto_awesome;
+        return 'assets/images/gambler_specials.png';
     }
   }
 
@@ -796,14 +796,14 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                       children: [
                         // Icon
                         Container(
-                          width: 80,
-                          height: 80,
+                          width: 100,
+                          height: 100,
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.3),
+                            color: Colors.black26,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isSelected ? Colors.white : color,
-                              width: 2,
+                              width: 3,
                             ),
                             boxShadow: isSelected
                                 ? [
@@ -812,25 +812,18 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                                         0.4 + _glowController.value * 0.3,
                                       ),
                                       blurRadius:
-                                          10 + _glowController.value * 8,
+                                          15 + _glowController.value * 10,
+                                      spreadRadius: 2,
                                     ),
                                   ]
                                 : [],
                           ),
-                          child: _getBetIcon(bet) is IconData
-                              ? Icon(
-                                  _getBetIcon(bet) as IconData,
-                                  color: isSelected ? Colors.white : color,
-                                  size: 40,
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Image.asset(
-                                    _getBetIcon(bet) as String,
-                                    color: isSelected ? Colors.white : color,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
+                          child: ClipOval(
+                            child: Image.asset(
+                              _getBetIcon(bet),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         // Alliance name
@@ -1011,20 +1004,31 @@ class _GamblerBetDialogState extends State<GamblerBetDialog>
                               scale: value,
                               child: Transform.rotate(
                                 angle: (1 - value) * pi,
-                                child: _getBetIcon(_selectedBet) is IconData
-                                    ? Icon(
-                                        _getBetIcon(_selectedBet) as IconData,
-                                        color: Colors.white,
-                                        size: 48,
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Image.asset(
-                                          _getBetIcon(_selectedBet) as String,
-                                          color: Colors.white,
-                                          fit: BoxFit.contain,
-                                        ),
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 3,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: color.withOpacity(0.6),
+                                        blurRadius: 20,
+                                        spreadRadius: 5,
                                       ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      _getBetIcon(_selectedBet),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
                               ),
                             );
                           },

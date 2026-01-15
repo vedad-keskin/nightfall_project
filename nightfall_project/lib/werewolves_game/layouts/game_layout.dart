@@ -285,7 +285,7 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                                   ),
                                                 ),
                                                 Image.asset(
-                                                  'assets/images/claw_icon.png',
+                                                  'assets/images/card.png',
                                                   width: 32,
                                                   height: 32,
                                                   fit: BoxFit.contain,
