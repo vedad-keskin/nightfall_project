@@ -12,6 +12,7 @@ import 'package:nightfall_project/services/language_service.dart';
 import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:nightfall_project/base_components/pixel_sound_button.dart';
 import 'package:nightfall_project/base_components/pixel_swipe_indicator.dart';
+import 'package:nightfall_project/base_components/nightfall_intro_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplitHomeScreen(),
+      home: const NightfallIntroScreen(next: SplitHomeScreen()),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -421,6 +422,7 @@ class _PixelRulesButtonState extends State<PixelRulesButton> {
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
                       Icons.help_center_outlined,
@@ -428,12 +430,22 @@ class _PixelRulesButtonState extends State<PixelRulesButton> {
                       size: 20,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      context.watch<LanguageService>().translate('how_to_play'),
-                      style: GoogleFonts.vt323(
-                        color: const Color(0xFFE0E1DD),
-                        fontSize: 18, // Reduced slightly to fit
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          context
+                              .watch<LanguageService>()
+                              .translate('how_to_play'),
+                          style: GoogleFonts.vt323(
+                            color: const Color(0xFFE0E1DD),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ],

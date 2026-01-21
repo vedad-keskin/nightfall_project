@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_button.dart';
 import 'package:nightfall_project/services/language_service.dart';
-import 'package:nightfall_project/services/sound_settings_service.dart';
 import 'package:provider/provider.dart';
 
 class GuardInspectionDialog extends StatefulWidget {
