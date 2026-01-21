@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nightfall_project/base_components/pixel_starfield_background.dart';
+import 'package:nightfall_project/services/sound_settings_service.dart';
+import 'package:provider/provider.dart';
 
 class NightfallIntroScreen extends StatefulWidget {
   final Widget next;
@@ -31,7 +33,19 @@ class _NightfallIntroScreenState extends State<NightfallIntroScreen>
     _controller = AnimationController(vsync: this, duration: widget.totalDuration)
       ..forward();
 
-    _navTimer = Timer(widget.totalDuration + const Duration(milliseconds: 250), () {
+    // Play intro sound (respects mute setting).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        final sound = Provider.of<SoundSettingsService>(context, listen: false);
+        // ignore: discarded_futures
+        sound.playGlobal('audio/intro1.mp3', loop: false);
+      } catch (_) {
+        // No-op: sound is optional (e.g., in tests without provider).
+      }
+    });
+
+    // Wait for intro animation to complete + extra time for fade-out to finish
+    _navTimer = Timer(widget.totalDuration + const Duration(milliseconds: 400), () {
       _goNext();
     });
   }
@@ -49,11 +63,23 @@ class _NightfallIntroScreenState extends State<NightfallIntroScreen>
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 700),
-        pageBuilder: (_, animation, __) => FadeTransition(
-          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          child: widget.next,
-        ),
+        transitionDuration: const Duration(milliseconds: 1000),
+        reverseTransitionDuration: const Duration(milliseconds: 600),
+        pageBuilder: (_, animation, __) => widget.next,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // Smooth fade transition - main screen fades in smoothly
+          final fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOut,
+            ),
+          );
+
+          return FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          );
+        },
       ),
     );
   }
