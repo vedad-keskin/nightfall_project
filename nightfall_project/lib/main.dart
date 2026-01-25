@@ -312,7 +312,7 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
                     _easterEggTimer?.cancel();
                   },
                   child: Text(
-                    'Nightfall Project v3.8.2',
+                    'Nightfall Project v3.8.3',
                     style: GoogleFonts.vt323(
                       color: Colors.white24,
                       fontSize: 14,
@@ -435,9 +435,9 @@ class _PixelRulesButtonState extends State<PixelRulesButton> {
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          context
-                              .watch<LanguageService>()
-                              .translate('how_to_play'),
+                          context.watch<LanguageService>().translate(
+                            'how_to_play',
+                          ),
                           style: GoogleFonts.vt323(
                             color: const Color(0xFFE0E1DD),
                             fontSize: 18,
