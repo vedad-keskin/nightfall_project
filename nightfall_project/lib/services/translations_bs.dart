@@ -228,6 +228,14 @@ const Map<String, String> bsTranslations = {
   'specials_alliance_desc':
       'Jedinstvene uloge sa specijalnim uslovima pobjede i posebnim sposobnostima.',
   'day_timer': 'TRAJANJE DANA',
+  'day_timer_info_title': 'INFO O TRAJANJU DANA',
+  'day_timer_info_description':
+      'Tajmer za dan ne prisiljava automatski kraj dana. On služi isključivo kao indikator naratoru da može zaključiti dnevnu fazu i potaknuti igrače da donesu odluku.',
+  'day_timer_options_title': 'OPCIJE TAJMERA:',
+  'day_timer_option_5min': '5 MIN - Fiksni tajmer od 5 minuta',
+  'day_timer_option_10min': '10 MIN - Fiksni tajmer od 10 minuta',
+  'day_timer_option_30s': '30s/I - 30 sekundi po igraču',
+  'day_timer_option_infinity': '∞ - Bez tajmera (beskonačno)',
   'timer_5_min': '5 MIN',
   'timer_10_min': '10 MIN',
   'timer_30s_p': '30s/I',

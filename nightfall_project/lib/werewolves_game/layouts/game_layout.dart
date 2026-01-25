@@ -90,6 +90,194 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
     });
   }
 
+  String _getModeLabel(TimerMode mode, LanguageService languageService) {
+    switch (mode) {
+      case TimerMode.fiveMinutes:
+        return languageService.translate('timer_5_min');
+      case TimerMode.tenMinutes:
+        return languageService.translate('timer_10_min');
+      case TimerMode.thirtySecondsPerPlayer:
+        return languageService.translate('timer_30s_p');
+      case TimerMode.infinity:
+        return languageService.translate('timer_infinity');
+    }
+  }
+
+  Widget _buildTimerOption(TimerMode mode, LanguageService languageService) {
+    final isSelected = _timerMode == mode;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _setTimerMode(mode),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFFFCA311) : Colors.transparent,
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFFFCA311)
+                  : const Color(0xFF415A77),
+              width: 2,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _getModeLabel(mode, languageService),
+                style: GoogleFonts.pressStart2p(
+                  color: isSelected ? Colors.black : Colors.white54,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showTimerInfoDialog(
+    BuildContext context,
+    LanguageService languageService,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D1B2A),
+            border: Border.all(color: const Color(0xFF778DA9), width: 4),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF415A77),
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFF778DA9), width: 3),
+                  ),
+                ),
+                child: Text(
+                  languageService.translate('day_timer_info_title'),
+                  style: GoogleFonts.pressStart2p(
+                    color: const Color(0xFFE0E1DD),
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Description
+                    Text(
+                      languageService.translate('day_timer_info_description'),
+                      style: GoogleFonts.vt323(
+                        color: Colors.white70,
+                        fontSize: 18,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Options Title
+                    Text(
+                      languageService.translate('day_timer_options_title'),
+                      style: GoogleFonts.pressStart2p(
+                        color: const Color(0xFFFCA311),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Options List
+                    _buildOptionInfo(
+                      languageService.translate('day_timer_option_5min'),
+                      languageService,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildOptionInfo(
+                      languageService.translate('day_timer_option_10min'),
+                      languageService,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildOptionInfo(
+                      languageService.translate('day_timer_option_30s'),
+                      languageService,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildOptionInfo(
+                      languageService.translate('day_timer_option_infinity'),
+                      languageService,
+                    ),
+                    const SizedBox(height: 20),
+                    // Close button
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF415A77),
+                            border: Border.all(
+                              color: const Color(0xFF778DA9),
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            languageService.translate('close_button'),
+                            style: GoogleFonts.pressStart2p(
+                              color: const Color(0xFFE0E1DD),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionInfo(String text, LanguageService languageService) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 6, right: 8),
+          width: 6,
+          height: 6,
+          decoration: const BoxDecoration(color: Color(0xFFFCA311)),
+        ),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.vt323(
+              color: Colors.white60,
+              fontSize: 16,
+              height: 1.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final languageService = context.watch<LanguageService>();
@@ -352,10 +540,93 @@ class _WerewolfGameLayoutState extends State<WerewolfGameLayout> {
                                             ),
                                           ),
                                           padding: const EdgeInsets.all(16),
-                                          child: PixelGameTimer(
-                                            selectedMode: _timerMode,
-                                            playerCount: _playerCount,
-                                            onModeChanged: _setTimerMode,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Header with info button
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    languageService.translate(
+                                                      'day_timer',
+                                                    ),
+                                                    style: GoogleFonts.vt323(
+                                                      color: Colors.white70,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () =>
+                                                        _showTimerInfoDialog(
+                                                          context,
+                                                          languageService,
+                                                        ),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            4,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(
+                                                          0xFF415A77,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: const Color(
+                                                            0xFF778DA9,
+                                                          ),
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.info_outline,
+                                                        color: Color(
+                                                          0xFFE0E1DD,
+                                                        ),
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                              // Timer options grid
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      _buildTimerOption(
+                                                        TimerMode.fiveMinutes,
+                                                        languageService,
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      _buildTimerOption(
+                                                        TimerMode.tenMinutes,
+                                                        languageService,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Row(
+                                                    children: [
+                                                      _buildTimerOption(
+                                                        TimerMode
+                                                            .thirtySecondsPerPlayer,
+                                                        languageService,
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      _buildTimerOption(
+                                                        TimerMode.infinity,
+                                                        languageService,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         const SizedBox(height: 24),

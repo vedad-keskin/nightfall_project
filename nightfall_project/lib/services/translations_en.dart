@@ -227,6 +227,14 @@ const Map<String, String> enTranslations = {
   'specials_alliance_desc':
       'Independent roles with unique win conditions and special abilities.',
   'day_timer': 'DAY TIMER',
+  'day_timer_info_title': 'DAY TIMER INFO',
+  'day_timer_info_description':
+      'The day timer does not force the day to end. It only serves as an indicator to the narrator that they can conclude the day time and force the players to make a decision.',
+  'day_timer_options_title': 'TIMER OPTIONS:',
+  'day_timer_option_5min': '5 MIN - Fixed 5 minute timer',
+  'day_timer_option_10min': '10 MIN - Fixed 10 minute timer',
+  'day_timer_option_30s': '30s/P - 30 seconds per player',
+  'day_timer_option_infinity': '∞ - No timer (infinite)',
   'timer_5_min': '5 MIN',
   'timer_10_min': '10 MIN',
   'timer_30s_p': '30s/P',
